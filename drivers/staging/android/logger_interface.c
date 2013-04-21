@@ -29,15 +29,14 @@ static ssize_t logger_mode_show(struct kobject *kobj, struct kobj_attribute *att
 	// print current mode
 	if (logger_mode == 0)
 	{
-		return sprintf(buf, "%d", logger_mode);
+		return sprintf(buf, "logger mode: %d (disabled)", logger_mode);
 	}
 	else
 	{
-		return sprintf(buf, "%d", logger_mode);
+		return sprintf(buf, "logger mode: %d (enabled)", logger_mode);
 	}
 
 }
-
 
 static ssize_t logger_mode_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
 {
@@ -91,8 +90,8 @@ int logger_mode_init(void)
 			kobject_put(logger_mode_kobj);
 	}
 
-	// initialize logger mode to 0 (disabled) as default
-	logger_mode = 0;
+	// initialize logger mode to 1 (enabled) as default
+	logger_mode = 1;
 
         return (logger_mode_retval);
 }
