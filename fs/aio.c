@@ -1172,7 +1172,6 @@ long do_io_submit(aio_context_t ctx_id, long nr,
 		return -EINVAL;
 	}
 
-
 	/*
 	 * AKPM: should this return a partial result if some of the IOs were
 	 * successfully submitted?
