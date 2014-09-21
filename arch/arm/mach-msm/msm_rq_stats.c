@@ -279,6 +279,9 @@ EXPORT_SYMBOL(get_rq_info);
 
 static void def_work_fn(struct work_struct *work)
 {
+	if (!rq_info.hotplug_enabled)
+		return;
+
 	/* Notify polling threads on change of value */
 	sysfs_notify(rq_info.kobj, NULL, "def_timer_ms");
 }
