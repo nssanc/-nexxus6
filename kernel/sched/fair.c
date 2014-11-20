@@ -238,6 +238,11 @@ void update_packing_domain(int cpu)
 #endif /* CONFIG_SCHED_PACKING_TASKS */
 #endif /* CONFIG_SMP */
 
+/* Save per_cpu information that will be shared with other frameworks */
+DEFINE_PER_CPU(struct sched_pm, sched_stat) = {
+	.wake_latency = ATOMIC_INIT(0)
+};
+
 #if BITS_PER_LONG == 32
 # define WMULT_CONST	(~0UL)
 #else
