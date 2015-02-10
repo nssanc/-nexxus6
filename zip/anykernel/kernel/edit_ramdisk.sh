@@ -71,6 +71,10 @@ chmod 750 /tmp/ramdisk/fstab.shamu
 cp /tmp/init.shamu.power.rc /tmp/ramdisk/init.shamu.power.rc
 chmod 750 /tmp/ramdisk/init.shamu.power.rc
 
+#copy ChainFire's Modified SEPOLICY Binary
+cp /tmp/sepolicy /tmp/ramdisk/sepolicy
+chmod 750 /tmp/ramdisk/sepolicy
+
 rm /tmp/ramdisk/boot.img-ramdisk.gz
 rm /tmp/boot.img-ramdisk.gz
 cd /tmp/ramdisk/
