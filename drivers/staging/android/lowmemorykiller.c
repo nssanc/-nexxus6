@@ -44,8 +44,11 @@
 #include <linux/delay.h>
 #include <linux/swap.h>
 #include <linux/fs.h>
-
 #include <trace/events/memkill.h>
+
+#define CREATE_TRACE_POINTS
+#include <trace/events/almk.h>
+
 
 #ifdef CONFIG_HIGHMEM
 #define _ZONE ZONE_HIGHMEM
@@ -82,7 +85,7 @@ static atomic_t shift_adj = ATOMIC_INIT(0);
 static short adj_max_shift = 353;
 
 /* User knob to enable/disable adaptive lmk feature */
-static int enable_adaptive_lmk = 1;
+static int enable_adaptive_lmk;
 module_param_named(enable_adaptive_lmk, enable_adaptive_lmk, int,
 	S_IRUGO | S_IWUSR);
 
@@ -176,6 +179,7 @@ static int lmk_vmpressure_notifier(struct notifier_block *nb,
 static struct notifier_block lmk_vmpr_nb = {
 	.notifier_call = lmk_vmpressure_notifier,
 };
+
 
 static bool avoid_to_kill(uid_t uid)
 {
