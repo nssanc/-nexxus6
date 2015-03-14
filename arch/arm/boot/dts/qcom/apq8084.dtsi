@@ -531,7 +531,9 @@
 		interrupt-names = "hc_irq", "pwr_irq";
 
 		qcom,bus-width = <8>;
+
 		qcom,cpu-dma-latency-us = <200>;
+		qcom,wakeup-on-idle;
 
 		qcom,msm-bus,name = "sdhc1";
 		qcom,msm-bus,num-cases = <9>;
@@ -562,6 +564,7 @@
 
 		qcom,bus-width = <4>;
 		qcom,cpu-dma-latency-us = <200>;
+		qcom,wakeup-on-idle;
 
 		qcom,msm-bus,name = "sdcc2";
 		qcom,msm-bus,num-cases = <8>;
@@ -5283,7 +5286,8 @@
 			"AMIC1", "MIC BIAS1 Internal1",
 			"MIC BIAS1 Internal1", "Handset Mic",
 			"AMIC2", "MIC BIAS2 External",
-			"MIC BIAS2 External", "Headset Mic",
+			"MIChead
+ BIAS2 External", "Headset Mic",
 			"AMIC3", "MIC BIAS2 External",
 			"MIC BIAS2 External", "ANCRight Headset Mic",
 			"AMIC4", "MIC BIAS2 External",
