@@ -35,6 +35,11 @@ module_param(enable_smb135x_wake_ws, bool, 0644);
 
 #include "power.h"
 
+#include <linux/moduleparam.h>
+
+static bool enable_sensorhub_wl = true;
+module_param(enable_sensorhub_wl, bool, 0644);
+
 /*
  * If set, the suspend/hibernate code will abort transitions to a sleep state
  * if wakeup events are registered during or immediately before the transition.
@@ -452,6 +457,11 @@ static bool wakeup_source_not_registered(struct wakeup_source *ws)
 static void wakeup_source_activate(struct wakeup_source *ws)
 {
 	unsigned int cec;
+
+        if (!enable_sensorhub_wl && !strcmp(ws->name, "ssp_sensorhub_wake_lock")) {
+		pr_info("wakeup source sensorhub activation skipped\n");
+		return;
+	}
 	
 	if (!enable_si_ws && !strcmp(ws->name, "sensor_ind"))
 		return;
