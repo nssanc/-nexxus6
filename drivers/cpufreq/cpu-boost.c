@@ -23,13 +23,9 @@
 #include <linux/slab.h>
 #include <linux/input.h>
 #include <linux/time.h>
-<<<<<<< HEAD
 #ifdef CONFIG_STATE_NOTIFIER
 #include <linux/state_notifier.h>
 #endif
-=======
-#include <linux/fb.h>
->>>>>>> 0bfa5d3... msm: Fix usage of FB notifiers
 
 struct cpu_sync {
 	int cpu;
@@ -398,10 +394,6 @@ static int cpu_boost_init(void)
 	if (state_register_client(&notif))
 		pr_err("Cannot register State notifier callback for cpuboost.\n");
 #endif
-
-	notif.notifier_call = fb_notifier_callback;
-	if (fb_register_client(&notif))
-		pr_err("Cannot register FB notifier callback for cpuboost.\n");
 
 	return ret;
 }
