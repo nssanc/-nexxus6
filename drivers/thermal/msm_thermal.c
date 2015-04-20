@@ -46,6 +46,15 @@
 #define TSENS_NAME_MAX 20
 #define TSENS_NAME_FORMAT "tsens_tz_sensor%d"
 #define THERM_SECURE_BITE_CMD 8
+#define CORE_MAX_FREQ 3091200 
+
+unsigned int temp_threshold = 70;
+module_param(temp_threshold, int, 0755);
+
+
+// allow full frequency mitigation
+bool full_fm = true;
+module_param(full_fm, bool, 0644);
 
 static struct msm_thermal_data msm_thermal_info;
 static struct delayed_work check_temp_work;
