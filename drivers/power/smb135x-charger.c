@@ -34,6 +34,10 @@
 #include <linux/fastcharge.h>
 #endif
 
+#ifdef CONFIG_FORCE_FAST_CHARGE
+#include <linux/fastcharge.h>
+#endif
+
 #define SMB135X_BITS_PER_REG	8
 
 /* Mask/Bit helpers */
