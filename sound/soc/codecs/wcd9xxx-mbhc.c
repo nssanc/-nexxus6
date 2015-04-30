@@ -3324,7 +3324,7 @@ static irqreturn_t wcd9xxx_mech_plug_detect_irq(int irq, void *data)
 		wcd9xxx_unlock_sleep(mbhc->resmgr->core_res);
 	}
 
-	if (mdss_panel_is_on() == false) {
+	if (mdss_panel_status() == DISPLAY_OFF) {
 		qpnp_ponkey_emulate(1);
 		msleep(5);
 		qpnp_ponkey_emulate(0);
