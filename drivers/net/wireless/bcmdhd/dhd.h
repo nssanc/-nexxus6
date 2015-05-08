@@ -1046,11 +1046,11 @@ extern uint dhd_force_tx_queueing;
 #endif
 #endif /* WLTDLS */
 
-
 #define MAX_DTIM_SKIP_BEACON_INTERVAL	100 /* max allowed associated AP beacon for DTIM skip */
 #ifndef MAX_DTIM_ALLOWED_INTERVAL
 #define MAX_DTIM_ALLOWED_INTERVAL 900 /* max allowed total beacon interval for DTIM skip */
 #endif
+
 #ifndef MIN_DTIM_FOR_ROAM_THRES_EXTEND
 #define MIN_DTIM_FOR_ROAM_THRES_EXTEND 600 /* minimum dtim interval to extend roam threshold */
 #endif
