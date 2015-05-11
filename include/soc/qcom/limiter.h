@@ -19,7 +19,7 @@ int cpuinfo_get_min(unsigned int cpu);
 #define MPD_ENABLED			0
 #define DEFAULT_SUSPEND_FREQUENCY	960000
 #define DEFAULT_RESUME_FREQUENCY	2265600
-#define DEFAULT_MIN_FREQUENCY		98300 
+#define DEFAULT_MIN_FREQUENCY		268800 
 
 static struct cpu_limit {
 	unsigned int limiter_enabled;
