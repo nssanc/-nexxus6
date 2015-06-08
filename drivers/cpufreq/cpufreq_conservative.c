@@ -53,6 +53,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 
 	cpufreq_notify_utilization(policy, load);
 
+	cpufreq_notify_utilization(policy, load);
+
 	/*
 	 * break out if we 'cannot' reduce the speed as the user might
 	 * want freq_step to be zero
