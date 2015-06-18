@@ -1,4 +1,5 @@
-CFLAGS_KERNEL := -fno-graphite -fno-fast-math -fno-strict-aliasing
+CFLAGS_nf_conntrack_core.o := -fno-graphite -fno-graphite-identity -fno-loop-flatten -fno-tree-loop-linear -fno-loop-interchange -fno-loop-strip-mine -fno-loop-block -fno-loop-nest-optimize -fno-loop-unroll-and-jam -fno-loop-parallelize-all -ftree-parallelize-loops=0 -fno-openmp -fno-fast-math -fno-strict-aliasing
+CFLAGS_xt_hashlimit.o := -fno-graphite -fno-graphite-identity -fno-loop-flatten -fno-tree-loop-linear -fno-loop-interchange -fno-loop-strip-mine -fno-loop-block -fno-loop-nest-optimize -fno-loop-unroll-and-jam -fno-loop-parallelize-all -ftree-parallelize-loops=0 -fno-openmp -fno-fast-math -fno-strict-aliasing
 
 netfilter-objs := core.o nf_log.o nf_queue.o nf_sockopt.o
 
