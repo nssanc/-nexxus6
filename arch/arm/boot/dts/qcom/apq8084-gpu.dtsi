@@ -23,7 +23,7 @@
 
 		qcom,chipid = <0x04020000>;
 
-		qcom,initial-pwrlevel = <7>;
+		qcom,initial-pwrlevel = <4>;
 
 		qcom,idle-timeout = <8>; //<HZ/12>
 		qcom,strtstp-sleepwake;
@@ -39,7 +39,8 @@
 		qcom,msm-bus,num-paths = <2>;
 		qcom,msm-bus,vectors-KBps =
 				<26 512 0 0>, <89 662 0 0>,
-                                <26 512 0 2400000>,  <89 662 0 3200000>,     // gpu=240 bus=150
+
+				<26 512 0 2400000>,  <89 662 0 3200000>,     // gpu=240 bus=150
 				<26 512 0 3200000>,  <89 662 0 3200000>,     // gpu=240 bus=200
 				<26 512 0 4915200>,  <89 662 0 3200000>,     // gpu=240 bus=307.2
 				<26 512 0 6144000>,  <89 662 0 3200000>,     // gpu=240 bus=384
@@ -130,7 +131,20 @@
 				qcom,gpu-freq = <240000000>;
 				qcom,bus-freq = <3>;
 				qcom,io-fraction = <100>;
-		
+			};
+			
+			qcom,gpu-pwrlevel@7 {
+				reg = <7>;
+				qcom,gpu-freq = <110000000>;
+				qcom,bus-freq = <1>;
+				qcom,io-fraction = <100>;
+			};
+
+			qcom,gpu-pwrlevel@8 {
+				reg = <8>;
+				qcom,gpu-freq = <27000000>;
+				qcom,bus-freq = <0>;
+				qcom,io-fraction = <0>;
 			};
 		};
 
