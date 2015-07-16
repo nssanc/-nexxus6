@@ -5297,8 +5297,8 @@ int qce_disable_clk(void *handle)
 
 	if (pce_dev->ce_clk != NULL)
 		clk_disable_unprepare(pce_dev->ce_clk);
-	if (pce_dev->ce_core_clk != NULL)
-		clk_disable_unprepare(pce_dev->ce_core_clk);
+	if (pce_dev->ce_core_src_clk != NULL)
+		clk_disable_unprepare(pce_dev->ce_core_src_clk);
 	if (pce_dev->ce_bus_clk != NULL)
 		clk_disable_unprepare(pce_dev->ce_bus_clk);
 
