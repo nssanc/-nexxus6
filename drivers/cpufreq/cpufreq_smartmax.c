@@ -1070,6 +1070,9 @@ static int FUNC_NAME(struct cpufreq_policy *new_policy,
 
 		break;
 	case CPUFREQ_GOV_LIMITS:
+		if (this_smartmax->cur_policy == NULL)
+			break;
+
 		mutex_lock(&this_smartmax->timer_mutex);
 		smartmax_update_min_max(this_smartmax,new_policy);
 
