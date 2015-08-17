@@ -6006,7 +6006,9 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 #endif /* EAPOL_PKT_PRIO */
 
 #ifdef EAPOL_PKT_PRIO
+#ifdef CONFIG_BCMDHD_PCIE
 	dhd_update_flow_prio_map(dhd, DHD_FLOW_PRIO_LLR_MAP);
+#endif /* CONFIG_BCMDHD_PCIE */
 #endif /* EAPOL_PKT_PRIO */
 
 	/* Write updated Event mask */
