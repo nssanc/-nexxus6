@@ -30,6 +30,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_DYNAMIC_INTERACTIVE) += cpufreq_dynamic_interactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_ELECTRODEMAND)   += cpufreq_electrodemand.o
 obj-$(CONFIG_CPU_FREQ_GOV_ELEMENTALX)	   += cpufreq_elementalx.o
 obj-$(CONFIG_CPU_FREQ_GOV_HYPERX)  	   += cpufreq_hyperx.o
+obj-$(CONFIG_CPU_FREQ_GOV_IMPULSE)	   += cpufreq_impulse.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTERACTIVE_PRO) += cpufreq_interactive_pro.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTELLIACTIVE)   += cpufreq_intelliactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTELLIMM)       += cpufreq_intellimm.o
@@ -55,8 +56,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_ZZMOOVE)         += cpufreq_zzmoove.o
 # Custom CPUfreq Governors - END
 
 obj-$(CONFIG_CPU_BOOST)			   += cpu-boost.o
-
-obj-$(CONFIG_GENERIC_CPUFREQ_CPU0)	+= cpufreq-cpu0.o
+obj-$(CONFIG_GENERIC_CPUFREQ_CPU0)	   += cpufreq-cpu0.o
 
 ##################################################################################
 # x86 drivers.
