@@ -144,6 +144,7 @@ static int lmk_vmpressure_notifier(struct notifier_block *nb,
 		return 0;
 
 	if (pressure >= 95) {
+	if (pressure >= VM_PRESSURE_ADAPTIVE_STOP) {
 		other_file = global_page_state(NR_FILE_PAGES) + zcache_pages() -
 			global_page_state(NR_SHMEM) -
 			total_swapcache_pages();
@@ -479,6 +480,8 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		other_file = global_page_state(NR_FILE_PAGES) -
 						global_page_state(NR_SHMEM) + zcache_pages() +
 						(si.freeswap >> 1) -
+		other_file = global_page_state(NR_FILE_PAGES) + zcache_pages() -
+						global_page_state(NR_SHMEM) -
 						total_swapcache_pages();
 		}
 #else
@@ -627,7 +630,7 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 				"   Total reserve is %ldkB\n" \
 				"   Total free pages is %ldkB\n" \
 				"   Total file cache is %ldkB\n" \
-                                "   Total zcache is %ldkB\n" \
+				"   Total zcache is %ldkB\n" \
 				"   Slab Reclaimable is %ldkB\n" \
 				"   Slab UnReclaimable is %ldkB\n" \
 				"   Total Slab is %ldkB\n" \
