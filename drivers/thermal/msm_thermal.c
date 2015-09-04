@@ -135,6 +135,33 @@ struct cpu_info {
 	uint32_t limited_max_freq;
 	uint32_t limited_min_freq;
 	bool freq_thresh_clear;
+
+	unsigned int safe_diff;
+	bool throttling;
+	bool pending_change;
+	const int min_interval_us;
+	u64 limit_cpu_time;
+} info = {
+	.cpuinfo_max_freq = LONG_MAX,
+	.limited_max_freq = LONG_MAX,
+	.safe_diff = 5,
+	.throttling = false,
+	.pending_change = false,
+	/* 1 second */
+	.min_interval_us = 1000000,
+};
+
+enum thermal_freqs {
+	FREQ_HELL		= 960000,
+	FREQ_VERY_HOT		= 1267200,
+	FREQ_HOT		= 1728000,
+	FREQ_WARM		= 2265600,
+};
+
+enum threshold_levels {
+	LEVEL_HELL		= 1 << 4,
+	LEVEL_VERY_HOT		= 1 << 3,
+	LEVEL_HOT		= 1 << 2,
 };
 
 struct threshold_info;
