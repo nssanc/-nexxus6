@@ -3,7 +3,8 @@
 # SDIO Basic feature
 #####################
 
-DHDCFLAGS += -Wall -Wstrict-prototypes -Dlinux -DLINUX -DBCMDRIVER            \
+DHDCFLAGS += -Wall -Wstrict-prototypes -Wno-tautological-compare          \
+    -Dlinux -DLINUX -DBCMDRIVER                                           \
 	-DBCMDONGLEHOST -DUNRELEASEDCHIP -DBCMDMA32 -DBCMFILEIMAGE            \
 	-DDHDTHREAD -DSHOW_EVENTS -DBCMDBG -DWLP2P                            \
 	-DWIFI_ACT_FRAME -DARP_OFFLOAD_SUPPORT                                \
