@@ -1,4 +1,16 @@
-CFLAGS_governor_msm_adreno_tz.o := -Wno-unused-function
+CFLAGS_KERNEL := -fno-graphite \
+          	-fno-graphite-identity \
+          	-fno-loop-flatten \
+          	-fno-tree-loop-linear \
+          	-fno-loop-interchange \
+          	-fno-loop-strip-mine \
+          	-fno-loop-block \
+          	-fno-loop-nest-optimize \
+          	-fno-loop-unroll-and-jam \
+          	-fno-loop-parallelize-all \
+          	-ftree-parallelize-loops=0 \
+          	-fno-openmp \
+		-Wno-unused-function
 
 obj-$(CONFIG_PM_DEVFREQ)	+= devfreq.o
 obj-$(CONFIG_ARCH_MSM_KRAIT)		+= krait-l2pm.o
