@@ -254,6 +254,11 @@ config CPU_FREQ_DEFAULT_GOV_TRIPNDROID
 	help
 	  Select tripndroid cpu governor as default
 
+config CPU_FREQ_DEFAULT_GOV_DESPAIR
+	bool "despair"
+	select CPU_FREQ_GOV_DESPAIR
+	help
+
 config CPU_FREQ_DEFAULT_GOV_WAVE
 	bool "wave"
 	select CPU_FREQ_GOV_WAVE
@@ -441,6 +446,13 @@ config CPU_FREQ_GOV_ADAPTIVE
 
 config CPU_FREQ_GOV_ALUCARD
 	tristate "'alucard' cpufreq governor"
+
+config CPU_FREQ_GOV_DESPAIR
+	tristate "'despair' cpufreq governor"
+	depends on CPU_FREQ
+	
+config CPU_FREQ_GOV_ZZMOOVE
+	tristate "'zzmoove' cpufreq governor"
 	depends on CPU_FREQ
 
 config CPU_FREQ_GOV_ARTERACTIVE
