@@ -97,4 +97,4 @@ x509.genkey
 # Ignore built kernel and packed zip
 #
 zip/anykernel/kernel/zImage
-zip/anykernel/test_kernel.zip
+zip/test_kernel.zip
