@@ -118,7 +118,7 @@ static unsigned int sample_rate_jiffies;
 /*************** End of tunables ***************/
 
 
-static void (*pm_idle_old)(void);
+//static void (*pm_idle_old)(void);
 static atomic_t active_count = ATOMIC_INIT(0);
 
 struct smartass_info_s {
@@ -355,7 +355,9 @@ static void cpufreq_smartass_timer(unsigned long cpu)
 		reset_timer(cpu,this_smartass);
 }
 
-static void cpufreq_idle(void)
+/* This function is unused
+ * 
+ * static void cpufreq_idle(void)
 {
 	struct smartass_info_s *this_smartass = &per_cpu(smartass_info, smp_processor_id());
 	struct cpufreq_policy *policy = this_smartass->cur_policy;
@@ -372,7 +374,7 @@ static void cpufreq_idle(void)
 
 	if (!timer_pending(&this_smartass->timer))
 		reset_timer(smp_processor_id(), this_smartass);
-}
+} */
 
 static int cpufreq_idle_notifier(struct notifier_block *nb,
 	unsigned long val, void *data) {
@@ -775,7 +777,7 @@ static int cpufreq_governor_smartass_h3(struct cpufreq_policy *new_policy,
 	return 0;
 }
 
-static void smartass_suspend(int cpu, int suspend)
+/*static void smartass_suspend(int cpu, int suspend)
 {
 	struct smartass_info_s *this_smartass = &per_cpu(smartass_info, smp_processor_id());
 	struct cpufreq_policy *policy = this_smartass->cur_policy;
@@ -804,8 +806,9 @@ static void smartass_suspend(int cpu, int suspend)
 	}
 
 	reset_timer(smp_processor_id(),this_smartass);
-}
+} */
 
+/* Function Unused
 static void smartass_early_suspend(struct early_suspend *handler) {
 	int i;
 	if (suspended || sleep_ideal_freq==0) // disable behavior for sleep_ideal_freq==0
@@ -813,8 +816,9 @@ static void smartass_early_suspend(struct early_suspend *handler) {
 	suspended = 1;
 	for_each_online_cpu(i)
 		smartass_suspend(i,1);
-}
+}*/
 
+/* Function Unused
 static void smartass_late_resume(struct early_suspend *handler) {
 	int i;
 	if (!suspended) // already not suspended so nothing to do
@@ -822,7 +826,7 @@ static void smartass_late_resume(struct early_suspend *handler) {
 	suspended = 0;
 	for_each_online_cpu(i)
 		smartass_suspend(i,0);
-}
+} */
 
 //static struct early_suspend smartass_power_suspend = {
 	//.suspend = smartass_early_suspend,
