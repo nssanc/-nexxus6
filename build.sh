@@ -6,7 +6,7 @@ export LOCALVERSION="PlaceHolder_Name-Alpha"
 
 
 make shamu_defconfig
-make -j6
+make -j5
 
 if [ ! -f arch/arm/boot/zImage-dtb ]; then
 echo "Build Failed"
