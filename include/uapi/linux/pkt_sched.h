@@ -269,7 +269,8 @@ enum {
        TCA_GRED_STAB,
        TCA_GRED_DPS,
        TCA_GRED_MAX_P,
-	   __TCA_GRED_MAX,
+       TCA_GRED_LIMIT,
+       __TCA_GRED_MAX,
 };
 
 #define TCA_GRED_MAX (__TCA_GRED_MAX - 1)
@@ -338,8 +339,8 @@ struct tc_choke_xstats {
 #define TC_HTB_PROTOVER		3 /* the same as HTB and TC's major */
 
 struct tc_htb_opt {
-	struct tc_ratespec 	rate;
-	struct tc_ratespec 	ceil;
+	struct tc_ratespec	rate;
+	struct tc_ratespec	ceil;
 	__u32	buffer;
 	__u32	cbuffer;
 	__u32	quantum;
@@ -348,8 +349,8 @@ struct tc_htb_opt {
 };
 struct tc_htb_glob {
 	__u32 version;		/* to match HTB/TC */
-    	__u32 rate2quantum;	/* bps->quantum divisor */
-    	__u32 defcls;		/* default class number */
+	__u32 rate2quantum;	/* bps->quantum divisor */
+	__u32 defcls;		/* default class number */
 	__u32 debug;		/* debug flags */
 
 	/* stats */
@@ -418,8 +419,8 @@ struct tc_cbq_lssopt {
 	unsigned char	flags;
 #define TCF_CBQ_LSS_BOUNDED	1
 #define TCF_CBQ_LSS_ISOLATED	2
-	unsigned char  	ewma_log;
-	unsigned char  	level;
+	unsigned char	ewma_log;
+	unsigned char	level;
 #define TCF_CBQ_LSS_FLAGS	1
 #define TCF_CBQ_LSS_EWMA	2
 #define TCF_CBQ_LSS_MAXIDLE	4
@@ -680,6 +681,7 @@ enum {
 	TCA_CODEL_LIMIT,
 	TCA_CODEL_INTERVAL,
 	TCA_CODEL_ECN,
+	TCA_CODEL_CE_THRESHOLD,
 	__TCA_CODEL_MAX
 };
 
@@ -696,6 +698,7 @@ struct tc_codel_xstats {
 	__u32	drop_overlimit; /* number of time max qdisc packet limit was hit */
 	__u32	ecn_mark;  /* number of packets we ECN marked instead of dropped */
 	__u32	dropping;  /* are we in dropping state ? */
+	__u32	ce_mark;   /* number of CE marked packets because of ce_threshold */
 };
 
 /* FQ_CODEL */
@@ -708,6 +711,7 @@ enum {
 	TCA_FQ_CODEL_ECN,
 	TCA_FQ_CODEL_FLOWS,
 	TCA_FQ_CODEL_QUANTUM,
+	TCA_FQ_CODEL_CE_THRESHOLD,
 	__TCA_FQ_CODEL_MAX
 };
 
@@ -731,6 +735,7 @@ struct tc_fq_codel_qd_stats {
 				 */
 	__u32	new_flows_len;	/* count of flows in new list */
 	__u32	old_flows_len;	/* count of flows in old list */
+	__u32	ce_mark;	/* packets above ce_threshold */
 };
 
 struct tc_fq_codel_cl_stats {
@@ -856,32 +861,43 @@ enum {
 	TCA_CAKE_FLOW_MODE,
 	TCA_CAKE_OVERHEAD,
 	TCA_CAKE_ACTIVE_FLOWS,
+	TCA_CAKE_RTT,
+	TCA_CAKE_TARGET,
 
 	__TCA_CAKE_MAX
 };
 #define TCA_CAKE_MAX	(__TCA_CAKE_MAX - 1)
 
+struct tc_cake_traffic_stats {
+	__u32 packets;
+	__u32 link_ms;
+	__u64 bytes;
+};
+
+#define TC_CAKE_MAX_TINS (8)
 struct tc_cake_xstats {
-	__u16 type;  /* constant magic 0xCAFE */
-	__u16 class_cnt;
-	struct {
-		__u32 rate;
-		__u32 target_us;
-		__u32 packets;
-		__u32 interval_us;
-		__u64 bytes;
-		__u32 dropped;
-		__u32 ecn_marked;
-		__u32 way_indirect_hits;
-		__u32 way_misses;
-		__u32 way_collisions;
-		__u32 backlog_bytes;
-		__u32 peak_delay; /* delay to fat flows */
-		__u32 avge_delay;
-		__u32 base_delay; /* delay to sparse flows */
-		__u16 sparse_flows;
-		__u16 bulk_flows;
-	} cls[8];
+	__u16 version;  /* == 2, increments when struct extended */
+	__u8  max_tins; /* == TC_CAKE_MAX_TINS */
+	__u8  tin_cnt;  /* <= TC_CAKE_MAX_TINS */
+
+	__u32 threshold_rate   [TC_CAKE_MAX_TINS];
+	__u32 target_us        [TC_CAKE_MAX_TINS];
+	struct tc_cake_traffic_stats sent      [TC_CAKE_MAX_TINS];
+	struct tc_cake_traffic_stats dropped   [TC_CAKE_MAX_TINS];
+	struct tc_cake_traffic_stats ecn_marked[TC_CAKE_MAX_TINS];
+	struct tc_cake_traffic_stats backlog   [TC_CAKE_MAX_TINS];
+	__u32 interval_us      [TC_CAKE_MAX_TINS];
+	__u32 way_indirect_hits[TC_CAKE_MAX_TINS];
+	__u32 way_misses       [TC_CAKE_MAX_TINS];
+	__u32 way_collisions   [TC_CAKE_MAX_TINS];
+	__u32 peak_delay_us    [TC_CAKE_MAX_TINS]; /* ~= delay to bulk flows */
+	__u32 avge_delay_us    [TC_CAKE_MAX_TINS];
+	__u32 base_delay_us    [TC_CAKE_MAX_TINS]; /* ~= delay to sparse flows */
+	__u16 sparse_flows     [TC_CAKE_MAX_TINS];
+	__u16 bulk_flows       [TC_CAKE_MAX_TINS];
+	__u32 last_skblen      [TC_CAKE_MAX_TINS]; /* skb_headlen */
+	__u32 max_skblen       [TC_CAKE_MAX_TINS];
+	__u32 capacity_estimate;  /* version 2 */
 };
 
 /* FQ_PIE */
@@ -929,6 +945,5 @@ struct tc_fq_pie_qd_stats {
 	__u32	throttled_flows;
 	__u32	pad;
 };
-
 #endif
 
