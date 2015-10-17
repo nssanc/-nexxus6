@@ -98,3 +98,4 @@ x509.genkey
 #
 zip/anykernel/kernel/zImage
 zip/test_kernel.zip
+vortex_local.sh

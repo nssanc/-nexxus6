@@ -1,12 +1,27 @@
 #!/bin/bash
+
+<<IMPORTANT
+
+This file has been modified in order to allow for sharing between multiple people.
+It now requires a local file called "vortex_local.sh" that should containt local variables
+at a miniumum it needs the following 3 lines. This will allow environmental configuring on each 
+machine. This "vortex_local.sh" file will be untracked (.gitignore). 
+
+#!/bin/bash
+export CROSS_COMPILE=/media/joe/linux_storage/toolchains/arm-eabi-4.8/bin/arm-eabi-
+export CC_JOBS="-j5"
+
+
+IMPORTANT
+
+
+source vortex_local.sh
 export ARCH=arm
 export SUBARCH=arm
-export CROSS_COMPILE=/media/joe/linux_storage/toolchains/arm-eabi-4.8/bin/arm-eabi-
-export LOCALVERSION="PlaceHolder_Name-Alpha"
 
 
-make shamu_defconfig
-make -j5
+make vortex_defconfig
+make $CC_JOBS
 
 if [ ! -f arch/arm/boot/zImage-dtb ]; then
 echo "Build Failed"
