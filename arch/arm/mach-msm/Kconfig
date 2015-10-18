@@ -1469,12 +1469,6 @@ config HAS_MACH_MEMUTILS
 	help
 	Faster memcpy performance for Krait
 
-config MSM_SLEEPER
-	bool "CPU hotplug driver"
-	default y
-	help
-	  CPU hotplug driver
-
 config MSM_HOTPLUG
 	bool "MSM hotplug driver"
 	depends on HOTPLUG_CPU
