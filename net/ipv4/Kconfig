@@ -654,7 +654,7 @@ config DEFAULT_TCP_CONG
 	default "veno" if DEFAULT_VENO
 	default "reno" if DEFAULT_RENO
 	default "cdg" if DEFAULT_CDG
-        default "sociopath" if DEFAULT_SOCIOPATH
+    default "sociopath" if DEFAULT_SOCIOPATH
 	default "cubic"
 
 config TCP_MD5SIG
