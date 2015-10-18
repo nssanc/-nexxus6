@@ -269,6 +269,8 @@ struct cpufreq_driver {
 int cpufreq_register_driver(struct cpufreq_driver *driver_data);
 int cpufreq_unregister_driver(struct cpufreq_driver *driver_data);
 
+void unlock_policy_rwsem_write(int cpu);
+
 const char *cpufreq_get_current_driver(void);
 
 void cpufreq_notify_utilization(struct cpufreq_policy *policy,
@@ -410,6 +412,8 @@ extern int __cpufreq_driver_getavg(struct cpufreq_policy *policy,
 				   unsigned int cpu);
 int cpufreq_register_governor(struct cpufreq_governor *governor);
 void cpufreq_unregister_governor(struct cpufreq_governor *governor);
+
+int lock_policy_rwsem_write(int cpu);
 
 /* CPUFREQ DEFAULT GOVERNOR */
 /*
