@@ -4,7 +4,6 @@
 #define DEFAULT_SUSPEND_FREQUENCY	960000 
 #define DEFAULT_RESUME_FREQUENCY	2726400
 #define DEFAULT_MIN_FREQUENCY		300000
-#endif
 
 static struct cpu_limit {
 	unsigned int limiter_enabled;
