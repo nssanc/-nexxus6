@@ -1,13 +1,10 @@
 #define MSM_LIMIT			"msm_limiter"
 #define LIMITER_ENABLED			1
 #define DEFAULT_SUSPEND_DEFER_TIME	10 
-#define DEFAULT_SUSPEND_FREQUENCY	1728000
-#if defined(CONFIG_ARCH_APQ8084)
-#define DEFAULT_RESUME_FREQUENCY	2649600
-#else
-#define DEFAULT_RESUME_FREQUENCY	2265600
-#endif
+#define DEFAULT_SUSPEND_FREQUENCY	960000 
+#define DEFAULT_RESUME_FREQUENCY	2726400
 #define DEFAULT_MIN_FREQUENCY		300000
+#endif
 
 static struct cpu_limit {
 	unsigned int limiter_enabled;
