@@ -570,79 +570,6 @@ static bool set_nr_and_not_polling(struct task_struct *p)
 }
 #endif
 
-/*
- * cmpxchg based fetch_or, macro so it works for different integer types
- */
-#define fetch_or(ptr, val)						\
-({	typeof(*(ptr)) __old, __val = *(ptr);				\
- 	for (;;) {							\
- 		__old = cmpxchg((ptr), __val, __val | (val));		\
- 		if (__old == __val)					\
- 			break;						\
- 		__val = __old;						\
- 	}								\
- 	__old;								\
-})
-
-#if defined(CONFIG_SMP) && defined(TIF_POLLING_NRFLAG)
-/*
- * Atomically set TIF_NEED_RESCHED and test for TIF_POLLING_NRFLAG,
- * this avoids any races wrt polling state changes and thereby avoids
- * spurious IPIs.
- */
-static bool set_nr_and_not_polling(struct task_struct *p)
-{
-	struct thread_info *ti = task_thread_info(p);
-	return !(fetch_or(&ti->flags, _TIF_NEED_RESCHED) & _TIF_POLLING_NRFLAG);
-}
-
-/*
- * Atomically set TIF_NEED_RESCHED if TIF_POLLING_NRFLAG is set.
- *
- * If this returns true, then the idle task promises to call
- * sched_ttwu_pending() and reschedule soon.
- */
-static bool set_nr_if_polling(struct task_struct *p)
-{
-	struct thread_info *ti = task_thread_info(p);
-	typeof(ti->flags) old, val = ACCESS_ONCE(ti->flags);
-
-	for (;;) {
-		if (!(val & _TIF_POLLING_NRFLAG))
-			return false;
-		if (val & _TIF_NEED_RESCHED)
-			return true;
-		old = cmpxchg(&ti->flags, val, val | _TIF_NEED_RESCHED);
-		if (old == val)
-			break;
-		val = old;
-	}
-	return true;
-}
-
-#else
-static bool set_nr_and_not_polling(struct task_struct *p)
-{
-	set_tsk_need_resched(p);
-	return true;
-}
-
-#ifdef CONFIG_SMP
-static bool set_nr_if_polling(struct task_struct *p)
-{
-	return false;
-}
-#endif
-#endif
-
-/*
- * resched_curr - mark rq's current task 'to be rescheduled now'.
- *
- * On UP this means the setting of the need_resched flag, on SMP it
- * might also involve a cross-CPU call to trigger the scheduler on
- * the target CPU.
- */
-#ifdef CONFIG_SMP
 void resched_task(struct task_struct *p)
 {
 	int cpu;
@@ -1626,17 +1553,13 @@ static int ttwu_remote(struct task_struct *p, int wake_flags)
 }
 
 #ifdef CONFIG_SMP
-void sched_ttwu_pending(void)
+static void sched_ttwu_pending(void)
 {
 	struct rq *rq = this_rq();
 	struct llist_node *llist = llist_del_all(&rq->wake_list);
 	struct task_struct *p;
-	unsigned long flags;
 
-	if (!llist)
-		return;
-
-	raw_spin_lock_irqsave(&rq->lock, flags);
+	raw_spin_lock(&rq->lock);
 
 	while (llist) {
 		p = llist_entry(llist, struct task_struct, wake_entry);
@@ -1644,7 +1567,7 @@ void sched_ttwu_pending(void)
 		ttwu_do_activate(rq, p, 0);
 	}
 
-	raw_spin_unlock_irqrestore(&rq->lock, flags);
+	raw_spin_unlock(&rq->lock);
 }
 
 void scheduler_ipi(void)
@@ -1683,12 +1606,8 @@ void scheduler_ipi(void)
 
 static void ttwu_queue_remote(struct task_struct *p, int cpu)
 {
-	struct rq *rq = cpu_rq(cpu);
-
-	if (llist_add(&p->wake_entry, &cpu_rq(cpu)->wake_list)) {
-		if (!set_nr_if_polling(rq->idle))
-			smp_send_reschedule(cpu);
-	}
+	if (llist_add(&p->wake_entry, &cpu_rq(cpu)->wake_list))
+		smp_send_reschedule(cpu);
 }
 
 bool cpus_share_cache(int this_cpu, int that_cpu)
@@ -3056,20 +2975,6 @@ unsigned long long task_sched_runtime(struct task_struct *p)
 	unsigned long flags;
 	struct rq *rq;
 	u64 ns = 0;
-
-#if defined(CONFIG_64BIT) && defined(CONFIG_SMP)
-	/*
-	 * 64-bit doesn't need locks to atomically read a 64bit value.
-	 * So we have a optimization chance when the task's delta_exec is 0.
-	 * Reading ->on_cpu is racy, but this is ok.
-	 *
-	 * If we race with it leaving cpu, we'll take a lock. So we're correct.
-	 * If we race with it entering cpu, unaccounted time is 0. This is
-	 * indistinguishable from the read occurring a few cycles earlier.
-	 */
-	if (!p->on_cpu)
-		return p->se.sum_exec_runtime;
-#endif
 
 	rq = task_rq_lock(p, &flags);
 	ns = p->se.sum_exec_runtime + do_task_delta_exec(p, rq);
@@ -4518,6 +4423,7 @@ long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
 	p = find_process_by_pid(pid);
 	if (!p) {
 		rcu_read_unlock();
+		put_online_cpus();
 		return -ESRCH;
 	}
 
