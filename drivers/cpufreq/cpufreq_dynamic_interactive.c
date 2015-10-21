@@ -81,9 +81,9 @@ static unsigned int low_power_threshold;
 static unsigned int hi_perf_threshold;
 static unsigned int low_power_rate;
 static enum tune_values {
-	LOW_POWER_TUNE = 1,
+	LOW_POWER_TUNE,
 	DEFAULT_TUNE,
-	HIGH_PERF_TUNE
+	HIGH_PERF_TUNE =1,
 } cur_tune_value;
 
 #define MIN_GO_HISPEED_LOAD 70
