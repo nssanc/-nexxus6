@@ -35,18 +35,11 @@
  */
 
 /* Tuning Interface */
-#ifdef CONFIG_MACH_LGE
 #define FREQ_RESPONSIVENESS		2265600
-#else
-#define FREQ_RESPONSIVENESS		1134000
-#endif
-
 #define CPUS_DOWN_RATE			2
 #define CPUS_UP_RATE			1
-
 #define DEC_CPU_LOAD			70
 #define DEC_CPU_LOAD_AT_MIN_FREQ	60
-
 #define INC_CPU_LOAD			70
 #define INC_CPU_LOAD_AT_MIN_FREQ	60
 
