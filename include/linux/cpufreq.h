@@ -467,15 +467,9 @@ extern struct cpufreq_governor cpufreq_gov_interactive;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_IMPULSE)
 extern struct cpufreq_governor cpufreq_gov_impulse;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_impulse)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LAGFREE)
-extern struct cpufreq_governor cpufreq_gov_lagfree;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lagfree)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LULZACTIVE)
 extern struct cpufreq_governor cpufreq_gov_lulzactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lulzactive)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_MYTH_PLUG)
-extern struct cpufreq_governor cpufreq_gov_myth_plug;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_myth_plug)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_NIGHTMARE)
 extern struct cpufreq_governor cpufreq_gov_nightmare;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_nightmare)
@@ -500,9 +494,6 @@ extern struct cpufreq_governor cpufreq_gov_smartassH3;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTMAX)
 extern struct cpufreq_governor cpufreq_gov_smartmax;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_smartmax)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS)
-extern struct cpufreq_governor cpufreq_gov_smartmax_eps;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_smartmax_eps)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_TRIPNDROID)
 extern struct cpufreq_governor cpufreq_gov_tripndroid;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_tripndroid)
