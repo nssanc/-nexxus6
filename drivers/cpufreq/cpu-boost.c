@@ -60,16 +60,16 @@ module_param(sync_threshold, uint, 0644);
 
 static bool input_boost_enabled;
 
-static unsigned int input_boost_ms = 40;
+static unsigned int input_boost_ms = 60;
 module_param(input_boost_ms, uint, 0644);
 
-static unsigned int migration_load_threshold = 30;
+static unsigned int migration_load_threshold = 40;
 module_param(migration_load_threshold, uint, 0644);
 
-static bool load_based_syncs = 1;
+static bool load_based_syncs = 0;
 module_param(load_based_syncs, bool, 0644);
 
-static bool hotplug_boost = 1;
+static bool hotplug_boost = 0;
 module_param(hotplug_boost, bool, 0644);
 
 bool wakeup_boost;
@@ -78,7 +78,7 @@ module_param(wakeup_boost, bool, 0644);
 static struct delayed_work input_boost_rem;
 static u64 last_input_time;
 
-static unsigned int min_input_interval = 150;
+static unsigned int min_input_interval = 125;
 module_param(min_input_interval, uint, 0644);
 
 
