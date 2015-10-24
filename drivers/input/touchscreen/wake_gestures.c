@@ -753,7 +753,7 @@ static ssize_t sweep_timeout_dump(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	sscanf(buf, "%d ",&sweep_timeout);
-	if (sweep_timeout < 1 || sweep_timeout > 2000)
+	if (sweep_timeout < 1 || sweep_timeout > 200)
 		sweep_timeout = 30;
 
 	return count;
