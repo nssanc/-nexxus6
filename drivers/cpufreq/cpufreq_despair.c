@@ -320,7 +320,7 @@ show_store_one(cs, up_threshold);
 show_store_one(cs, down_threshold);
 show_store_one(cs, ignore_nice_load);
 show_store_one(cs, freq_step);
-declare_show_sampling_rate_min(cs);
+show_store_one(cs, sampling_rate_min);
 show_store_one(cs, twostep_threshold);
 
 gov_sys_pol_attr_rw(sampling_rate);
@@ -329,7 +329,7 @@ gov_sys_pol_attr_rw(up_threshold);
 gov_sys_pol_attr_rw(down_threshold);
 gov_sys_pol_attr_rw(ignore_nice_load);
 gov_sys_pol_attr_rw(freq_step);
-gov_sys_pol_attr_ro(sampling_rate_min);
+gov_sys_pol_attr_rw(sampling_rate_min);
 gov_sys_pol_attr_rw(twostep_threshold);
 
 static struct attribute *dbs_attributes_gov_sys[] = {
