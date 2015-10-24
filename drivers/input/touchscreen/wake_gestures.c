@@ -94,6 +94,9 @@ int vib_strength = VIB_STRENGTH;
 static int dt2w_time = DT2W_TIME;
 static int dt2w_feather_x = DT2W_FEATHER;
 static int dt2w_feather_y = DT2W_FEATHER;
+static int sweep_timeout = SWEEP_TIMEOUT;
+
+
 
 static struct input_dev * wake_dev;
 static DEFINE_MUTEX(pwrkeyworklock);
@@ -279,7 +282,7 @@ static void detect_sweep2wake_v(int x, int y, bool st)
 				barriery[1] = true;
 				if (y < prevy) {
 					if (y < (nexty - SWEEP_Y_NEXT)) {
-						if (exec_county && (jiffies - firsty_time < SWEEP_TIMEOUT)) {
+						if (exec_county && (jiffies - firsty_time < sweep_timeout)) {
 							pr_debug(LOGTAG"sweep up\n");
 #if (WAKE_GESTURES_ENABLED)
 							if (gestures_switch) {
@@ -310,7 +313,7 @@ static void detect_sweep2wake_v(int x, int y, bool st)
 				barriery[1] = true;
 				if (y > prevy) {
 					if (y > (nexty + SWEEP_Y_NEXT)) {
-						if (exec_county && (jiffies - firsty_time < SWEEP_TIMEOUT)) {
+						if (exec_county && (jiffies - firsty_time < sweep_timeout)) {
 							pr_debug(LOGTAG"sweep down\n");
 #if (WAKE_GESTURES_ENABLED)
 							if (gestures_switch) {
@@ -367,7 +370,7 @@ static void detect_sweep2wake_h(int x, int y, bool st, bool scr_suspended)
 				barrierx[1] = true;
 				if (x > prevx) {
 					if (x > (SWEEP_X_MAX - SWEEP_X_FINAL)) {
-						if (exec_countx && (jiffies - firstx_time < SWEEP_TIMEOUT)) {
+						if (exec_countx && (jiffies - firstx_time < sweep_timeout)) {
 							pr_debug(LOGTAG"sweep right\n");
 #if (WAKE_GESTURES_ENABLED)
 							if (gestures_switch && scr_suspended) {
@@ -738,6 +741,27 @@ static ssize_t dt2w_feather_y_dump(struct device *dev,
 static DEVICE_ATTR(dt2w_feather_y, (S_IWUSR|S_IRUGO),
 	dt2w_feather_y_show, dt2w_feather_y_dump);
 
+static ssize_t sweep_timeout_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	size_t count = 0;
+	count += sprintf(buf, "%d\n", sweep_timeout);
+	return count;
+}
+
+static ssize_t sweep_timeout_dump(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	sscanf(buf, "%d ",&sweep_timeout);
+	if (sweep_timeout < 1 || sweep_timeout > 2000)
+		sweep_timeout = 30;
+
+	return count;
+}
+
+static DEVICE_ATTR(sweep_timeout, (S_IWUSR|S_IRUGO),
+	sweep_timeout_show, sweep_timeout_dump);
+
 /*
  * INIT / EXIT stuff below here
  */
@@ -755,6 +779,7 @@ static struct attribute *android_touch_attrs[] =
     &dev_attr_dt2w_time.attr,
     &dev_attr_dt2w_feather_x.attr,
 	&dev_attr_dt2w_feather_y.attr,
+	&dev_attr_sweep_timeout.attr,
 
 #if (WAKE_GESTURES_ENABLED)
     &dev_attr_wake_gestures.attr,
