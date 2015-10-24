@@ -132,20 +132,6 @@
 				qcom,bus-freq = <3>;
 				qcom,io-fraction = <100>;
 			};
-			
-			qcom,gpu-pwrlevel@7 {
-				reg = <7>;
-				qcom,gpu-freq = <110000000>;
-				qcom,bus-freq = <1>;
-				qcom,io-fraction = <100>;
-			};
-
-			qcom,gpu-pwrlevel@8 {
-				reg = <8>;
-				qcom,gpu-freq = <27000000>;
-				qcom,bus-freq = <0>;
-				qcom,io-fraction = <0>;
-			};
 		};
 
 	};
