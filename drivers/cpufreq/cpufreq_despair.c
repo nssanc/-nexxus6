@@ -23,7 +23,6 @@
 #define DEF_SAMPLING_DOWN_FACTOR		(1)
 #define MAX_SAMPLING_DOWN_FACTOR		(10)
 #define MICRO_FREQUENCY_MIN_SAMPLE_RATE	(20000)
-#define DEFAULT_MIN_LOAD			(15)
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 
@@ -76,8 +75,8 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		if (policy->cur == policy->max)
 			return;
 
-		if (load < cs_tuners->up_threshold && dbs_info->twostep_counter++ < 2) {
-			dbs_info->twostep_time = now;
+		if (load < cs_tuners->up_threshold && cs_tuners->twostep_counter++ < 2) {
+			cs_tuners->twostep_time = now;
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy->max >> 1);
 		} else {
 			if (load >= cs_tuners->up_threshold)
@@ -119,11 +118,6 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		 */
 		if (policy->cur == policy->min)
 			return;
-
-		if (load < DEFAULT_MIN_LOAD) {
-			dbs_info->requested_freq = policy->min;
-			goto scale_down;
-		}
 
 		freq_target = get_freq_target(cs_tuners, policy->max);
 		if (dbs_info->requested_freq > freq_target)
@@ -302,24 +296,6 @@ static ssize_t store_freq_step(struct dbs_data *dbs_data, const char *buf,
 	return count;
 }
 
-static ssize_t store_min_load(struct dbs_data *dbs_data, const char *buf,
-                size_t count)
-{
-        struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
-        unsigned int input;
-        int ret;
-        ret = sscanf(buf, "%u", &input);
-
-        if (ret != 1)
-                return -EINVAL;
-
-        if (input < 0)
-                input = 0;
-
-        cs_tuners->min_load = input;
-        return count;
-}
-
 static ssize_t store_twostep_threshold(struct dbs_data *dbs_data, const char *buf,
                 size_t count)
 {
@@ -345,7 +321,6 @@ show_store_one(cs, down_threshold);
 show_store_one(cs, ignore_nice_load);
 show_store_one(cs, freq_step);
 declare_show_sampling_rate_min(cs);
-show_store_one(cs, min_load);
 show_store_one(cs, twostep_threshold);
 
 gov_sys_pol_attr_rw(sampling_rate);
@@ -355,7 +330,6 @@ gov_sys_pol_attr_rw(down_threshold);
 gov_sys_pol_attr_rw(ignore_nice_load);
 gov_sys_pol_attr_rw(freq_step);
 gov_sys_pol_attr_ro(sampling_rate_min);
-gov_sys_pol_attr_rw(min_load);
 gov_sys_pol_attr_rw(twostep_threshold);
 
 static struct attribute *dbs_attributes_gov_sys[] = {
@@ -366,7 +340,6 @@ static struct attribute *dbs_attributes_gov_sys[] = {
 	&down_threshold_gov_sys.attr,
 	&ignore_nice_load_gov_sys.attr,
 	&freq_step_gov_sys.attr,
-	&min_load_gov_sys.attr,
 	&twostep_threshold_gov_sys.attr,
 	NULL
 };
@@ -384,7 +357,6 @@ static struct attribute *dbs_attributes_gov_pol[] = {
 	&down_threshold_gov_pol.attr,
 	&ignore_nice_load_gov_pol.attr,
 	&freq_step_gov_pol.attr,
-	&min_load_gov_pol.attr,
 	&twostep_threshold_gov_pol.attr,
 	NULL
 };
@@ -412,7 +384,6 @@ static int cs_init(struct dbs_data *dbs_data)
 	tuners->ignore_nice_load = 0;
 	tuners->freq_step = DEF_FREQUENCY_STEP;
 	tuners->twostep_counter = 0;
-	tuners->min_load=DEFAULT_MIN_LOAD;	
 	tuners->twostep_threshold=DEF_FREQUENCY_TWOSTEP_THRESHOLD;	
 
 	dbs_data->tuners = tuners;
