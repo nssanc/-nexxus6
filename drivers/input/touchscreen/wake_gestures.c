@@ -91,6 +91,8 @@ static unsigned long long tap_time_pre = 0;
 static int touch_nr = 0, x_pre = 0, y_pre = 0;
 static bool touch_cnt = true;
 int vib_strength = VIB_STRENGTH;
+static int dt2w_time = DT2W_TIME;
+static int dt2w_feather = DT2W_FEATHER;
 
 static struct input_dev * wake_dev;
 static DEFINE_MUTEX(pwrkeyworklock);
@@ -146,7 +148,6 @@ static void wake_pwrtrigger(void) {
 	
 	if (pwrtrigger_time[0] - pwrtrigger_time[1] < TRIGGER_TIMEOUT)
 		return;
-
 	set_vibrate(vib_strength);
 	schedule_work(&wake_presspwr_work);
         return;
@@ -200,9 +201,9 @@ static void detect_doubletap2wake(int x, int y, bool st)
 		if (touch_nr == 0) {
 			new_touch(x, y);
 		} else if (touch_nr == 1) {
-			if ((calc_feather(x, x_pre) < DT2W_FEATHER) &&
-			    (calc_feather(y, y_pre) < DT2W_FEATHER) &&
-			    ((jiffies-tap_time_pre) < DT2W_TIME))
+			if ((calc_feather(x, x_pre) < dt2w_feather) &&
+			    (calc_feather(y, y_pre) < dt2w_feather) &&
+			    ((jiffies-tap_time_pre) < dt2w_time))
 				touch_nr++;
 			else {
 				doubletap2wake_reset();
@@ -578,6 +579,7 @@ static ssize_t sweep2wake_dump(struct device *dev,
 static DEVICE_ATTR(sweep2wake, (S_IWUSR|S_IRUGO),
 	sweep2wake_show, sweep2wake_dump);
 
+
 static ssize_t sweep2sleep_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -628,8 +630,9 @@ static ssize_t doubletap2wake_dump(struct device *dev,
 
 static DEVICE_ATTR(doubletap2wake, (S_IWUSR|S_IRUGO),
 	doubletap2wake_show, doubletap2wake_dump);
-	
+
 #if (WAKE_GESTURES_ENABLED)
+
 static ssize_t wake_gestures_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -671,6 +674,48 @@ static ssize_t vib_strength_dump(struct device *dev,
 static DEVICE_ATTR(vib_strength, (S_IWUSR|S_IRUGO),
 	vib_strength_show, vib_strength_dump);
 
+static ssize_t dt2w_time_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	size_t count = 0;
+	count += sprintf(buf, "%d\n", dt2w_time);
+	return count;
+}
+
+static ssize_t dt2w_time_dump(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	sscanf(buf, "%d ",&dt2w_time);
+	if (dt2w_time < 25 || dt2w_time > 100)
+		dt2w_time = 50;
+
+	return count;
+}
+
+static DEVICE_ATTR(dt2w_time, (S_IWUSR|S_IRUGO),
+	dt2w_time_show, dt2w_time_dump);
+
+static ssize_t dt2w_feather_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	size_t count = 0;
+	count += sprintf(buf, "%d\n", dt2w_feather);
+	return count;
+}
+
+static ssize_t dt2w_feather_dump(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	sscanf(buf, "%d ",&dt2w_feather);
+	if (dt2w_feather < 100 || dt2w_feather > 200)
+		dt2w_feather = 150;
+
+	return count;
+}
+
+static DEVICE_ATTR(dt2w_feather, (S_IWUSR|S_IRUGO),
+	dt2w_feather_show, dt2w_feather_dump);
+
 
 /*
  * INIT / EXIT stuff below here
@@ -678,6 +723,29 @@ static DEVICE_ATTR(vib_strength, (S_IWUSR|S_IRUGO),
 
 struct kobject *android_touch_kobj;
 EXPORT_SYMBOL_GPL(android_touch_kobj);
+
+
+static struct attribute *android_touch_attrs[] =
+	{
+		&dev_attr_sweep2wake.attr,
+    &dev_attr_sweep2sleep.attr,
+    &dev_attr_doubletap2wake.attr,
+    &dev_attr_vib_strength.attr,
+    &dev_attr_dt2w_time.attr,
+    &dev_attr_dt2w_feather.attr,
+
+#if (WAKE_GESTURES_ENABLED)
+    &dev_attr_wake_gestures.attr,
+#endif
+
+		NULL,
+	};
+
+static struct attribute_group android_touch_attr_group =
+	{
+		.attrs = android_touch_attrs,
+	};
+
 
 static int __init wake_gestures_init(void)
 {
@@ -727,26 +795,14 @@ static int __init wake_gestures_init(void)
 	if (android_touch_kobj == NULL) {
 		pr_warn("%s: android_touch_kobj create_and_add failed\n", __func__);
 	}
-	rc = sysfs_create_file(android_touch_kobj, &dev_attr_sweep2wake.attr);
-	if (rc) {
-		pr_warn("%s: sysfs_create_file failed for sweep2wake\n", __func__);
-	}
-	rc = sysfs_create_file(android_touch_kobj, &dev_attr_sweep2sleep.attr);
-	if (rc) {
-		pr_warn("%s: sysfs_create_file failed for sweep2sleep\n", __func__);
-	}
-		rc = sysfs_create_file(android_touch_kobj, &dev_attr_doubletap2wake.attr);
-	if (rc) {
-		pr_warn("%s: sysfs_create_file failed for doubletap2wake\n", __func__);
-	}
-	rc = sysfs_create_file(android_touch_kobj, &dev_attr_vib_strength.attr);
-	if (rc) {
-		pr_warn("%s: sysfs_create_file failed for vib_strength\n", __func__);
-	}
-#if (WAKE_GESTURES_ENABLED)
-	rc = sysfs_create_file(android_touch_kobj, &dev_attr_wake_gestures.attr);
-	if (rc) {
-		pr_warn("%s: sysfs_create_file failed for wake_gestures\n", __func__);
+
+    rc= sysfs_create_group(android_touch_kobj,
+			&android_touch_attr_group);
+
+    if (rc) {
+		pr_err("%s android_touch_kobj create failed!\n",
+			__func__);
+		goto err_dev;
 	}
 
 	return 0;
@@ -754,9 +810,12 @@ static int __init wake_gestures_init(void)
 err_gesture_dev:
 	input_free_device(gesture_dev);
 err_alloc_dev:
-#endif
 
-	return 0;
+err_dev:
+	if (android_touch_kobj != NULL)
+		kobject_put(android_touch_kobj);
+	return rc;
+
 }
 
 static void __exit wake_gestures_exit(void)
