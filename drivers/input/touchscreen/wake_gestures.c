@@ -92,7 +92,8 @@ static int touch_nr = 0, x_pre = 0, y_pre = 0;
 static bool touch_cnt = true;
 int vib_strength = VIB_STRENGTH;
 static int dt2w_time = DT2W_TIME;
-static int dt2w_feather = DT2W_FEATHER;
+static int dt2w_feather_x = DT2W_FEATHER;
+static int dt2w_feather_y = DT2W_FEATHER;
 
 static struct input_dev * wake_dev;
 static DEFINE_MUTEX(pwrkeyworklock);
@@ -201,8 +202,8 @@ static void detect_doubletap2wake(int x, int y, bool st)
 		if (touch_nr == 0) {
 			new_touch(x, y);
 		} else if (touch_nr == 1) {
-			if ((calc_feather(x, x_pre) < dt2w_feather) &&
-			    (calc_feather(y, y_pre) < dt2w_feather) &&
+			if ((calc_feather(x, x_pre) < dt2w_feather_x) &&
+			    (calc_feather(y, y_pre) < dt2w_feather_y) &&
 			    ((jiffies-tap_time_pre) < dt2w_time))
 				touch_nr++;
 			else {
@@ -695,27 +696,47 @@ static ssize_t dt2w_time_dump(struct device *dev,
 static DEVICE_ATTR(dt2w_time, (S_IWUSR|S_IRUGO),
 	dt2w_time_show, dt2w_time_dump);
 
-static ssize_t dt2w_feather_show(struct device *dev,
+static ssize_t dt2w_feather_x_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
 	size_t count = 0;
-	count += sprintf(buf, "%d\n", dt2w_feather);
+	count += sprintf(buf, "%d\n", dt2w_feather_x);
 	return count;
 }
 
-static ssize_t dt2w_feather_dump(struct device *dev,
+static ssize_t dt2w_feather_x_dump(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {
-	sscanf(buf, "%d ",&dt2w_feather);
-	if (dt2w_feather < 100 || dt2w_feather > 200)
-		dt2w_feather = 150;
+	sscanf(buf, "%d ",&dt2w_feather_x);
+	if (dt2w_feather_x < 1 || dt2w_feather_x > 500)
+		dt2w_feather_x = 150;
 
 	return count;
 }
 
-static DEVICE_ATTR(dt2w_feather, (S_IWUSR|S_IRUGO),
-	dt2w_feather_show, dt2w_feather_dump);
+static DEVICE_ATTR(dt2w_feather_x, (S_IWUSR|S_IRUGO),
+	dt2w_feather_x_show, dt2w_feather_x_dump);
 
+static ssize_t dt2w_feather_y_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	size_t count = 0;
+	count += sprintf(buf, "%d\n", dt2w_feather_y);
+	return count;
+}
+
+static ssize_t dt2w_feather_y_dump(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	sscanf(buf, "%d ",&dt2w_feather_y);
+	if (dt2w_feather_y < 1 || dt2w_feather_y > 500)
+		dt2w_feather_y = 150;
+
+	return count;
+}
+
+static DEVICE_ATTR(dt2w_feather_y, (S_IWUSR|S_IRUGO),
+	dt2w_feather_y_show, dt2w_feather_y_dump);
 
 /*
  * INIT / EXIT stuff below here
@@ -727,12 +748,13 @@ EXPORT_SYMBOL_GPL(android_touch_kobj);
 
 static struct attribute *android_touch_attrs[] =
 	{
-		&dev_attr_sweep2wake.attr,
+	&dev_attr_sweep2wake.attr,
     &dev_attr_sweep2sleep.attr,
     &dev_attr_doubletap2wake.attr,
     &dev_attr_vib_strength.attr,
     &dev_attr_dt2w_time.attr,
-    &dev_attr_dt2w_feather.attr,
+    &dev_attr_dt2w_feather_x.attr,
+	&dev_attr_dt2w_feather_y.attr,
 
 #if (WAKE_GESTURES_ENABLED)
     &dev_attr_wake_gestures.attr,
