@@ -142,6 +142,7 @@ obj-$(CONFIG_MMI_SOC_INFO) += mmi_soc_info.o
 obj-$(CONFIG_FORCE_FAST_CHARGE) += fastchg.o
 obj-$(CONFIG_ZEN_DECISION)    += msm_zen_decision.o
 
+obj-$(CONFIG_BLU_PLUG) += blu_plug.o
 obj-$(CONFIG_BRICKED_HOTPLUG) += bricked_hotplug.o
 obj-$(CONFIG_DYN_HOTPLUG) += dyn_hotplug.o
 obj-$(CONFIG_MSM_LIMITER) += msm_limiter.o
