@@ -83,13 +83,6 @@
 			#size-cells = <0>;
 
 			compatible = "qcom,gpu-pwrlevels";
-
-			qcom,gpu-pwrlevel@0 {
-				reg = <0>;
-				qcom,gpu-freq = <700000000>;
-				qcom,bus-freq = <16>;
-				qcom,io-fraction = <25>;
-			};
 			
 			qcom,gpu-pwrlevel@0 {
 				reg = <0>;
