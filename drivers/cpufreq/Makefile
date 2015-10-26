@@ -35,6 +35,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_SMARTASS2)	   += cpufreq_smartass2.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSH3)	   += cpufreq_smartassH3.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTMAX)        += cpufreq_smartmax.o
 obj-$(CONFIG_CPU_FREQ_GOV_TRIPNDROID)	   += cpufreq_tripndroid.o
+obj-$(CONFIG_CPU_FREQ_GOV_UMBRELLA_CORE)	+= cpufreq_umbrella_core.o
 obj-$(CONFIG_CPU_FREQ_GOV_WAVE)	           += cpufreq_wave.o
 obj-$(CONFIG_CPU_FREQ_GOV_YANKACTIVE)	   += cpufreq_yankactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_ZZMOOVE)         += cpufreq_zzmoove.o

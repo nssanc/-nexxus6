@@ -266,6 +266,15 @@ config CPU_FREQ_DEFAULT_GOV_YANKACTIVE
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'yankactive' governor for latency-sensitive workloads.
+	  
+config CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE
+	bool "umbrella_core"
+	select CPU_FREQ_GOV_UMBRELLA_CORE
+	help
+	  Use the CPUFreq governor 'umbrella_core' as default. This allows
+	  you to get a full dynamic cpu frequency capable system by simply
+	  loading your cpufreq low-level hardware driver, using the
+	  'umbrella_core' governor for latency-sensitive workloads.
 
 config CPU_FREQ_DEFAULT_GOV_ZZMOOVE
 	  bool "zzmoove"
@@ -585,6 +594,15 @@ config CPU_FREQ_GOV_TRIPNDROID
 	  Custom cpu governor designed specificly for multi cpu mobile devices.
 	  Aiming at a balance between performance and battery lifetime, but it
 	  hangs a little bit more towards performance at low latencys.
+
+config CPU_FREQ_GOV_UMBRELLA_CORE
+	tristate "'umbrella_core' cpufreq policy governor"
+	help
+	  'umbrella_core' - This driver adds a dynamic cpufreq policy governor
+	  designed for latency-sensitive workloads.
+
+	  The governor is based on interactive to provide a resident controller
+	  which interprets unnecessary battery drain as evil.
 
 config CPU_FREQ_GOV_WAVE
 	tristate "'wave' cpufreq governor"

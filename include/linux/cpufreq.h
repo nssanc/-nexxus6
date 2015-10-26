@@ -103,6 +103,7 @@ struct cpufreq_policy {
 
 	unsigned int util;
 	unsigned int	util_thres; /* Threshold to increase utilization*/
+	unsigned int		load_at_max;  /* CPU utilization at max frequency */
 };
 
 /* Only for ACPI */
