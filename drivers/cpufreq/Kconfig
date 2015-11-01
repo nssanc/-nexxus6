@@ -258,6 +258,12 @@ config CPU_FREQ_DEFAULT_GOV_WAVE
 	bool "wave"
 	select CPU_FREQ_GOV_WAVE
 
+config CPU_FREQ_DEFAULT_GOV_XPERIENCE
+	bool "xperience"
+	select CPU_FREQ_GOV_XPERIENCE
+	help
+	Use the CPUfreq governor 'xperience' as default.
+
 config CPU_FREQ_DEFAULT_GOV_YANKACTIVE
 	bool "yankactive"
 	select CPU_FREQ_GOV_YANKACTIVE
@@ -607,6 +613,12 @@ config CPU_FREQ_GOV_UMBRELLA_CORE
 config CPU_FREQ_GOV_WAVE
 	tristate "'wave' cpufreq governor"
 	depends on CPU_FREQ
+
+config CPU_FREQ_GOV_XPERIENCE
+	 tristate "'xperience' cpufreq governor"
+	 depends on CPU_FREQ
+	 help
+	'XPerience' - a "powered and smart" governor
 
 config CPU_FREQ_GOV_YANKACTIVE
 	tristate "'yankactive' cpufreq policy governor"

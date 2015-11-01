@@ -504,6 +504,9 @@ extern struct cpufreq_governor cpufreq_gov_userspace;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_WAVE)
 extern struct cpufreq_governor cpufreq_gov_wave;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_wave)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_XPERIENCE)
+extern struct cpufreq_governor cpufreq_gov_xperience;
+#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_xperience)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_YANKACTIVE)
 extern struct cpufreq_governor cpufreq_gov_yankactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_yankactive)
