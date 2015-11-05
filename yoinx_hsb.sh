@@ -15,12 +15,12 @@ export CC_JOBS="-j5"
 IMPORTANT
 
 
-source vortex_local.sh
+source hsb_local.sh
 export ARCH=arm
 export SUBARCH=arm
 
 
-make vortex_defconfig
+make HSB_defconfig
 make $CC_JOBS
 
 if [ ! -f arch/arm/boot/zImage-dtb ]; then
