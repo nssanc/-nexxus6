@@ -381,7 +381,8 @@ KBUILD_CFLAGS   :=	$(GRAPHITE) -Wall -marm -DNDEBUG -Wundef -Wstrict-prototypes 
 			-Wno-format-security -fstdarg-opt -fsection-anchors \
 			-fmodulo-sched -fmodulo-sched-allow-regmoves -ftree-vectorize -ffast-math \
 			-funswitch-loops -fgcse-after-reload -fno-delete-null-pointer-checks \
-			--param l1-cache-size=16 --param l1-cache-line-size=16 --param l2-cache-size=2048
+			--param l1-cache-size=16 --param l1-cache-line-size=16 --param l2-cache-size=2048 \
+			-Wno-unused-const-variable
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
