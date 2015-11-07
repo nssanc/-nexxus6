@@ -38,7 +38,7 @@
 #define DEF_DOWN_TIMER_CNT	(10)	/* 5 secs */
 #define DEF_UP_TIMER_CNT	(2)	/* 1 sec */
 
-static int enabled;
+static int enabled = 0;
 static unsigned int up_threshold;
 static unsigned int min_online;
 static unsigned int max_online;
