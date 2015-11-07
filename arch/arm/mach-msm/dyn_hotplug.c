@@ -30,7 +30,6 @@
 #include <linux/earlysuspend.h>
 #endif
 
-#define HOTPLUG_ENABLED	        (0)
 #define INIT_DELAY		(60 * HZ) /* Initial delay to 60 sec */
 #define DELAY			(HZ / 2)
 #define UP_THRESHOLD		(40)
