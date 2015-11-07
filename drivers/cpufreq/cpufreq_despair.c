@@ -1,5 +1,5 @@
 /*
- *  drivers/cpufreq/cpufreq_conservative.c
+ *  drivers/cpufreq/cpufreq_despair.c
  *
  *  Copyright (C)  2001 Russell King
  *            (C)  2003 Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>.
@@ -14,15 +14,19 @@
 
 #include <linux/slab.h>
 #include "cpufreq_governor.h"
+#include <linux/touchboost.h>
 
 /* Conservative governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(95)
 #define DEF_FREQUENCY_DOWN_THRESHOLD		(35)
-#define DEF_FREQUENCY_TWOSTEP_THRESHOLD	(65)
+#define DEF_FREQUENCY_TWOSTEP_THRESHOLD		(65)
 #define DEF_FREQUENCY_STEP			(5)
 #define DEF_SAMPLING_DOWN_FACTOR		(1)
 #define MAX_SAMPLING_DOWN_FACTOR		(10)
-#define MICRO_FREQUENCY_MIN_SAMPLE_RATE	(20000)
+#define MICRO_FREQUENCY_MIN_SAMPLE_RATE		(10000)
+#define BOOST_DURATION_US			(40000)
+#define BOOST_FREQ_VAL				(960000)
+#define DEFAULT_MIN_LOAD			(15)
 
 static DEFINE_PER_CPU(struct cs_cpu_dbs_info_s, cs_cpu_dbs_info);
 
@@ -53,6 +57,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	struct cpufreq_policy *policy = dbs_info->cdbs.cur_policy;
 	struct dbs_data *dbs_data = policy->governor_data;
 	struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
+	bool boosted;
 	u64 now;
 
 	cpufreq_notify_utilization(policy, load);
@@ -65,6 +70,7 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		return;
 
 	now = ktime_to_us(ktime_get());
+	boosted = now < (get_input_time() + cs_tuners->input_boost_duration);
 
 	/* Check for frequency increase */
 	if (load > DEF_FREQUENCY_TWOSTEP_THRESHOLD) {
@@ -75,24 +81,26 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		if (policy->cur == policy->max)
 			return;
 
-		if (load < cs_tuners->up_threshold && cs_tuners->twostep_counter++ < 2) {
-			cs_tuners->twostep_time = now;
+		if (load < cs_tuners->up_threshold && dbs_info->twostep_counter++ < 2) {
+			dbs_info->twostep_time = now;
 			dbs_info->requested_freq += get_freq_target(cs_tuners, policy->max >> 1);
 		} else {
 			if (load >= cs_tuners->up_threshold)
 				dbs_info->requested_freq += get_freq_target(cs_tuners, policy->max);
 
-			cs_tuners->twostep_counter = 0;
+			dbs_info->twostep_counter = 0;
 		}
 
 		if (dbs_info->requested_freq > policy->max)
 			dbs_info->requested_freq = policy->max;
 
-		if (dbs_info->requested_freq == policy->cur)
-			return;
+		if (boosted)
+                        dbs_info->requested_freq
+                                = max(cs_tuners->input_boost_freq,
+                                        dbs_info->requested_freq);
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
-			CPUFREQ_RELATION_H);
+			CPUFREQ_RELATION_C);
 		return;
 	}
 
@@ -104,13 +112,15 @@ static void cs_check_cpu(int cpu, unsigned int load)
 	/* Check for frequency decrease */
 	if (load < cs_tuners->down_threshold) {
 		unsigned int freq_target;
+
 		/*
 		 * we're scaling down, so reset the counter if
 		 * the conditions are met
 		 */
-		if (cs_tuners->twostep_counter) {
-			if ((now - cs_tuners->twostep_time) >= 150000)
-                		cs_tuners->twostep_counter = 0;
+		if (dbs_info->twostep_counter) {
+			/* 150ms*/
+			if ((now - dbs_info->twostep_time) >= 150000)
+                		dbs_info->twostep_counter = 0;
 		}
 
 		/*
@@ -119,11 +129,23 @@ static void cs_check_cpu(int cpu, unsigned int load)
 		if (policy->cur == policy->min)
 			return;
 
+		if (load < DEFAULT_MIN_LOAD) {
+			dbs_info->requested_freq = policy->min;
+			goto scale_down;
+		}
+
 		freq_target = get_freq_target(cs_tuners, policy->max);
 		if (dbs_info->requested_freq > freq_target)
 			dbs_info->requested_freq -= freq_target;
 		else
 			dbs_info->requested_freq = policy->min;
+
+scale_down:
+
+		if (boosted)
+                        dbs_info->requested_freq
+				= max(cs_tuners->input_boost_freq,
+					dbs_info->requested_freq);
 
 		__cpufreq_driver_target(policy, dbs_info->requested_freq,
 				CPUFREQ_RELATION_L);
@@ -296,6 +318,60 @@ static ssize_t store_freq_step(struct dbs_data *dbs_data, const char *buf,
 	return count;
 }
 
+static ssize_t store_input_boost_freq(struct dbs_data *dbs_data, const char *buf,
+                size_t count)
+{
+        struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
+        unsigned int input;
+        int ret;
+        ret = sscanf(buf, "%u", &input);
+
+        if (ret != 1)
+                return -EINVAL;
+
+        if (input < 0)
+                input = 0;
+
+        cs_tuners->input_boost_freq = input;
+        return count;
+}
+
+static ssize_t store_input_boost_duration(struct dbs_data *dbs_data, const char *buf,
+                size_t count)
+{
+        struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
+        unsigned int input;
+        int ret;
+        ret = sscanf(buf, "%u", &input);
+
+        if (ret != 1)
+                return -EINVAL;
+
+        if (input < 0)
+                input = 0;
+
+        cs_tuners->input_boost_duration = input;
+        return count;
+}
+
+static ssize_t store_min_load(struct dbs_data *dbs_data, const char *buf,
+                size_t count)
+{
+        struct cs_dbs_tuners *cs_tuners = dbs_data->tuners;
+        unsigned int input;
+        int ret;
+        ret = sscanf(buf, "%u", &input);
+
+        if (ret != 1)
+                return -EINVAL;
+
+        if (input < 0)
+                input = 0;
+
+        cs_tuners->min_load = input;
+        return count;
+}
+
 static ssize_t store_twostep_threshold(struct dbs_data *dbs_data, const char *buf,
                 size_t count)
 {
@@ -321,6 +397,9 @@ show_store_one(cs, down_threshold);
 show_store_one(cs, ignore_nice_load);
 show_store_one(cs, freq_step);
 declare_show_sampling_rate_min(cs);
+show_store_one(cs, input_boost_freq);
+show_store_one(cs, input_boost_duration);
+show_store_one(cs, min_load);
 show_store_one(cs, twostep_threshold);
 
 gov_sys_pol_attr_rw(sampling_rate);
@@ -330,6 +409,9 @@ gov_sys_pol_attr_rw(down_threshold);
 gov_sys_pol_attr_rw(ignore_nice_load);
 gov_sys_pol_attr_rw(freq_step);
 gov_sys_pol_attr_ro(sampling_rate_min);
+gov_sys_pol_attr_rw(input_boost_freq);
+gov_sys_pol_attr_rw(input_boost_duration);
+gov_sys_pol_attr_rw(min_load);
 gov_sys_pol_attr_rw(twostep_threshold);
 
 static struct attribute *dbs_attributes_gov_sys[] = {
@@ -340,6 +422,9 @@ static struct attribute *dbs_attributes_gov_sys[] = {
 	&down_threshold_gov_sys.attr,
 	&ignore_nice_load_gov_sys.attr,
 	&freq_step_gov_sys.attr,
+	&input_boost_freq_gov_sys.attr,
+	&input_boost_duration_gov_sys.attr,
+	&min_load_gov_sys.attr,
 	&twostep_threshold_gov_sys.attr,
 	NULL
 };
@@ -357,6 +442,9 @@ static struct attribute *dbs_attributes_gov_pol[] = {
 	&down_threshold_gov_pol.attr,
 	&ignore_nice_load_gov_pol.attr,
 	&freq_step_gov_pol.attr,
+	&input_boost_freq_gov_pol.attr,
+	&input_boost_duration_gov_pol.attr,
+	&min_load_gov_pol.attr,
 	&twostep_threshold_gov_pol.attr,
 	NULL
 };
@@ -383,7 +471,9 @@ static int cs_init(struct dbs_data *dbs_data)
 	tuners->sampling_down_factor = DEF_SAMPLING_DOWN_FACTOR;
 	tuners->ignore_nice_load = 0;
 	tuners->freq_step = DEF_FREQUENCY_STEP;
-	tuners->twostep_counter = 0;
+	tuners->input_boost_freq = BOOST_FREQ_VAL;
+    tuners->input_boost_duration = BOOST_DURATION_US;
+	tuners->min_load=DEFAULT_MIN_LOAD;	
 	tuners->twostep_threshold=DEF_FREQUENCY_TWOSTEP_THRESHOLD;	
 
 	dbs_data->tuners = tuners;
