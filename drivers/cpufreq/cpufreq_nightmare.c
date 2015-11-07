@@ -30,7 +30,7 @@
 #include <linux/sched.h>
 #include <linux/slab.h>
 
-#define MIN_SAMPLING_RATE	10000
+#define MIN_SAMPLING_RATE 20000
 
 /*
  * dbs is used in this file as a shortform for demandbased switching
@@ -81,12 +81,12 @@ static struct nightmare_tuners {
 	int freq_step_dec_at_max_freq;
 
 } nightmare_tuners_ins = {
-	.sampling_rate = 50000,
+	.sampling_rate = 40000,
 	.inc_cpu_load_at_min_freq = 40,
 	.inc_cpu_load = 60,
 	.dec_cpu_load = 60,
-        .freq_for_responsiveness = 1728000,
-	.freq_for_responsiveness_max = 2726400,
+        .freq_for_responsiveness = 1267200,
+	.freq_for_responsiveness_max = 2265600,
         .freq_step_at_min_freq = 40,
 	.freq_step = 50,
 	.freq_up_brake_at_min_freq = 40,
