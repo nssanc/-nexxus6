@@ -65,13 +65,13 @@
  *    Setting this to 1 will activate Touchboost and use maximum frequency on screen touch input events.
  * Please set this to 0 if the source-tree has another Touchboost(e.g. TSP_BOOSTER) implemented.
  */
-#define TOUCHBOOST 0
+#define TOUCHBOOST 1
 
 /*
  * Duration in usec to be used with Touchboost(interactive_input_event).
  * Default is 500000 usec(500 msec).
  */
-#define TOUCHBOOST_DURATION 0
+#define TOUCHBOOST_DURATION 500000
 
 #if TOUCHBOOST
 #include <linux/input.h>
@@ -113,7 +113,7 @@ static spinlock_t speedchange_cpumask_lock;
 static struct mutex gov_lock;
 
 /* Hi speed to bump to from lo speed when load burst (default max) */
-static unsigned int hispeed_freq = 1190400;
+static unsigned int hispeed_freq = 1267200;
 
 /* Go to hi speed when CPU load at or above this value. */
 #define DEFAULT_GO_HISPEED_LOAD 99
@@ -238,8 +238,8 @@ static int mode_count = 0;
  * sync_freq
  */
 static unsigned int up_threshold_any_cpu_load = 95;
-static unsigned int sync_freq = 729600;
-static unsigned int up_threshold_any_cpu_freq = 960000;
+static unsigned int sync_freq = 1190400;
+static unsigned int up_threshold_any_cpu_freq = 1036800;
 
 static int cpufreq_governor_arteractive(struct cpufreq_policy *policy,
 		unsigned int event);
