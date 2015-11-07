@@ -9,7 +9,8 @@ export ARCH=arm
 export SUBARCH=arm
 
 
-make HSB_defconfig $CC_JOBS
+make HSB_defconfig 
+make $CC_JOBS
 
 if [ ! -f arch/arm/boot/zImage-dtb ]; then
 echo "Build Failed"
