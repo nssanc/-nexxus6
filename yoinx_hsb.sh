@@ -1,26 +1,15 @@
 #!/bin/bash
 
-<<IMPORTANT
+export CROSS_COMPILE="ccache /media/joe/linux_storage/toolchains/xanaxdroid-arm-eabi-5.2/bin/arm-eabi-"
+#export CROSS_COMPILE="ccache /media/joe/linux_storage/toolchains/sm-arm-eabi-6.0/bin/arm-eabi-"
 
-This file has been modified in order to allow for sharing between multiple people.
-It now requires a local file called "vortex_local.sh" that should containt local variables
-at a miniumum it needs the following 3 lines. This will allow environmental configuring on each 
-machine. This "vortex_local.sh" file will be untracked (.gitignore). 
-
-#!/bin/bash
-export CROSS_COMPILE=/media/joe/linux_storage/toolchains/arm-eabi-4.8/bin/arm-eabi-
+export HOST_CC="ccache gcc"
 export CC_JOBS="-j5"
-
-
-IMPORTANT
-
-
-source hsb_local.sh
 export ARCH=arm
 export SUBARCH=arm
 
 
-make HSB_defconfig
+make HSB_defconfig 
 make $CC_JOBS
 
 if [ ! -f arch/arm/boot/zImage-dtb ]; then
