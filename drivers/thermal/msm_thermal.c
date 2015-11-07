@@ -48,7 +48,7 @@
 #define THERM_SECURE_BITE_CMD 8
 #define CORE_MAX_FREQ 3091200 
 
-unsigned int temp_threshold = 70;
+unsigned int temp_threshold = 60;
 module_param(temp_threshold, int, 0755);
 
 
