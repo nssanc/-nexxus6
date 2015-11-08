@@ -48,7 +48,7 @@ struct msm_thermal_data {
 	int32_t therm_reset_temp_degC;
 };
 
-#ifdef (CONFIG_THERMAL_MONITOR)
+#ifdef CONFIG_THERMAL_MONITOR
 extern int msm_thermal_init(struct msm_thermal_data *pdata);
 extern int msm_thermal_device_init(void);
 #else
