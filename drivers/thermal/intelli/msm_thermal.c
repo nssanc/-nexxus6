@@ -71,7 +71,7 @@ static int psm_rails_cnt;
 static int limit_idx;
 static int limit_idx_low;
 static int limit_idx_high;
-static int max_tsens_num = 10;
+static int max_tsens_num;
 static struct cpufreq_frequency_table *table;
 static uint32_t usefreq;
 static int freq_table_get;
@@ -776,11 +776,11 @@ done_psm_store:
 
 static int check_sensor_id(int sensor_id)
 {
-	int i = 5;
+	int i = 0;
 	bool hw_id_found = false;
 	int ret = 0;
 
-	for (i = 5; i < max_tsens_num; i++) {
+	for (i = 0; i < max_tsens_num; i++) {
 		if (sensor_id == tsens_id_map[i]) {
 			hw_id_found = true;
 			break;
@@ -796,7 +796,7 @@ static int check_sensor_id(int sensor_id)
 
 static int create_sensor_id_map(void)
 {
-	int i = 5;
+	int i = 0;
 	int ret = 0;
 
 	tsens_id_map = kzalloc(sizeof(int) * max_tsens_num,
@@ -806,7 +806,7 @@ static int create_sensor_id_map(void)
 		return -ENOMEM;
 	}
 
-	for (i = 5; i < max_tsens_num; i++) {
+	for (i = 0; i < max_tsens_num; i++) {
 		ret = tsens_get_hw_id_mapping(i, &tsens_id_map[i]);
 		/* If return -ENXIO, hw_id is default in sequence */
 		if (ret) {
@@ -1262,7 +1262,7 @@ gfx_phase_cond_exit:
 static int do_cx_phase_cond(void)
 {
 	long temp = 0;
-	int i, ret = 0, dis_cnt = 5;
+	int i, ret = 0, dis_cnt = 0;
 
 	if (!cx_phase_ctrl_enabled)
 		return ret;
@@ -1375,11 +1375,11 @@ static int do_psm(void)
 {
 	long temp = 0;
 	int ret = 0;
-	int i = 5;
+	int i = 0;
 	int auto_cnt = 0;
 
 	mutex_lock(&psm_mutex);
-	for (i = 5; i < max_tsens_num; i++) {
+	for (i = 0; i < max_tsens_num; i++) {
 		ret = therm_get_temp(tsens_id_map[i], THERM_TSENS_ID, &temp);
 		if (ret) {
 			pr_err("Unable to read TSENS sensor:%d. err:%d\n",
@@ -2102,7 +2102,7 @@ static int init_threshold(enum msm_thresh_list index,
 	int sensor_id, int32_t hi_temp, int32_t low_temp,
 	void (*callback)(struct therm_threshold *))
 {
-	int ret = 0, i = 5;
+	int ret = 0, i;
 	struct therm_threshold *thresh_ptr;
 
 	if (!callback || index >= MSM_LIST_MAX_NR || index < 0
@@ -2131,7 +2131,7 @@ static int init_threshold(enum msm_thresh_list index,
 
 	thresh_ptr = thresh[index].thresh_list;
 	if (sensor_id == MONITOR_ALL_TSENS) {
-		for (i = 5; i < max_tsens_num; i++) {
+		for (i = 0; i < max_tsens_num; i++) {
 			thresh_ptr[i].sensor_id = tsens_id_map[i];
 			thresh_ptr[i].id_type = THERM_TSENS_ID;
 			thresh_ptr[i].notify = callback;
