@@ -238,7 +238,6 @@ struct cpufreq_driver {
 	int	(*bios_limit)	(int cpu, unsigned int *limit);
 
 	int	(*exit)		(struct cpufreq_policy *policy);
-	void	(*stop_cpu)	(struct cpufreq_policy *policy);
 	int	(*suspend)	(struct cpufreq_policy *policy);
 	int	(*resume)	(struct cpufreq_policy *policy);
 	struct freq_attr	**attr;
@@ -432,9 +431,6 @@ extern struct cpufreq_governor cpufreq_gov_adaptive;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ALUCARD)
 extern struct cpufreq_governor cpufreq_gov_alucard;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_alucard)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ARTERACTIVE)
-extern struct cpufreq_governor cpufreq_gov_arteractive;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_arteractive)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_DESPAIR)
 extern struct cpufreq_governor cpufreq_gov_despair;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_despair)
@@ -453,9 +449,6 @@ extern struct cpufreq_governor cpufreq_gov_conservative;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVEX)
 extern struct cpufreq_governor cpufreq_gov_conservativex;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_conservativex)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_DARKNESS)
-extern struct cpufreq_governor cpufreq_gov_darkness;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_darkness)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_HELLSACTIVE)
 extern struct cpufreq_governor cpufreq_gov_hellsactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_hellsactive)
