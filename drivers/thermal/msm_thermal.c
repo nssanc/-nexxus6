@@ -26,7 +26,16 @@
 #include <linux/of.h>
 #include <linux/hrtimer.h>
 
-int TEMP_THRESHOLD = 70;
+/* Temp Threshold is the LOWEST level to start throttling. */
+#define temp_threshold		70
+/* This is the modifier for each of the progressive throttle levels to kick in*/
+#define temp_step			4
+
+int TEMP_THRESHOLD = temp_threshold;
+int TEMP_STEP = temp_step;
+int LEVEL_VERY_HOT = temp_threshold + temp_step;
+int LEVEL_HOT = temp_threshold + (temp_step * 2);
+int LEVEL_HELL = temp_threshold + (temp_step * 3);
 int FREQ_HELL = 960000;
 int FREQ_VERY_HOT = 1267200;
 int FREQ_HOT = 1728000;
@@ -46,7 +55,6 @@ static int set_temp_threshold(const char *val, const struct kernel_param *kp)
 	if (i < 40 || i > 90)
 		return -EINVAL;
 	
-	pr_info("%s: Setting Temp Threshold to %d\n", KBUILD_MODNAME, i);
 	ret = param_set_int(val, kp);
 
 	return ret;
@@ -68,12 +76,11 @@ static int set_freq_limit(const char *val, const struct kernel_param *kp)
 	ret = kstrtouint(val, 10, &i);
 	if (ret)
 		return -EINVAL;
-	// need to figure out how to verify that the value being set is a valid cpu freq. 
-	// not sure how to instantitate the cpufreqtable though to execute this call.
-	//if (!cpufreq_verify_within_limits(0, i, i))
-	//	return -EINVAL;
-
-	pr_info("%s: Storing frequency %d\n", KBUILD_MODNAME, i);
+/* need to figure out how to verify that the value being set is a valid cpu freq. 
+ * not sure how to instantitate the policy though to perform this call.
+ * if (!cpufreq_frequency_table_verify(0, i))
+ * 		return -EINVAL;
+*/
 	ret = param_set_int(val, kp);
 
 	return ret;
@@ -107,12 +114,6 @@ static struct thermal_info {
 	.pending_change = false,
 	/* 1 second */
 	.min_interval_us = 1000000,
-};
-
-enum threshold_levels {
-	LEVEL_HELL		= 1 << 4,
-	LEVEL_VERY_HOT	= 1 << 3,
-	LEVEL_HOT		= 1 << 2,
 };
 
 static struct msm_thermal_data msm_thermal_info;
