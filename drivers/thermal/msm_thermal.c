@@ -26,8 +26,70 @@
 #include <linux/of.h>
 #include <linux/hrtimer.h>
 
-unsigned int temp_threshold = 70;
-module_param(temp_threshold, int, 0644);
+int TEMP_THRESHOLD = 70;
+int FREQ_HELL = 960000;
+int FREQ_VERY_HOT = 1267200;
+int FREQ_HOT = 1728000;
+int FREQ_WARM = 2265600;
+
+/* SYSFS */
+
+/* Temperature Threshold Storage */
+static int set_temp_threshold(const char *val, const struct kernel_param *kp)
+{
+	int ret = 0;
+	int i;
+
+	ret = kstrtouint(val, 10, &i);
+	if (ret)
+		return -EINVAL;
+	if (i < 40 || i > 90)
+		return -EINVAL;
+	
+	pr_info("%s: Setting Temp Threshold to %d\n", KBUILD_MODNAME, i);
+	ret = param_set_int(val, kp);
+
+	return ret;
+}
+
+static struct kernel_param_ops temp_threshold_ops = {
+	.set = set_temp_threshold,
+	.get = param_get_int,
+};
+
+module_param_cb(TEMP_THRESHOLD, &temp_threshold_ops, &TEMP_THRESHOLD, 0644);
+
+/* Frequency limit storage */
+static int set_freq_limit(const char *val, const struct kernel_param *kp)
+{
+	int ret = 0;
+	int i;
+	
+	ret = kstrtouint(val, 10, &i);
+	if (ret)
+		return -EINVAL;
+	// need to figure out how to verify that the value being set is a valid cpu freq. 
+	// not sure how to instantitate the cpufreqtable though to execute this call.
+	//if (!cpufreq_verify_within_limits(0, i, i))
+	//	return -EINVAL;
+
+	pr_info("%s: Storing frequency %d\n", KBUILD_MODNAME, i);
+	ret = param_set_int(val, kp);
+
+	return ret;
+}
+
+static struct kernel_param_ops freq_limit_ops = {
+	.set = set_freq_limit,
+	.get = param_get_int,
+};
+
+module_param_cb(FREQ_HELL, &freq_limit_ops, &FREQ_HELL, 0644);
+module_param_cb(FREQ_VERY_HOT, &freq_limit_ops, &FREQ_VERY_HOT, 0644);
+module_param_cb(FREQ_HOT, &freq_limit_ops, &FREQ_HOT, 0644);
+module_param_cb(FREQ_WARM, &freq_limit_ops, &FREQ_WARM, 0644);
+
+/* SYSFS END */
 
 static struct thermal_info {
 	uint32_t cpuinfo_max_freq;
@@ -47,27 +109,15 @@ static struct thermal_info {
 	.min_interval_us = 1000000,
 };
 
-enum thermal_freqs {
-	FREQ_HELL		= 960000,
-	FREQ_VERY_HOT		= 1267200,
-	FREQ_HOT		= 1728000,
-	FREQ_WARM		= 2265600,
-};
-
 enum threshold_levels {
 	LEVEL_HELL		= 1 << 4,
-	LEVEL_VERY_HOT		= 1 << 3,
+	LEVEL_VERY_HOT	= 1 << 3,
 	LEVEL_HOT		= 1 << 2,
 };
 
 static struct msm_thermal_data msm_thermal_info;
 
 static struct delayed_work check_temp_work;
-
-unsigned short get_threshold(void)
-{
-	return temp_threshold;
-}
 
 static int msm_thermal_cpufreq_callback(struct notifier_block *nfb,
 		unsigned long event, void *data)
@@ -121,7 +171,7 @@ static void check_temp(struct work_struct *work)
 
 	if (info.throttling)
 	{
-		if (temp < (temp_threshold - info.safe_diff))
+		if (temp < (TEMP_THRESHOLD - info.safe_diff))
 		{
 			now = ktime_to_us(ktime_get());
 
@@ -134,13 +184,13 @@ static void check_temp(struct work_struct *work)
 		}
 	}
 
-	if (temp >= temp_threshold + LEVEL_HELL)
+	if (temp >= TEMP_THRESHOLD + LEVEL_HELL)
 		freq = FREQ_HELL;
-	else if (temp >= temp_threshold + LEVEL_VERY_HOT)
+	else if (temp >= TEMP_THRESHOLD + LEVEL_VERY_HOT)
 		freq = FREQ_VERY_HOT;
-	else if (temp >= temp_threshold + LEVEL_HOT)
+	else if (temp >= TEMP_THRESHOLD + LEVEL_HOT)
 		freq = FREQ_HOT;
-	else if (temp > temp_threshold)
+	else if (temp > TEMP_THRESHOLD)
 		freq = FREQ_WARM;
 
 	if (freq)
