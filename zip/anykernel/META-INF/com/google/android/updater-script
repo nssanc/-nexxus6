@@ -6,8 +6,13 @@ ui_print(" ");
 ui_print(" ");
 ui_print("################################################");
 ui_print("#    -------------------------------------     #");
-ui_print("#          Script Borrowed from HellsGod       #");
+ui_print("#          APOPHIS9283-YOINX BRING YOU         #");
 ui_print("#    -------------------------------------     #");
+ui_print("#           HEAVEN SHALL BURN KERNEL           #");
+ui_print("#           ------------------------           #");
+ui_print("#                                              #");
+ui_print("#            BY APOPHIS9283-Yoinx              #");
+ui_print("#          --------------------------          #");
 ui_print("################################################");
 ui_print(" ");
 ui_print(" ");
@@ -24,6 +29,9 @@ ui_print("-Ok to proceed");
 ifelse(is_mounted("/system") == "/system", unmount("/system"));
 ifelse(is_mounted("/cache") == "/cache", unmount("/cache"));
 
+ui_print("  ");
+ui_print("WELCOME TO HEAVEN SHALL BURN KERNEL BY APOPHIS9283-YOINX");
+ui_print("  ");
 set_progress(0.01);
 
 ################EXTRACT SETUP FILES
@@ -67,13 +75,13 @@ unmount("/system");
 set_progress(0.8);
 
 ################REPACK
-ui_print("Repack boot.img with custom kernel files");
-ui_print("Installing kernel...");
+ui_print("Repack boot.img with HEAVEN SHALL BURN");
+ui_print("Installing HEAVEN SHALL BURN...");
 run_program("/tmp/mkbootimg.sh");
 set_progress(0.9);
 
 ################KERNEL FLASH
-ui_print("Flashing New boot.img...");
+ui_print("Flashing HEAVEN SHALL BURN boot.img...");
 run_program("/sbin/busybox", "dd", "if=/tmp/newboot.img", "of=/dev/block/platform/msm_sdcc.1/by-name/boot");
 set_progress(0.95);
 
@@ -85,5 +93,5 @@ run_program("/sbin/busybox", "umount", "/cache");
 set_progress(1.0);
 
 ui_print("######################");
-ui_print("#      Kernel flashed, enjoy!");
+ui_print("# HEAVEN SHALL BURN KERNEL FLASHED. ENJOY!!");
 ui_print("######################");
