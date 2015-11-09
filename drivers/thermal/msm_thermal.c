@@ -55,6 +55,10 @@ static int set_temp_threshold(const char *val, const struct kernel_param *kp)
 	if (i < 40 || i > 90)
 		return -EINVAL;
 	
+	LEVEL_VERY_HOT = i + TEMP_STEP;
+	LEVEL_HOT = i + (TEMP_STEP * 2);
+	LEVEL_HELL = i + (TEMP_STEP * 3);
+	
 	ret = param_set_int(val, kp);
 
 	return ret;
@@ -67,6 +71,36 @@ static struct kernel_param_ops temp_threshold_ops = {
 
 module_param_cb(TEMP_THRESHOLD, &temp_threshold_ops, &TEMP_THRESHOLD, 0644);
 
+/* Temperature Step Storage */
+static int set_temp_step(const char *val, const struct kernel_param *kp)
+{
+	int ret = 0;
+	int i;
+
+	ret = kstrtouint(val, 10, &i);
+	if (ret)
+		return -EINVAL;
+	/*	Restrict the values to 1-6 as this will result in threshold + value - value *3
+		without a restriction this could result in significanty higher than expected values*/
+	if (i < 1 || i > 6)
+		return -EINVAL;
+	
+	LEVEL_VERY_HOT = TEMP_THRESHOLD + i;
+	LEVEL_HOT = TEMP_THRESHOLD + (i * 2);
+	LEVEL_HELL = TEMP_THRESHOLD + (i * 3);
+	
+	ret = param_set_int(val, kp);
+
+	return ret;
+}
+
+static struct kernel_param_ops temp_step_ops = {
+	.set = set_temp_step,
+	.get = param_get_int,
+};
+
+module_param_cb(TEMP_STEP, &temp_step_ops, &TEMP_STEP, 0644);
+
 /* Frequency limit storage */
 static int set_freq_limit(const char *val, const struct kernel_param *kp)
 {
@@ -78,9 +112,10 @@ static int set_freq_limit(const char *val, const struct kernel_param *kp)
 		return -EINVAL;
 /* need to figure out how to verify that the value being set is a valid cpu freq. 
  * not sure how to instantitate the policy though to perform this call.
- * if (!cpufreq_frequency_table_verify(0, i))
- * 		return -EINVAL;
-*/
+ * 
+ * 	if (!cpufreq_frequency_table_verify(0, i))
+	* 	return -EINVAL;
+ */
 	ret = param_set_int(val, kp);
 
 	return ret;
