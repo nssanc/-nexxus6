@@ -1505,7 +1505,7 @@ config INTELLI_HOTPLUG
 	  An intelligent cpu hotplug driver for
 	  Low Latency Frequency Transition capable processors.
 
-config MSM_PERFORMANCE
+config MSM_SLEEPER
 	bool "CPU hotplug driver"
 	default y
 	help
