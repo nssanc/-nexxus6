@@ -86,7 +86,7 @@ static enum tune_values {
 	HIGH_PERF_TUNE,
 } cur_tune_value;
 
-#define MIN_GO_HISPEED_LOAD 70
+#define MIN_GO_HISPEED_LOAD 85
 #define DEFAULT_LOW_POWER_RATE 10
 #define DEFAULT_SAMPLING_PERIODS 10
 #define DEFAULT_HI_PERF_THRESHOLD 80
