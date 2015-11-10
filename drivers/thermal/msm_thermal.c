@@ -30,6 +30,8 @@
 #define _temp_threshold		70
 /* This is the modifier for each of the progressive throttle levels to kick in*/
 #define _temp_step			4
+/* Default the poll interval to 1 second. Time in usecs */
+#define _poll_interval		1000000
 
 int TEMP_THRESHOLD = _temp_threshold;
 int TEMP_STEP = _temp_step;
@@ -40,6 +42,8 @@ int FREQ_HELL = 960000;
 int FREQ_VERY_HOT = 1267200;
 int FREQ_HOT = 1728000;
 int FREQ_WARM = 2265600;
+int POLL_INTERVAL = _poll_interval;
+
 
 /* SYSFS */
 
@@ -101,6 +105,32 @@ static struct kernel_param_ops temp_step_ops = {
 
 module_param_cb(temp_step, &temp_step_ops, &TEMP_STEP, 0644);
 
+/* Poll interval Storage */
+static int set_poll_interval(const char *val, const struct kernel_param *kp)
+{
+	int ret = 0;
+	int i;
+
+	ret = kstrtouint(val, 10, &i);
+	if (ret)
+		return -EINVAL;
+	/*	Restrict the values to between 250ms and 3 seconds */
+	if (i < 250000 || i > 3000000)
+		return -EINVAL;
+	
+	ret = param_set_int(val, kp);
+
+	return ret;
+}
+
+static struct kernel_param_ops poll_interval_ops = {
+	.set = set_poll_interval,
+	.get = param_get_int,
+};
+
+module_param_cb(poll_interval, &poll_interval_ops, &POLL_INTERVAL, 0644);
+
+
 /* Frequency limit storage */
 static int set_freq_limit(const char *val, const struct kernel_param *kp)
 {
@@ -139,7 +169,6 @@ static struct thermal_info {
 	unsigned int safe_diff;
 	bool throttling;
 	bool pending_change;
-	const int min_interval_us;
 	u64 limit_cpu_time;
 } info = {
 	.cpuinfo_max_freq = LONG_MAX,
@@ -147,8 +176,6 @@ static struct thermal_info {
 	.safe_diff = 5,
 	.throttling = false,
 	.pending_change = false,
-	/* 1 second */
-	.min_interval_us = 1000000,
 };
 
 static struct msm_thermal_data msm_thermal_info;
@@ -211,7 +238,7 @@ static void check_temp(struct work_struct *work)
 		{
 			now = ktime_to_us(ktime_get());
 
-			if (now < (info.limit_cpu_time + info.min_interval_us))
+			if (now < (info.limit_cpu_time + POLL_INTERVAL))
 				goto reschedule;
 
 			limit_cpu_freqs(info.cpuinfo_max_freq);
