@@ -135,17 +135,25 @@ module_param_cb(poll_interval, &poll_interval_ops, &POLL_INTERVAL, 0644);
 static int set_freq_limit(const char *val, const struct kernel_param *kp)
 {
 	int ret = 0;
-	int i;
+	int i, cnt;
+	int valid = 0;
+	struct cpufreq_policy *policy;
+	static struct cpufreq_frequency_table *tbl = NULL;
 	
 	ret = kstrtouint(val, 10, &i);
 	if (ret)
 		return -EINVAL;
-/* need to figure out how to verify that the value being set is a valid cpu freq. 
- * not sure how to instantitate the policy though to perform this call.
- * 
- * 	if (!cpufreq_frequency_table_verify(0, i))
-	* 	return -EINVAL;
- */
+
+	policy = cpufreq_cpu_get(0);
+	tbl = cpufreq_frequency_get_table(0);
+	for (cnt = 0; (tbl[cnt].frequency != CPUFREQ_TABLE_END); cnt++) {
+		if (cnt > 0)
+			if (tbl[cnt].frequency == i)
+				valid = 1;
+	}
+	if (!valid)
+		return -EINVAL;
+	
 	ret = param_set_int(val, kp);
 
 	return ret;
