@@ -27,15 +27,15 @@
 #include <linux/hrtimer.h>
 
 /* Temp Threshold is the LOWEST level to start throttling. */
-#define temp_threshold		70
+#define _temp_threshold		70
 /* This is the modifier for each of the progressive throttle levels to kick in*/
-#define temp_step			4
+#define _temp_step			4
 
-int TEMP_THRESHOLD = temp_threshold;
-int TEMP_STEP = temp_step;
-int LEVEL_VERY_HOT = temp_threshold + temp_step;
-int LEVEL_HOT = temp_threshold + (temp_step * 2);
-int LEVEL_HELL = temp_threshold + (temp_step * 3);
+int TEMP_THRESHOLD = _temp_threshold;
+int TEMP_STEP = _temp_step;
+int LEVEL_VERY_HOT = _temp_threshold + _temp_step;
+int LEVEL_HOT = _temp_threshold + (_temp_step * 2);
+int LEVEL_HELL = _temp_threshold + (_temp_step * 3);
 int FREQ_HELL = 960000;
 int FREQ_VERY_HOT = 1267200;
 int FREQ_HOT = 1728000;
@@ -69,7 +69,7 @@ static struct kernel_param_ops temp_threshold_ops = {
 	.get = param_get_int,
 };
 
-module_param_cb(TEMP_THRESHOLD, &temp_threshold_ops, &TEMP_THRESHOLD, 0644);
+module_param_cb(temp_threshold, &temp_threshold_ops, &TEMP_THRESHOLD, 0644);
 
 /* Temperature Step Storage */
 static int set_temp_step(const char *val, const struct kernel_param *kp)
@@ -99,7 +99,7 @@ static struct kernel_param_ops temp_step_ops = {
 	.get = param_get_int,
 };
 
-module_param_cb(TEMP_STEP, &temp_step_ops, &TEMP_STEP, 0644);
+module_param_cb(temp_step, &temp_step_ops, &TEMP_STEP, 0644);
 
 /* Frequency limit storage */
 static int set_freq_limit(const char *val, const struct kernel_param *kp)
@@ -126,10 +126,10 @@ static struct kernel_param_ops freq_limit_ops = {
 	.get = param_get_int,
 };
 
-module_param_cb(FREQ_HELL, &freq_limit_ops, &FREQ_HELL, 0644);
-module_param_cb(FREQ_VERY_HOT, &freq_limit_ops, &FREQ_VERY_HOT, 0644);
-module_param_cb(FREQ_HOT, &freq_limit_ops, &FREQ_HOT, 0644);
-module_param_cb(FREQ_WARM, &freq_limit_ops, &FREQ_WARM, 0644);
+module_param_cb(freq_hell, &freq_limit_ops, &FREQ_HELL, 0644);
+module_param_cb(freq_very_hot, &freq_limit_ops, &FREQ_VERY_HOT, 0644);
+module_param_cb(freq_hot, &freq_limit_ops, &FREQ_HOT, 0644);
+module_param_cb(freq_warm, &freq_limit_ops, &FREQ_WARM, 0644);
 
 /* SYSFS END */
 
