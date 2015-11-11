@@ -28,6 +28,14 @@ if  grep -qr ro.secure=1 /tmp/ramdisk/default.prop; then
    sed -i "s/ro.secure=1/ro.secure=0/" /tmp/ramdisk/default.prop
 fi
 
+# remove verify
+if  grep -qr verify_load_state /tmp/ramdisk/init.shamu.rc; then
+ sed -i "s/verify_load_state/#verify_load_state/" /tmp/ramdisk/init.shamu.rc
+fi
+if  grep -qr verify_update_state /tmp/ramdisk/init.shamu.rc; then
+ sed -i "s/verify_update_state/#verify_update_state/" /tmp/ramdisk/init.shamu.rc
+fi
+
 #add init.d support if not already supported
 #this is no longer needed as the ramdisk now inserts our modules, but we will
 #keep this here for user comfort, since having run-parts init.d support is a
@@ -54,6 +62,10 @@ if [ "$found" != 'run-parts /system/etc/init.d' ]; then
         echo "    user root" >> /tmp/ramdisk/init.rc
         echo "    group root" >> /tmp/ramdisk/init.rc
 fi
+
+#copy fstab
+cp /tmp/fstab.shamu /tmp/ramdisk/fstab.shamu
+chmod 750 /tmp/ramdisk/fstab.shamu
 
 #copy custom init.shamu.power.rc
 cp /tmp/init.shamu.power.rc /tmp/ramdisk/init.shamu.power.rc
