@@ -144,6 +144,9 @@ static int set_freq_limit(const char *val, const struct kernel_param *kp)
 	if (ret)
 		return -EINVAL;
 
+	/* Verify that the value being set is an actual frequency 
+	 * easiest way I could think of was to just loop through the table
+	 * and check if the value was the same */
 	policy = cpufreq_cpu_get(0);
 	tbl = cpufreq_frequency_get_table(0);
 	for (cnt = 0; (tbl[cnt].frequency != CPUFREQ_TABLE_END); cnt++) {
@@ -151,6 +154,7 @@ static int set_freq_limit(const char *val, const struct kernel_param *kp)
 			if (tbl[cnt].frequency == i)
 				valid = 1;
 	}
+	/* If value being set wasn't found in the frequency table, valid will equal 0 */
 	if (!valid)
 		return -EINVAL;
 	
