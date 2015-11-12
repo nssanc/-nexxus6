@@ -144,6 +144,9 @@ static int set_freq_limit(const char *val, const struct kernel_param *kp)
 	if (ret)
 		return -EINVAL;
 
+	/* Verify that the value being set is an actual frequency 
+	 * easiest way I could think of was to just loop through the table
+	 * and check if the value was the same */
 	policy = cpufreq_cpu_get(0);
 	tbl = cpufreq_frequency_get_table(0);
 	for (cnt = 0; (tbl[cnt].frequency != CPUFREQ_TABLE_END); cnt++) {
@@ -151,8 +154,21 @@ static int set_freq_limit(const char *val, const struct kernel_param *kp)
 			if (tbl[cnt].frequency == i)
 				valid = 1;
 	}
+	/* If value being set wasn't found in the frequency table, valid will equal 0 */
 	if (!valid)
 		return -EINVAL;
+	
+	/* Perform some sanity checks on the values that we're storing 
+	 * to make sure that they're scaling linearly 					*/
+	if (strcmp( kp->name, "msm_thermal.freq_warm") == 0 && i <= FREQ_HOT) 
+		return -EINVAL;
+	if ( strcmp( kp->name, "msm_thermal.freq_hot") == 0 &&  ( i >= FREQ_WARM || i <= FREQ_VERY_HOT ))
+		return -EINVAL;	
+	if ( strcmp( kp->name, "msm_thermal.freq_very_hot") == 0 && ( i >= FREQ_HOT || i <= FREQ_HELL ))
+		return -EINVAL;		
+	if ( strcmp( kp->name, "msm_thermal.freq_hell") == 0 && i >= FREQ_VERY_HOT ) 
+		return -EINVAL;		
+	/* End Sanity Checks */
 	
 	ret = param_set_int(val, kp);
 
