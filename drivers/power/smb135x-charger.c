@@ -34,14 +34,6 @@
 static bool use_wlock = true;
 module_param(use_wlock, bool, 0644);
 
-#ifdef CONFIG_FORCE_FAST_CHARGE
-#include <linux/fastcharge.h>
-#endif
-
-#ifdef CONFIG_FORCE_FAST_CHARGE
-#include <linux/fastcharge.h>
-#endif
-
 #define SMB135X_BITS_PER_REG	8
 
 /* Mask/Bit helpers */
@@ -1498,6 +1490,10 @@ static int smb135x_set_high_usb_chg_current(struct smb135x_chg *chip,
 	return rc;
 }
 
+#ifdef CONFIG_FORCE_FAST_CHARGE
+extern int force_fast_charge;
+#endif
+
 #define MAX_VERSION			0xF
 #define USB_100_PROBLEM_VERSION		0x2
 /* if APSD results are used
@@ -1547,14 +1543,17 @@ static int smb135x_set_usb_chg_current(struct smb135x_chg *chip,
 		goto out;
 	}
 	if (current_ma == CURRENT_500_MA) {
-		
 #ifdef CONFIG_FORCE_FAST_CHARGE
-		if (force_fast_charge)
-			rc = smb135x_masked_write(chip, CFG_5_REG, USB_2_3_BIT, USB_2_3_BIT);
-		else
+		if (force_fast_charge) {
+			current_ma = CURRENT_900_MA;
+			rc = smb135x_masked_write(chip, CFG_5_REG,
+				USB_2_3_BIT, USB_2_3_BIT);
+		} else
+			rc = smb135x_masked_write(chip, CFG_5_REG,
+				USB_2_3_BIT, 0);
+#else
+		rc = smb135x_masked_write(chip, CFG_5_REG, USB_2_3_BIT, 0);
 #endif
-			rc = smb135x_masked_write(chip, CFG_5_REG, USB_2_3_BIT, 0);
-	
 		rc |= smb135x_masked_write(chip, CMD_INPUT_LIMIT,
 				USB_100_500_AC_MASK, USB_500_VAL);
 		rc |= smb135x_path_suspend(chip, USB, CURRENT, false);
@@ -2186,7 +2185,14 @@ static void smb135x_external_power_changed(struct power_supply *psy)
 
 	if (chip->usb_psy_ma != current_limit) {
 		mutex_lock(&chip->current_change_lock);
+#ifdef CONFIG_FORCE_FAST_CHARGE
+		if (force_fast_charge)
+			chip->usb_psy_ma = 1600;
+		else
+			chip->usb_psy_ma = current_limit;
+#else
 		chip->usb_psy_ma = current_limit;
+#endif
 		rc = smb135x_set_appropriate_current(chip, USB);
 		mutex_unlock(&chip->current_change_lock);
 		if (rc < 0)
@@ -3302,16 +3308,8 @@ static void smb135x_notify_vbat(enum qpnp_tm_state state, void *ctx)
 		if (batt_volt < chip->low_gauge_mv) {
 			chip->shutdown_voltage_tripped = true;
 		} else {
-			usleep_range(2000, 2100);
-			rc = qpnp_vadc_read(chip->vadc_dev, VSYS, &result);
-			pr_info("VSYS = %lld, raw = 0x%x\n",
-			result.physical, result.adc_code);
-			if (result.physical < chip->low_voltage_uv) {
-				chip->shutdown_voltage_tripped = true;
-			} else {
-				qpnp_adc_tm_channel_measure(chip->adc_tm_dev,
+			qpnp_adc_tm_channel_measure(chip->adc_tm_dev,
 				&chip->vbat_monitor_params);
-			}
 		}
 	}
 	else
