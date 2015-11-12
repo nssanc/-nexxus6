@@ -154,6 +154,18 @@ static int set_freq_limit(const char *val, const struct kernel_param *kp)
 	if (!valid)
 		return -EINVAL;
 	
+	/* Perform some sanity checks on the values that we're storing 
+	 * to make sure that they're scaling linearly 					*/
+	if (strcmp( kp->name, "msm_thermal.freq_warm") == 0 && i <= FREQ_HOT) 
+		return -EINVAL;
+	if ( strcmp( kp->name, "msm_thermal.freq_hot") == 0 &&  ( i >= FREQ_WARM || i <= FREQ_VERY_HOT ))
+		return -EINVAL;	
+	if ( strcmp( kp->name, "msm_thermal.freq_very_hot") == 0 && ( i >= FREQ_HOT || i <= FREQ_HELL ))
+		return -EINVAL;		
+	if ( strcmp( kp->name, "msm_thermal.freq_hell") == 0 && i >= FREQ_VERY_HOT ) 
+		return -EINVAL;		
+	/* End Sanity Checks */
+	
 	ret = param_set_int(val, kp);
 
 	return ret;
