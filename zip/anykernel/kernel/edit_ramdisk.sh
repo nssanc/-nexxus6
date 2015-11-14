@@ -28,12 +28,12 @@ if  grep -qr ro.secure=1 /tmp/ramdisk/default.prop; then
    sed -i "s/ro.secure=1/ro.secure=0/" /tmp/ramdisk/default.prop
 fi
 
-# remove verify
-if  grep -qr verify_load_state /tmp/ramdisk/init.shamu.rc; then
- sed -i "s/verify_load_state/#verify_load_state/" /tmp/ramdisk/init.shamu.rc
+#remove verify
+if  grep -qr verity_load_state /tmp/ramdisk/init.shamu.rc; then
+ sed -i "s/verity_load_state/#verity_load_state/" /tmp/ramdisk/init.shamu.rc
 fi
-if  grep -qr verify_update_state /tmp/ramdisk/init.shamu.rc; then
- sed -i "s/verify_update_state/#verify_update_state/" /tmp/ramdisk/init.shamu.rc
+if  grep -qr verity_update_state /tmp/ramdisk/init.shamu.rc; then
+ sed -i "s/verity_update_state/#verity_update_state/" /tmp/ramdisk/init.shamu.rc
 fi
 
 #add init.d support if not already supported
