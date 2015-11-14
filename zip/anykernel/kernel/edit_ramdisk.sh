@@ -28,7 +28,7 @@ if  grep -qr ro.secure=1 /tmp/ramdisk/default.prop; then
    sed -i "s/ro.secure=1/ro.secure=0/" /tmp/ramdisk/default.prop
 fi
 
-#remove verify
+#remove verity
 if  grep -qr verity_load_state /tmp/ramdisk/init.shamu.rc; then
  sed -i "s/verity_load_state/#verity_load_state/" /tmp/ramdisk/init.shamu.rc
 fi
