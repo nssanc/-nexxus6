@@ -151,22 +151,27 @@ config CPU_FREQ_DEFAULT_GOV_BLU_ACTIVE
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
 
-config CPU_FREQ_DEFAULT_GOV_ELEMENTALX
-	bool "elementalx"
-	select CPU_FREQ_GOV_ELEMENTALX
-	select CPU_FREQ_GOV_PERFORMANCE
-	help
-	  Use the CPUFreq governor 'elementalx' as default.
-
 config CPU_FREQ_DEFAULT_GOV_CONSERVATIVEX
 	bool "conservativex"
 	select CPU_FREQ_GOV_CONSERVATIVEX
 	help
 	  Use the CPUFreq governor 'conservativex' as default.
 
+config CPU_FREQ_DEFAULT_GOV_DESPAIR
+	bool "despair"
+	select CPU_FREQ_GOV_DESPAIR
+	help
+
 config CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE
 	bool "dynamic_interactive"
 	select CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
+
+config CPU_FREQ_DEFAULT_GOV_ELEMENTALX
+	bool "elementalx"
+	select CPU_FREQ_GOV_ELEMENTALX
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'elementalx' as default.
 	
 config CPU_FREQ_DEFAULT_GOV_HELLSACTIVE
 	bool "hellsactive"
@@ -210,15 +215,20 @@ config CPU_FREQ_DEFAULT_GOV_ONDEMAND_EPS
 	  governor. If unsure have a look at the help section of the
 	  driver. Fallback governor will be the performance governor.
 
+config CPU_FREQ_DEFAULT_GOV_PRESERVATIVE
+	bool "preservative"
+	select CPU_FREQ_GOV_PRESERVATIVE
+	help
+
 config CPU_FREQ_DEFAULT_GOV_RAGINGMOLASSES
 	bool "ragingmolasses"
 	select CPU_FREQ_GOV_RAGINMOLASSES
 	help
 	  Use the CPUFreq governor 'ragingmolasses' as default. Work in progress attempt at a goodaround governor that can do either high performance or battery.      Attempts to keep CPU away from max frequ ency as much as possible.
 
-config CPU_FREQ_DEFAULT_GOV_SMARTASS2
+config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
 	bool "smartass2"
-	select CPU_FREQ_GOV_SMARTASS2
+	select CPU_FREQ_GOV_SMARTASSV2
 	help
 	  Use the CPUFreq governor 'smartassV2' as default.
 
@@ -234,10 +244,14 @@ config CPU_FREQ_DEFAULT_GOV_TRIPNDROID
 	help
 	  Select tripndroid cpu governor as default
 
-config CPU_FREQ_DEFAULT_GOV_DESPAIR
-	bool "despair"
-	select CPU_FREQ_GOV_DESPAIR
+config CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE
+	bool "umbrella_core"
+	select CPU_FREQ_GOV_UMBRELLA_CORE
 	help
+	  Use the CPUFreq governor 'umbrella_core' as default. This allows
+	  you to get a full dynamic cpu frequency capable system by simply
+	  loading your cpufreq low-level hardware driver, using the
+	  'umbrella_core' governor for latency-sensitive workloads.
 
 config CPU_FREQ_DEFAULT_GOV_WAVE
 	bool "wave"
@@ -257,15 +271,6 @@ config CPU_FREQ_DEFAULT_GOV_YANKACTIVE
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'yankactive' governor for latency-sensitive workloads.
-	  
-config CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE
-	bool "umbrella_core"
-	select CPU_FREQ_GOV_UMBRELLA_CORE
-	help
-	  Use the CPUFreq governor 'umbrella_core' as default. This allows
-	  you to get a full dynamic cpu frequency capable system by simply
-	  loading your cpufreq low-level hardware driver, using the
-	  'umbrella_core' governor for latency-sensitive workloads.
 
 config CPU_FREQ_DEFAULT_GOV_ZZMOOVE
 	  bool "zzmoove"
@@ -427,14 +432,6 @@ config CPU_FREQ_GOV_ADAPTIVE
 config CPU_FREQ_GOV_ALUCARD
 	tristate "'alucard' cpufreq governor"
 
-config CPU_FREQ_GOV_DESPAIR
-	tristate "'despair' cpufreq governor"
-	depends on CPU_FREQ
-	
-config CPU_FREQ_GOV_ZZMOOVE
-	tristate "'zzmoove' cpufreq governor"
-	depends on CPU_FREQ
-
 config CPU_FREQ_GOV_BARRY_ALLEN
 	tristate "'barry_allen' cpufreq policy governor"
 	help
@@ -477,6 +474,10 @@ config CPU_FREQ_GOV_CONSERVATIVEX
 	depends on CPU_FREQ
 	help
 	  'conservativex' - less aggressive version of conservative
+
+config CPU_FREQ_GOV_DESPAIR
+	tristate "'despair' cpufreq governor"
+	depends on CPU_FREQ
 
 config CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 	tristate "'dynamic_interactive' cpufreq governor"
@@ -556,7 +557,7 @@ config CPU_FREQ_GOV_RAGINGMOLASSES
 
 	  If in doubt, say N0.
 
-config CPU_FREQ_GOV_SMARTASS2
+config CPU_FREQ_GOV_SMARTASSV2
 	tristate "'smartassV2' cpufreq governor"
 	depends on CPU_FREQ
 	help
