@@ -39,12 +39,6 @@
 #include <linux/slab.h>
 #include <linux/kernel_stat.h>
 
-#ifdef CONFIG_CPU_FREQ_GOV_SMARTMAX_TEGRA
-extern int tegra_input_boost (struct cpufreq_policy *policy,
-		       unsigned int target_freq,
-		       unsigned int relation);
-#endif
-
 /******************** Tunable parameters: ********************/
 
 /*
@@ -53,40 +47,12 @@ extern int tegra_input_boost (struct cpufreq_policy *policy,
  * lowering the frequency towards the ideal frequency is faster than below it.
  */
 
-
-#ifdef CONFIG_CPU_FREQ_GOV_SMARTMAX_SHAMU
-#define DEFAULT_SUSPEND_IDEAL_FREQ 475000
-#define DEFAULT_AWAKE_IDEAL_FREQ 475000
-#define DEFAULT_RAMP_UP_STEP 300000
-#define DEFAULT_RAMP_DOWN_STEP 150000
-#define DEFAULT_MAX_CPU_LOAD 80
-#define DEFAULT_MIN_CPU_LOAD 50
-#define DEFAULT_UP_RATE 30000
-#define DEFAULT_DOWN_RATE 60000
-#define DEFAULT_SAMPLING_RATE 30000
-// default to 3 * sampling_rate
-#define DEFAULT_INPUT_BOOST_DURATION 0
-#define DEFAULT_TOUCH_POKE_FREQ 0
-#define DEFAULT_BOOST_FREQ 0
-/*
- * from cpufreq_wheatley.c
- * Not all CPUs want IO time to be accounted as busy; this dependson how
- * efficient idling at a higher frequency/voltage is.
- * Pavel Machek says this is not so for various generations of AMD and old
- * Intel systems.
- * Mike Chan (androidlcom) calis this is also not true for ARM.
- */
-#define DEFAULT_IO_IS_BUSY 0
-#define DEFAULT_IGNORE_NICE 1
-#endif
-
-// msm8084 platform
 #ifdef CONFIG_CPU_FREQ_GOV_SMARTMAX_EPS
 #define DEFAULT_SUSPEND_IDEAL_FREQ 300000
 #define DEFAULT_AWAKE_IDEAL_FREQ 652800
 #define DEFAULT_RAMP_UP_STEP 200000
 #define DEFAULT_RAMP_DOWN_STEP 200000
-#define DEFAULT_MAX_CPU_LOAD 70
+#define DEFAULT_MAX_CPU_LOAD 80
 #define DEFAULT_MIN_CPU_LOAD 40
 #define DEFAULT_UP_RATE 30000
 #define DEFAULT_DOWN_RATE 60000
@@ -194,12 +160,12 @@ static DEFINE_PER_CPU(struct smartmax_info_s, smartmax_info);
 	} while (0)
 
 enum {
-	SMARTMAX_DEBUG_JUMPS = 1,
-	SMARTMAX_DEBUG_LOAD = 2,
-	SMARTMAX_DEBUG_ALG = 4,
-	SMARTMAX_DEBUG_BOOST = 8,
-	SMARTMAX_DEBUG_INPUT = 16,
-	SMARTMAX_DEBUG_SUSPEND = 32
+	SMARTMAX_DEBUG_JUMPS = 0,
+	SMARTMAX_DEBUG_LOAD = 0,
+	SMARTMAX_DEBUG_ALG = 0,
+	SMARTMAX_DEBUG_BOOST = 0,
+	SMARTMAX_DEBUG_INPUT = 0,
+	SMARTMAX_DEBUG_SUSPEND = 0
 };
 
 /*
