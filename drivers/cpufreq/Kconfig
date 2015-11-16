@@ -182,6 +182,12 @@ config CPU_FREQ_DEFAULT_GOV_HELLSACTIVE
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
 
+config CPU_FREQ_DEFAULT_GOV_HYPER
+        bool "HYPER"
+        select CPU_FREQ_GOV_HYPER
+        ---help---
+          Use the CPUFreq governor 'HYPER' as default.
+
 config CPU_FREQ_DEFAULT_GOV_IMPULSE
 	bool "impulse"
 	select CPU_FREQ_GOV_IMPULSE
@@ -501,6 +507,14 @@ config CPU_FREQ_GOV_ELEMENTALX
 	  For details, take a look at linux/Documentation/cpu-freq.
 
 	  If in doubt, say N.
+
+config CPU_FREQ_GOV_HYPER
+        tristate "'HYPER' cpufreq governor"
+        depends on CPU_FREQ
+        ---help---
+          'HYPER' - a tweaked "ondemand" based smart and smooth optimized governor!
+
+           If in doubt, say Y.
 	  
 config CPU_FREQ_GOV_HELLSACTIVE
 	tristate "'hellsactive' cpufreq policy governor"
