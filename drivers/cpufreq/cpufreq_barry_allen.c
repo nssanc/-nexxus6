@@ -133,7 +133,7 @@ static bool boosted;
 #define DEFAULT_TIMER_SLACK (4 * DEFAULT_TIMER_RATE)
 static int timer_slack_val = DEFAULT_TIMER_SLACK;
 
-#define TOP_STOCK_FREQ 2889000
+#define TOP_STOCK_FREQ 3091200 
 
 static bool io_is_busy;
 
