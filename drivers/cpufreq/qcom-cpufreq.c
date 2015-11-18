@@ -342,17 +342,14 @@ static int msm_cpufreq_init(struct cpufreq_policy *policy)
 #ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
 		policy->cpuinfo.min_freq = CONFIG_MSM_CPU_FREQ_MIN;
 		policy->cpuinfo.max_freq = CONFIG_MSM_CPU_FREQ_MAX;
-#else
-		policy->max = 2649600;
-		policy->min = 300000;		
 #endif
 	}
 #ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
 	policy->min = CONFIG_MSM_CPU_FREQ_MIN;
 	policy->max = CONFIG_MSM_CPU_FREQ_MAX;
 #else
-	policy->max = 3091200;
-	policy->min = 35800;
+	policy->max = 2649600;
+	policy->min = 300000;
 #endif
 	
 	cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
