@@ -448,7 +448,7 @@ if TCP_CONG_ADVANCED
 
 config TCP_CONG_BIC
 	tristate "Binary Increase Congestion (BIC) control"
-	default m
+	default n
 	---help---
 	BIC-TCP is a sender-side only change that ensures a linear RTT
 	fairness under large windows while offering both scalability and
@@ -460,35 +460,37 @@ config TCP_CONG_BIC
 	increase provides TCP friendliness.
 	See http://www.csc.ncsu.edu/faculty/rhee/export/bitcp/
 
+config TCP_CONG_CDG
+	tristate "CAIA Delay-Gradient (CDG)"
+	default n
+	---help---
+	CAIA Delay-Gradient (CDG) is a TCP congestion control that modifies
+	the TCP sender in order to:
+
+	  o Use the delay gradient as a congestion signal.
+	  o Back off with an average probability that is independent of the RTT.
+	  o Coexist with flows that use loss-based congestion control.
+	  o Tolerate packet loss unrelated to congestion.
+
+	For further details see:
+	  D.A. Hayes and G. Armitage. "Revisiting TCP congestion control using
+	  delay gradients." In Networking 2011. Preprint: http://goo.gl/No3vdg
+
 config TCP_CONG_CUBIC
 	tristate "CUBIC TCP"
-	default y
+	default n
 	---help---
 	This is version 2.0 of BIC-TCP which uses a cubic growth function
 	among other techniques.
 	See http://www.csc.ncsu.edu/faculty/rhee/export/bitcp/cubic-paper.pdf
 
-config TCP_CONG_WESTWOOD
-	tristate "TCP Westwood+"
-	default m
-	---help---
-	TCP Westwood+ is a sender-side only modification of the TCP Reno
-	protocol stack that optimizes the performance of TCP congestion
-	control. It is based on end-to-end bandwidth estimation to set
-	congestion window and slow start threshold after a congestion
-	episode. Using this estimation, TCP Westwood+ adaptively sets a
-	slow start threshold and a congestion window which takes into
-	account the bandwidth used  at the time congestion is experienced.
-	TCP Westwood+ significantly increases fairness wrt TCP Reno in
-	wired networks and throughput over wireless links.
-
-config TCP_CONG_SOCIOPATH
-	tristate "TCP Sociopath"
+config TCP_CONG_HIGHSPEED
+	tristate "TCP HIGHSPEED"
 	default n
 
 config TCP_CONG_HTCP
         tristate "H-TCP"
-        default m
+        default n
 	---help---
 	H-TCP is a send-side only modifications of the TCP Reno
 	protocol stack that optimizes the performance of TCP
@@ -516,24 +518,14 @@ config TCP_CONG_HYBLA
 	involved, especially when sharing a common bottleneck with normal
 	terrestrial connections.
 
-config TCP_CONG_VEGAS
-	tristate "TCP Vegas"
-	default n
+config TCP_CONG_ILLINOIS
+	tristate "TCP Illinois"
+	default y
 	---help---
-	TCP Vegas is a sender-side only change to TCP that anticipates
-	the onset of congestion by estimating the bandwidth. TCP Vegas
-	adjusts the sending rate by modifying the congestion
-	window. TCP Vegas should provide less packet loss, but it is
-	not as aggressive as TCP Reno.
-
-config TCP_CONG_SCALABLE
-	tristate "Scalable TCP"
-	default n
-	---help---
-	Scalable TCP is a sender-side only change to TCP which uses a
-	MIMD congestion control algorithm which has some nice scaling
-	properties, though is known to have fairness issues.
-	See http://www.deneholme.net/tom/scalable/
+	TCP-Illinois is a sender-side modification of TCP Reno for
+	high speed long delay links. It uses round-trip-time to
+	adjust the alpha and beta parameters to achieve a higher average
+	throughput and maintain fairness.
 
 config TCP_CONG_LP
 	tristate "TCP Low Priority"
@@ -544,6 +536,29 @@ config TCP_CONG_LP
 	``fair share`` of bandwidth as targeted by TCP.
 	See http://www-ece.rice.edu/networks/TCP-LP/
 
+config TCP_CONG_SCALABLE
+	tristate "Scalable TCP"
+	default n
+	---help---
+	Scalable TCP is a sender-side only change to TCP which uses a
+	MIMD congestion control algorithm which has some nice scaling
+	properties, though is known to have fairness issues.
+	See http://www.deneholme.net/tom/scalable/
+
+config TCP_CONG_SOCIOPATH
+	tristate "TCP Sociopath"
+	default n
+
+config TCP_CONG_VEGAS
+	tristate "TCP Vegas"
+	default n
+	---help---
+	TCP Vegas is a sender-side only change to TCP that anticipates
+	the onset of congestion by estimating the bandwidth. TCP Vegas
+	adjusts the sending rate by modifying the congestion
+	window. TCP Vegas should provide less packet loss, but it is
+	not as aggressive as TCP Reno.
+
 config TCP_CONG_VENO
 	tristate "TCP Veno"
 	default n
@@ -553,7 +568,21 @@ config TCP_CONG_VENO
 	distinguishing to circumvent the difficult judgment of the packet loss
 	type. TCP Veno cuts down less congestion window in response to random
 	loss packets.
-	See <http://ieeexplore.ieee.org/xpl/freeabs_all.jsp?arnumber=1177186> 
+	See <http://ieeexplore.ieee.org/xpl/freeabs_all.jsp?arnumber=1177186>
+
+config TCP_CONG_WESTWOOD
+	tristate "TCP Westwood+"
+	default n
+	---help---
+	TCP Westwood+ is a sender-side only modification of the TCP Reno
+	protocol stack that optimizes the performance of TCP congestion
+	control. It is based on end-to-end bandwidth estimation to set
+	congestion window and slow start threshold after a congestion
+	episode. Using this estimation, TCP Westwood+ adaptively sets a
+	slow start threshold and a congestion window which takes into
+	account the bandwidth used  at the time congestion is experienced.
+	TCP Westwood+ significantly increases fairness wrt TCP Reno in
+	wired networks and throughput over wireless links.
 
 config TCP_CONG_YEAH
 	tristate "YeAH TCP"
@@ -569,33 +598,7 @@ config TCP_CONG_YEAH
 	For further details look here:
 	  http://wil.cs.caltech.edu/pfldnet2007/paper/YeAH_TCP.pdf
 
-config TCP_CONG_ILLINOIS
-	tristate "TCP Illinois"
-	default n
-	---help---
-	TCP-Illinois is a sender-side modification of TCP Reno for
-	high speed long delay links. It uses round-trip-time to
-	adjust the alpha and beta parameters to achieve a higher average
-	throughput and maintain fairness.
 
-	For further details see:
-	  http://www.ews.uiuc.edu/~shaoliu/tcpillinois/index.html
-
-config TCP_CONG_CDG
-	tristate "CAIA Delay-Gradient (CDG)"
-	default n
-	---help---
-	CAIA Delay-Gradient (CDG) is a TCP congestion control that modifies
-	the TCP sender in order to:
-
-	  o Use the delay gradient as a congestion signal.
-	  o Back off with an average probability that is independent of the RTT.
-	  o Coexist with flows that use loss-based congestion control.
-	  o Tolerate packet loss unrelated to congestion.
-
-	For further details see:
-	  D.A. Hayes and G. Armitage. "Revisiting TCP congestion control using
-	  delay gradients." In Networking 2011. Preprint: http://goo.gl/No3vdg
 
 choice
 	prompt "Default TCP congestion control"
@@ -607,14 +610,32 @@ choice
 	config DEFAULT_BIC
 		bool "Bic" if TCP_CONG_BIC=y
 
+	config DEFAULT_CDG
+		bool "CDG" if TCP_CONG_CDG=y
+
 	config DEFAULT_CUBIC
 		bool "Cubic" if TCP_CONG_CUBIC=y
+
+       	config DEFAULT_HIGHSPEED
+		bool "HIGHSPEED" if TCP_CONG_HIGHSPEED=y
 
 	config DEFAULT_HTCP
 		bool "Htcp" if TCP_CONG_HTCP=y
 
 	config DEFAULT_HYBLA
 		bool "Hybla" if TCP_CONG_HYBLA=y
+
+        config DEFAULT_ILLINOIS
+		bool "ILLINOIS" if TCP_CONG_ILLINOIS=y
+
+        config DEFAULT_LP
+		bool "LP" if TCP_CONG_LP=y
+
+        config DEFAULT_SCALABLE
+		bool "SCALABLE" if TCP_CONG_SCALABLE=y
+
+        config DEFAULT_SOCIOPATH
+		bool "Sociopath" if TCP_CONG_SOCIOPATH=y
 
 	config DEFAULT_VEGAS
 		bool "Vegas" if TCP_CONG_VEGAS=y
@@ -625,20 +646,17 @@ choice
 	config DEFAULT_WESTWOOD
 		bool "Westwood" if TCP_CONG_WESTWOOD=y
 
-	config DEFAULT_CDG
-		bool "CDG" if TCP_CONG_CDG=y
+        config DEFAULT_YEAH
+		bool "YEAH" if TCP_CONG_YEAH=y
 
-        config DEFAULT_SOCIOPATH
-		bool "Sociopath" if TCP_CONG_SOCIOPATH=y
 
-	config DEFAULT_RENO
-		bool "Reno"
+        
 
 endchoice
 
 endif
 
-config TCP_CONG_CUBIC
+config TCP_CONG_ILLINOIS
 	tristate
 	depends on !TCP_CONG_ADVANCED
 	default y
@@ -646,16 +664,20 @@ config TCP_CONG_CUBIC
 config DEFAULT_TCP_CONG
 	string
 	default "bic" if DEFAULT_BIC
+        default "cdg" if DEFAULT_CDG
 	default "cubic" if DEFAULT_CUBIC
+        default "highspeed" if DEFAULT_HIGHSPEED
 	default "htcp" if DEFAULT_HTCP
 	default "hybla" if DEFAULT_HYBLA
+        default "illinois" if DEFAULT_ILLINOIS
+        default "lp" if DEFAULT_LP
+        default "scalable" if DEFAULT_SCALABLE
+        default "sociopath" if DEFAULT_SOCIOPATH
 	default "vegas" if DEFAULT_VEGAS
+        default "veno" if DEFAULT_VENO
 	default "westwood" if DEFAULT_WESTWOOD
-	default "veno" if DEFAULT_VENO
-	default "reno" if DEFAULT_RENO
-	default "cdg" if DEFAULT_CDG
-    default "sociopath" if DEFAULT_SOCIOPATH
-	default "cubic"
+        default "yeah" if DEFAULT_YEAH
+        default "illinois"
 
 config TCP_MD5SIG
 	bool "TCP: MD5 Signature Option support (RFC2385)"
