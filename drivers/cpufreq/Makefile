@@ -15,7 +15,6 @@ obj-$(CONFIG_CPU_BOOST)			   += cpu-boost.o
 
 # Custom CPUfreq Governors
 obj-$(CONFIG_CPU_FREQ_GOV_ADAPTIVE)	   += cpufreq_adaptive.o
-obj-$(CONFIG_CPU_FREQ_GOV_ALUCARD) 	   += cpufreq_alucard.o
 obj-$(CONFIG_CPU_FREQ_GOV_BARRY_ALLEN)	   += cpufreq_barry_allen.o
 obj-$(CONFIG_CPU_FREQ_GOV_BIOSHOCK)	   += cpufreq_bioshock.o
 obj-$(CONFIG_CPU_FREQ_GOV_BLU_ACTIVE)      += cpufreq_blu_active.o
@@ -38,7 +37,6 @@ obj-$(CONFIG_CPU_FREQ_GOV_TRIPNDROID)	   += cpufreq_tripndroid.o
 obj-$(CONFIG_CPU_FREQ_GOV_UMBRELLA_CORE)   += cpufreq_umbrella_core.o
 obj-$(CONFIG_CPU_FREQ_GOV_WAVE)	           += cpufreq_wave.o
 obj-$(CONFIG_CPU_FREQ_GOV_XPERIENCE)	   += cpufreq_xperience.o
-obj-$(CONFIG_CPU_FREQ_GOV_YANKACTIVE)	   += cpufreq_yankactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_ZZMOOVE)         += cpufreq_zzmoove.o
 # Custom CPUfreq Governors - END
 
