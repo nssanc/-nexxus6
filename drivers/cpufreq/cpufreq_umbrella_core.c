@@ -155,9 +155,9 @@ static spinlock_t mode_lock;
 #define SINGLE_MODE	1
 #define NO_MODE	0
 
-static unsigned int mode = 0;
-static unsigned int enforced_mode = 0;
-static u64 mode_check_timestamp = 0;
+static unsigned int mode = 2;
+static unsigned int enforced_mode = 2;
+static u64 mode_check_timestamp = 2;
 
 #define DEFAULT_MULTI_ENTER_TIME (4 * DEFAULT_TIMER_RATE)
 static unsigned long multi_enter_time = DEFAULT_MULTI_ENTER_TIME;
@@ -197,7 +197,7 @@ static unsigned int sampling_down_factor_set[MAX_PARAM_SET];
 #ifdef CONFIG_UC_MODE_AUTO_CHANGE_BOOST
 // BIMC freq vs BW table
 // BW for 8084 : 762 1144 2288 3051 5996 8056 10101 12145 16250
-// Freq for 8084 (KHz) : 35800 98300 300000 345600 422400 652800 729600 883200 960000 1036800 1190400 1267200 1497600 1574400 1728000 1958400 2265600 2457600 2496000 2572800 2649600 2726400 2803200 2880000 2956800 3033600 3091200   
+// Freq for 8084 (KHz) : 35800 98300 223200 300000 345600 422400 652800 729600 883200 960000 1036800 1190400 1267200 1497600 1574400 1728000 1958400 2265600 2457600 2496000 2572800 2649600 2726400 2803200 2880000 2956800 3033600 3091200  
 static unsigned long bimc_hispeed_freq = 0;	// bimc hispeed freq on mode change. default : MHz
 static int mode_count = 0;
 //extern int request_bimc_clk(unsigned long request_clk);
