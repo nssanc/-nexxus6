@@ -1,4 +1,4 @@
-if ARCH_MSM
+kernel/ksysfs.cif ARCH_MSM
 
 menu "MSM SoC Type"
 
@@ -1504,12 +1504,6 @@ config INTELLI_HOTPLUG
 	help
 	  An intelligent cpu hotplug driver for
 	  Low Latency Frequency Transition capable processors.
-
-config MSM_SLEEPER
-	bool "CPU hotplug driver"
-	default y
-	help
-	  CPU hotplug driver
 
 config MSM_LIMITER
 	bool "MSM Frequency Limiter Driver"
