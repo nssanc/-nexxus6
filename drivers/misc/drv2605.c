@@ -164,7 +164,7 @@
 #define I2C_RETRIES		5
 
 static struct kobject *vibe_kobj;
-static int vibe_strength;
+static int vibe_strength = 100;
 
 static struct drv260x {
 	struct class *class;
