@@ -2,7 +2,7 @@ on charger
     #disable zen decision
     write /sys/kernel/zen_decision/enabled 0
     #low power governing
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor conservativex
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor dyninteractive
     write /sys/devices/system/cpu/cpu1/online 0
     write /sys/devices/system/cpu/cpu2/online 0
     write /sys/devices/system/cpu/cpu3/online 0
@@ -21,10 +21,10 @@ on boot
 
 on property:dev.bootcomplete=1
     stop mpdecision
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor conservativex
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor conservativex
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor conservativex
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor conservativex
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor dyninteractive
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor dyninteractive
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor dyninteractive
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor dyninteractive
     write /sys/module/lpm_levels/enable_low_power/l2 4
     write /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled 1
     write /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled 1
