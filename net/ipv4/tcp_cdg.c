@@ -263,7 +263,6 @@ static void tcp_cdg_cong_avoid(struct sock *sk, u32 ack, u32 in_flight)
 	struct tcp_sock *tp = tcp_sk(sk);
 	u32 prior_snd_cwnd;
 	u32 incr;
-	u32 in_flight;
 
 	if (tp->snd_cwnd < tp->snd_ssthresh && hystart_detect)
 		tcp_cdg_hystart_update(sk);
