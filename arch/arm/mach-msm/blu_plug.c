@@ -36,9 +36,9 @@
 #define DEF_UP_TIMER_CNT	(2)	/* 1 sec */
 #define MAX_CORES_SCREENOFF     (1)
 #define MAX_FREQ_SCREENOFF      (0)
-#define MAX_FREQ_PLUG           (0)
+#define MAX_FREQ_PLUG           (3091200)
 #define DEF_PLUG_THRESHOLD      (70)
-#define BLU_PLUG_ENABLED	(0)
+#define BLU_PLUG_ENABLED	(1)
 
 static unsigned int blu_plug_enabled = BLU_PLUG_ENABLED;
 
