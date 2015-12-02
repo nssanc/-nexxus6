@@ -81,9 +81,9 @@ static unsigned int low_power_threshold;
 static unsigned int hi_perf_threshold;
 static unsigned int low_power_rate;
 static enum tune_values {
-	LOW_POWER_TUNE =1,
+	LOW_POWER_TUNE,
 	DEFAULT_TUNE,
-	HIGH_PERF_TUNE,
+	HIGH_PERF_TUNE = 1,
 } cur_tune_value;
 
 #define MIN_GO_HISPEED_LOAD 85
@@ -97,7 +97,7 @@ static enum tune_values {
 static u64 hispeed_freq;
 
 /* Go to hi speed when CPU load at or above this value. */
-#define DEFAULT_GO_HISPEED_LOAD 95
+#define DEFAULT_GO_HISPEED_LOAD 80
 static unsigned long go_hispeed_load;
 /*
  * The minimum amount of time to spend at a frequency before we can ramp down.
