@@ -22,8 +22,6 @@ config CPU_IDLE_GOV_LADDER
 	bool "Ladder idle governor"
 	depends on CPU_IDLE
 	default n
-        bool "Ladder governor (for periodic timer tick)"
-
 
 config CPU_IDLE_GOV_MENU
 	bool "Menu idle governor"
