@@ -9,7 +9,7 @@ export ARCH=arm
 export SUBARCH=arm
 
 
-make HSB_defconfig 
+make Singularity_defconfig 
 make $CC_JOBS
 
 if [ ! -f arch/arm/boot/zImage-dtb ]; then
