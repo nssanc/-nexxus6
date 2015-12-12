@@ -66,7 +66,7 @@
 				} while (0)
 
 bool backlight_dimmer = true;
-module_param(backlight_dimmer, bool, 0664);
+module_param(backlight_dimmer, bool, 0644);
 
 #define MAX_FBI_LIST 32
 static struct fb_info *fbi_list[MAX_FBI_LIST];
