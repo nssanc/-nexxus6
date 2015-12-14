@@ -48,7 +48,7 @@
 #define DEFAULT_FREQ_BOOST_TIME			(0)
 #define MAX_FREQ_BOOST_TIME			(0)
 #define UP_THRESHOLD_AT_MIN_FREQ		(40)
-#define FREQ_FOR_RESPONSIVENESS			(2496000)
+#define FREQ_FOR_RESPONSIVENESS			(2880000)
 
 static u64 hyper_freq_boosted_time;
 
@@ -71,8 +71,8 @@ static unsigned int min_sampling_rate;
 #define MIN_LATENCY_MULTIPLIER			(20)
 #define TRANSITION_LATENCY_LIMIT		(10 * 1000 * 1000)
 
-/* have the timer rate booted for this much time 4s*/
-#define TIMER_RATE_BOOST_TIME 4000000
+/* have the timer rate boosted for this much time 4s*/
+#define TIMER_RATE_BOOST_TIME 0
 static int hyper_sampling_rate_boosted;
 static u64 hyper_sampling_rate_boosted_time;
 unsigned int hyper_current_sampling_rate;
@@ -152,7 +152,7 @@ static struct dbs_tuners {
 	.ignore_nice = 0,
 	.powersave_bias = 0,
 	.freq_boost_time = DEFAULT_FREQ_BOOST_TIME,
-	.boostfreq = 2496000,
+	.boostfreq = 0,
 	.freq_step = FREQ_STEP,
 	.freq_responsiveness = FREQ_FOR_RESPONSIVENESS
 };

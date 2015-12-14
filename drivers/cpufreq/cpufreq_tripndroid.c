@@ -80,7 +80,7 @@ static struct mutex set_speed_lock;
 static u64 hispeed_freq; 
 
 /* governor settings */
-#define DEFAULT_GO_HISPEED_LOAD 95
+#define DEFAULT_GO_HISPEED_LOAD 90
 static unsigned long go_hispeed_load;
 
 #define DEFAULT_DOWN_SAMPLE_TIME 30 * USEC_PER_MSEC

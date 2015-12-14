@@ -37,6 +37,7 @@
 #include <trace/events/cpufreq_interactive.h>
 
 static int active_count;
+extern bool mdss_screen_on;
 
 struct cpufreq_interactive_cpuinfo {
 	struct timer_list cpu_timer;
@@ -73,7 +74,7 @@ static struct mutex gov_lock;
 static unsigned int hispeed_freq;
 
 /* Go to hi speed when CPU load at or above this value. */
-#define DEFAULT_GO_HISPEED_LOAD 99
+#define DEFAULT_GO_HISPEED_LOAD 95
 static unsigned long go_hispeed_load = DEFAULT_GO_HISPEED_LOAD;
 
 /* Sampling down factor to be applied to min_sample_time at max freq */
@@ -126,6 +127,9 @@ static u64 boostpulse_endtime;
 #define DEFAULT_TIMER_SLACK (4 * DEFAULT_TIMER_RATE)
 static int timer_slack_val = DEFAULT_TIMER_SLACK;
 
+#define DEFAULT_SCREEN_OFF_MAX 2265600
+static unsigned long screen_off_max = DEFAULT_SCREEN_OFF_MAX;
+
 static bool io_is_busy;
 
 /*
@@ -145,7 +149,7 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 static
 #endif
 struct cpufreq_governor cpufreq_gov_interactive = {
-	.name = "interactive",
+	.name = "interactiveX",
 	.governor = cpufreq_governor_interactive,
 	.max_transition_latency = 10000000,
 	.owner = THIS_MODULE,
@@ -391,11 +395,9 @@ static void cpufreq_interactive_timer(unsigned long data)
 
 	do_div(cputime_speedadj, delta_time);
 	loadadjfreq = (unsigned int)cputime_speedadj * 100;
-	cpu_load = loadadjfreq / pcpu->policy->cur;
+	cpu_load = loadadjfreq / pcpu->target_freq;
 	pcpu->prev_load = cpu_load;
 	boosted = boost_val || now < boostpulse_endtime;
-
-	cpufreq_notify_utilization(pcpu->policy, cpu_load);
 
 	if (cpu_load >= go_hispeed_load || boosted) {
 		if (pcpu->target_freq < hispeed_freq) {
@@ -633,6 +635,9 @@ static int cpufreq_interactive_speedchange_task(void *data)
 				if (pjcpu->target_freq > max_freq)
 					max_freq = pjcpu->target_freq;
 			}
+
+			if (unlikely(!mdss_screen_on))
+				if (max_freq > screen_off_max) max_freq = screen_off_max;
 
 			if (max_freq != pcpu->policy->cur)
 				__cpufreq_driver_target(pcpu->policy,
@@ -1018,7 +1023,6 @@ static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
 		trace_cpufreq_interactive_boost("on");
 		cpufreq_interactive_boost();
 	} else {
-		boostpulse_endtime = ktime_to_us(ktime_get());
 		trace_cpufreq_interactive_unboost("off");
 	}
 
@@ -1068,6 +1072,30 @@ static ssize_t store_boostpulse_duration(
 }
 
 define_one_global_rw(boostpulse_duration);
+
+ static ssize_t show_screen_off_maxfreq(struct kobject *kobj,
+                                         struct attribute *attr, char *buf)
+ {
+         return sprintf(buf, "%lu\n", screen_off_max);
+ }
+ 
+ static ssize_t store_screen_off_maxfreq(struct kobject *kobj,
+                                          struct attribute *attr,
+                                          const char *buf, size_t count)
+ {
+         int ret;
+         unsigned long val;
+ 
+         ret = strict_strtoul(buf, 0, &val);
+         if (ret < 0) return ret;
+         if (val < 300000) screen_off_max = DEFAULT_SCREEN_OFF_MAX;
+         else screen_off_max = val;
+         return count;
+ }
+ 
+ static struct global_attr screen_off_maxfreq =
+        __ATTR(screen_off_maxfreq, 0666, show_screen_off_maxfreq,
+                store_screen_off_maxfreq);
 
 static ssize_t show_io_is_busy(struct kobject *kobj,
 			struct attribute *attr, char *buf)
@@ -1172,6 +1200,7 @@ static struct attribute *interactive_attributes[] = {
 	&boost.attr,
 	&boostpulse.attr,
 	&boostpulse_duration.attr,
+	&screen_off_maxfreq.attr,
 	&io_is_busy_attr.attr,
 	&sampling_down_factor_attr.attr,
 	&sync_freq_attr.attr,
@@ -1183,6 +1212,11 @@ static struct attribute *interactive_attributes[] = {
 static struct attribute_group interactive_attr_group = {
 	.attrs = interactive_attributes,
 	.name = "interactive",
+};
+
+static struct attribute_group interactivex_attr_group = {
+	.attrs = interactive_attributes,
+	.name = "interactiveX",
 };
 
 static int cpufreq_interactive_idle_notifier(struct notifier_block *nb,
@@ -1263,6 +1297,9 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 			return rc;
 		}
 
+		rc = sysfs_create_group(get_governor_parent_kobj(policy),
+				&interactivex_attr_group);
+
 		idle_notifier_register(&cpufreq_interactive_idle_nb);
 		cpufreq_register_notifier(
 			&cpufreq_notifier_block, CPUFREQ_TRANSITION_NOTIFIER);
@@ -1291,6 +1328,8 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *policy,
 		idle_notifier_unregister(&cpufreq_interactive_idle_nb);
 		sysfs_remove_group(get_governor_parent_kobj(policy),
 				&interactive_attr_group);
+		sysfs_remove_group(get_governor_parent_kobj(policy),
+				&interactivex_attr_group);
 		if (!have_governor_per_policy())
 			cpufreq_put_global_kobject();
 		mutex_unlock(&gov_lock);
@@ -1387,6 +1426,7 @@ static int __init cpufreq_interactive_init(void)
 	struct cpufreq_interactive_cpuinfo *pcpu;
 	struct sched_param param = { .sched_priority = MAX_RT_PRIO-1 };
 
+	mdss_screen_on = true;
 	/* Initalize per-cpu timers */
 	for_each_possible_cpu(i) {
 		pcpu = &per_cpu(cpuinfo, i);

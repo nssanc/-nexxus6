@@ -81,12 +81,12 @@ static struct nightmare_tuners {
 	int freq_step_dec_at_max_freq;
 
 } nightmare_tuners_ins = {
-	.sampling_rate = 40000,
+	.sampling_rate = 10000,
 	.inc_cpu_load_at_min_freq = 40,
 	.inc_cpu_load = 60,
 	.dec_cpu_load = 60,
-        .freq_for_responsiveness = 1267200,
-	.freq_for_responsiveness_max = 2265600,
+        .freq_for_responsiveness = 2265600,
+	.freq_for_responsiveness_max = 2880000,
         .freq_step_at_min_freq = 40,
 	.freq_step = 50,
 	.freq_up_brake_at_min_freq = 40,

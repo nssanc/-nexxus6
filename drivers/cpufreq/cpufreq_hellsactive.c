@@ -72,10 +72,10 @@ static spinlock_t speedchange_cpumask_lock;
 static struct mutex gov_lock;
 
 /* Hi speed to bump to from lo speed when load burst (default max) */
-static unsigned int hispeed_freq = 1190400;
+static unsigned int hispeed_freq = 3091200;
 
 /* Go to hi speed when CPU load at or above this value. */
-#define DEFAULT_GO_HISPEED_LOAD 99
+#define DEFAULT_GO_HISPEED_LOAD 95
 static unsigned long go_hispeed_load = DEFAULT_GO_HISPEED_LOAD;
 
 /* Target load.  Lower values result in higher CPU speeds. */
@@ -115,9 +115,9 @@ static unsigned int *above_hispeed_delay = default_above_hispeed_delay;
 static int nabove_hispeed_delay = ARRAY_SIZE(default_above_hispeed_delay);
 
 /* 1000000us - 1s */
-#define DEFAULT_BOOSTPULSE_DURATION 500000
+#define DEFAULT_BOOSTPULSE_DURATION 0
 static int boostpulse_duration_val = DEFAULT_BOOSTPULSE_DURATION;
-#define DEFAULT_INPUT_BOOST_FREQ 1036800
+#define DEFAULT_INPUT_BOOST_FREQ 0
 unsigned int hells_input_boost_freq = DEFAULT_INPUT_BOOST_FREQ;
 
 /*
@@ -128,7 +128,7 @@ unsigned int hells_input_boost_freq = DEFAULT_INPUT_BOOST_FREQ;
 /*
  * Default thread migration boost cpufreq
  */
-#define CPU_SYNC_FREQ 1036800
+#define CPU_SYNC_FREQ 0
 
 /*
  * Max additional time to wait in idle, beyond timer_rate, at speeds above
