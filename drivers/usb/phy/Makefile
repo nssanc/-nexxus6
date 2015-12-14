@@ -1,6 +1,7 @@
 #
 # Makefile for physical layer USB drivers
 #
+CFLAGS_KERNEL := -Wno-misleading-indentation
 
 ccflags-$(CONFIG_USB_DEBUG) := -DDEBUG
 

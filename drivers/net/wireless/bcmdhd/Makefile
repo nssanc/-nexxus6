@@ -1,3 +1,4 @@
+CFLAGS_KERNEL := -Wno-misleading-indentation
 # bcmdhd
 #####################
 # SDIO Basic feature

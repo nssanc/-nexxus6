@@ -12,7 +12,8 @@ CFLAGS_KERNEL := -fno-graphite \
           	-fno-loop-unroll-and-jam \
           	-fno-loop-parallelize-all \
           	-ftree-parallelize-loops=0 \
-          	-fno-openmp
+          	-fno-openmp \
+                -Wno-misleading-indentation
 
 ccflags-$(CONFIG_USB_GADGET_DEBUG) := -DDEBUG
 
