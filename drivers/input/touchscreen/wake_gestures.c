@@ -78,7 +78,7 @@ static struct input_dev *gesture_dev;
 
 /* Resources */
 int s2w_switch = S2W_DEFAULT;
-bool dt2w_switch;
+bool dt2w_switch = 1;
 static int s2s_switch = S2S_DEFAULT;
 static int touch_x = 0, touch_y = 0;
 static bool touch_x_called = false, touch_y_called = false;
