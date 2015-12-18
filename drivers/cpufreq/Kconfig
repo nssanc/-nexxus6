@@ -167,15 +167,6 @@ config CPU_FREQ_DEFAULT_GOV_ELEMENTALX
 	select CPU_FREQ_GOV_PERFORMANCE
 	help
 	  Use the CPUFreq governor 'elementalx' as default.
-	
-config CPU_FREQ_DEFAULT_GOV_HELLSACTIVE
-	bool "hellsactive"
-	select CPU_FREQ_GOV_HELLSACTIVE
-	help
-	  Use the CPUFreq governor 'hellsactive' as default. This allows
-	  you to get a full dynamic cpu frequency capable system by simply
-	  loading your cpufreq low-level hardware driver, using the
-	  'interactive' governor for latency-sensitive workloads.
 
 config CPU_FREQ_DEFAULT_GOV_HYPER
         bool "HYPER"
@@ -253,10 +244,6 @@ config CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'umbrella_core' governor for latency-sensitive workloads.
-
-config CPU_FREQ_DEFAULT_GOV_WAVE
-	bool "wave"
-	select CPU_FREQ_GOV_WAVE
 
 config CPU_FREQ_DEFAULT_GOV_XPERIENCE
 	bool "xperience"
@@ -493,23 +480,6 @@ config CPU_FREQ_GOV_HYPER
 
            If in doubt, say Y.
 	  
-config CPU_FREQ_GOV_HELLSACTIVE
-	tristate "'hellsactive' cpufreq policy governor"
-	help
-	  'hellsactive' - This driver adds a dynamic cpufreq policy governor
-	  designed for latency-sensitive workloads.
-
-	  This governor attempts to reduce the latency of clock
-	  increases so that the system is more responsive to
-	  interactive workloads.
-
-	  To compile this driver as a module, choose M here: the
-	  module will be called cpufreq_interactive.
-
-	  For details, take a look at linux/Documentation/cpu-freq.
-
-	  If in doubt, say N.
-	  
 config CPU_FREQ_GOV_IMPULSE
 	tristate "'interactive' cpufreq policy governor"
 	help
@@ -582,10 +552,6 @@ config CPU_FREQ_GOV_UMBRELLA_CORE
 
 	  The governor is based on interactive to provide a resident controller
 	  which interprets unnecessary battery drain as evil.
-
-config CPU_FREQ_GOV_WAVE
-	tristate "'wave' cpufreq governor"
-	depends on CPU_FREQ
 
 config CPU_FREQ_GOV_XPERIENCE
 	 tristate "'xperience' cpufreq governor"
