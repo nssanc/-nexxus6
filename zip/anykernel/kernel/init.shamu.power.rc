@@ -19,6 +19,15 @@ on boot
     chmod 0660 /dev/cpuctl/cpu.notify_on_migrate
     write /sys/module/msm_thermal/core_control/enabled 0
 
+    # Screen color
+    write /sys/devices/platform/kcal_ctrl.0/kcal_enable 1
+    write /sys/devices/platform/kcal_ctrl.0/kcal 250 250 255
+    write /sys/devices/platform/kcal_ctrl.0/kcal_cont 256
+    write /sys/devices/platform/kcal_ctrl.0/kcal_hue 1515
+    write /sys/devices/platform/kcal_ctrl.0/kcal_min 26
+    write /sys/devices/platform/kcal_ctrl.0/kcal_sat 245
+    write /sys/devices/platform/kcal_ctrl.0/kcal_val 251
+
 on property:dev.bootcomplete=1
     stop mpdecision
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor dyninteractive
