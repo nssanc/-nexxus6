@@ -27,7 +27,6 @@ obj-$(CONFIG_CPU_FREQ_GOV_ELEMENTALX)	   += cpufreq_elementalx.o
 obj-$(CONFIG_CPU_FREQ_GOV_HYPER)  	   += cpufreq_hyper.o
 obj-$(CONFIG_CPU_FREQ_GOV_IMPULSE)         += cpufreq_impulse.o
 obj-$(CONFIG_CPU_FREQ_GOV_LULZACTIVE)	   += cpufreq_lulzactive.o
-obj-$(CONFIG_CPU_FREQ_GOV_NIGHTMARE)	   += cpufreq_nightmare.o
 obj-$(CONFIG_CPU_FREQ_GOV_ONDEMAND_EPS)    += cpufreq_ondemand_eps.o
 obj-$(CONFIG_CPU_FREQ_GOV_PRESERVATIVE)	   += cpufreq_preservative.o
 obj-$(CONFIG_CPU_FREQ_GOV_RAGINGMOLASSES)  += cpufreq_ragingmolasses.o
