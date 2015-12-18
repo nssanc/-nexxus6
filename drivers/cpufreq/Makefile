@@ -30,7 +30,6 @@ obj-$(CONFIG_CPU_FREQ_GOV_LULZACTIVE)	   += cpufreq_lulzactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_ONDEMAND_EPS)    += cpufreq_ondemand_eps.o
 obj-$(CONFIG_CPU_FREQ_GOV_PRESERVATIVE)	   += cpufreq_preservative.o
 obj-$(CONFIG_CPU_FREQ_GOV_RAGINGMOLASSES)  += cpufreq_ragingmolasses.o
-obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSV2)	   += cpufreq_smartassv2.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTMAX_EPS)    += cpufreq_smartmax_eps.o
 obj-$(CONFIG_CPU_FREQ_GOV_TRIPNDROID)	   += cpufreq_tripndroid.o
 obj-$(CONFIG_CPU_FREQ_GOV_UMBRELLA_CORE)   += cpufreq_umbrella_core.o
