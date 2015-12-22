@@ -173,6 +173,10 @@ config CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE
 	bool "dynamic_interactive"
 	select CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 
+config CPU_FREQ_DEFAULT_GOV_ELECTRODEMAND
+	bool "electrodemand"
+	select CPU_FREQ_GOV_ELECTRODEMAND
+
 config CPU_FREQ_DEFAULT_GOV_ELEMENTALX
 	bool "elementalx"
 	select CPU_FREQ_GOV_ELEMENTALX
@@ -467,6 +471,10 @@ config CPU_FREQ_GOV_DESPAIR
 config CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 	tristate "'dynamic_interactive' cpufreq governor"
 	depends on CPU_FREQ
+
+config CPU_FREQ_GOV_ELECTRODEMAND
+ 	tristate "'electrodemand' cpufreq policy governor"
+        depends on CPU_FREQ
 
 config CPU_FREQ_GOV_ELEMENTALX
 	tristate "'elementalx' cpufreq policy governor"
