@@ -148,5 +148,3 @@ obj-$(CONFIG_BRICKED_HOTPLUG) += bricked_hotplug.o
 obj-$(CONFIG_ALUCARD_HOTPLUG) += alucard_hotplug.o
 obj-$(CONFIG_BLU_PLUG)        += blu_plug.o
 obj-$(CONFIG_MSM_LIMITER)     += msm_limiter.o
-
-obj-$(CONFIG_FORCE_FAST_CHARGE) += fastchg.o
