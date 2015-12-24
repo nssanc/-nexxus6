@@ -53,7 +53,7 @@ static struct notifier_block notif;
 static unsigned int boost_ms = 1200;
 module_param(boost_ms, uint, 0644);
 
-static unsigned int sync_threshold = 1728;
+static unsigned int sync_threshold;
 module_param(sync_threshold, uint, 0644);
 
 static bool input_boost_enabled;
