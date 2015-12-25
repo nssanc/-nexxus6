@@ -29,8 +29,8 @@
 		qcom,strtstp-sleepwake;
 		qcom,clk-map = <0x00000006>; //KGSL_CLK_CORE | KGSL_CLK_IFACE
 
-		qcom,pm-qos-active-latency = <500>;
-		qcom,pm-qos-wakeup-latency = <400>;
+		qcom,pm-qos-active-latency = <501>;
+		qcom,pm-qos-wakeup-latency = <490>;
 
 		/* Bus Scale Settings */
 		qcom,bus-control;
@@ -122,31 +122,25 @@
 
 			qcom,gpu-pwrlevel@6 {
 				reg = <6>;
-				qcom,gpu-freq = <240000000>;
-				qcom,bus-freq = <3>;
+				qcom,gpu-freq = <220000000>;
+				qcom,bus-freq = <4>;
 			};
 			
 			qcom,gpu-pwrlevel@7 {
 				reg = <7>;
-				qcom,gpu-freq = <180000000>;
-				qcom,bus-freq = <1>;
+				qcom,gpu-freq = <150000000>;
+				qcom,bus-freq = <2>;
 			};
 
 		        qcom,gpu-pwrlevel@8 {
 				reg = <8>;
-				qcom,gpu-freq = <100000000>;
-                                qcom,bus-freq = <1>;	
-			};
- 
-                         qcom,gpu-pwrlevel@9 {
-				reg = <9>;
-				qcom,gpu-freq = <60000000>;
-                                qcom,bus-freq = <1>;	
+				qcom,gpu-freq = <80000000>;
+                                qcom,bus-freq = <1>;		
 			};
 
-			qcom,gpu-pwrlevel@10 {
-				reg = <10>;
-				qcom,gpu-freq = <25000000>;
+			qcom,gpu-pwrlevel@9 {
+				reg = <9>;
+				qcom,gpu-freq = <27000000>;
 				qcom,bus-freq = <0>;
 			};
 		};
