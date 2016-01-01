@@ -124,12 +124,6 @@ config CPU_FREQ_DEFAULT_GOV_DARKNESS
 	help
 	Use the CPUfreq governor 'darkness' as default.
 
-config CPU_FREQ_DEFAULT_GOV_DESPAIR
-	bool "despair"
-	select CPU_FREQ_GOV_DESPAIR
-	help
-	Use the CPUfreq governor 'despair' as default.
-
 config CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE
 	bool "dynamic_interactive"
 	select CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
@@ -443,10 +437,6 @@ config CPU_FREQ_GOV_CONSERVATIVEX
 
 config CPU_FREQ_GOV_DARKNESS
 	tristate "'darkness' cpufreq governor"
-	depends on CPU_FREQ
-
-config CPU_FREQ_GOV_DESPAIR
-	tristate "'despair' cpufreq governor"
 	depends on CPU_FREQ
 
 config CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
