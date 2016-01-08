@@ -132,8 +132,8 @@ static u64 boostpulse_endtime;
 #define DEFAULT_TIMER_SLACK (4 * DEFAULT_TIMER_RATE)
 static int timer_slack_val = DEFAULT_TIMER_SLACK;
 
-#define DEFAULT_INACTIVE_FREQ_ON    2496000 
-#define DEFAULT_INACTIVE_FREQ_OFF   960000
+#define DEFAULT_INACTIVE_FREQ_ON    2035200
+#define DEFAULT_INACTIVE_FREQ_OFF   576000
 unsigned int max_inactive_freq = DEFAULT_INACTIVE_FREQ_ON;
 unsigned int max_inactive_freq_screen_on = DEFAULT_INACTIVE_FREQ_ON;
 unsigned int max_inactive_freq_screen_off = DEFAULT_INACTIVE_FREQ_OFF;
@@ -196,11 +196,12 @@ static unsigned int sampling_down_factor_set[MAX_PARAM_SET];
 
 #ifdef CONFIG_UC_MODE_AUTO_CHANGE_BOOST
 // BIMC freq vs BW table
-// BW for 8084 : 762 1144 2288 3051 5996 8056 10101 12145 16250
-// Freq for 8084 (KHz) : 35800 98300 223200 300000 345600 422400 652800 729600 883200 960000 1036800 1190400 1267200 1497600 1574400 1728000 1958400 2265600 2457600 2496000 2572800 2649600 2726400 2803200 2880000 2956800 3033600 3091200  
+// BW for 8084 : 762 1144 1525 2288 3051 3952 4684 5859 7019 8056 10101 12145 16250
+// Freq for 8974 (KHz) : 19200   37500   50000   75000  100000  150000  200000  307200  460800  614400  825600
+// Freq for 8084 (KHz) : 19200   37500   50000   75000  100000  150000  200000  307200  384000  460800  556800  691200  825600  931200
 static unsigned long bimc_hispeed_freq = 0;	// bimc hispeed freq on mode change. default : MHz
 static int mode_count = 0;
-//extern int request_bimc_clk(unsigned long request_clk);
+extern int request_bimc_clk(unsigned long request_clk);
 extern void msm_pm_retention_mode_enable(bool enable);
 static void mode_auto_change_boost(struct work_struct *work);
 static struct workqueue_struct *mode_auto_change_boost_wq;
@@ -730,7 +731,8 @@ static void cpufreq_umbrella_core_timer(unsigned long data)
 		pcpu->floor_validate_time = now;
 	}
 
-	if (pcpu->target_freq == new_freq) {
+    if (pcpu->target_freq == new_freq &&
+        pcpu->target_freq <= pcpu->policy->cur) {
 		trace_cpufreq_umbrella_core_already(
 			data, cpu_load, pcpu->target_freq,
 			pcpu->policy->cur, new_freq);
@@ -1035,7 +1037,7 @@ static ssize_t show_target_loads(
 		ret += sprintf(buf + ret, "%u%s", target_loads[i],
 			       i & 0x1 ? ":" : " ");
 #endif
-	ret += sprintf(buf + ret, "\n");
+	ret += sprintf(buf + -ret, "\n");
 	spin_unlock_irqrestore(&target_loads_lock, flags);
 	return ret;
 }
@@ -1102,7 +1104,7 @@ static ssize_t show_above_hispeed_delay(
 		ret += sprintf(buf + ret, "%u%s", above_hispeed_delay[i],
 			       i & 0x1 ? ":" : " ");
 #endif
-	ret += sprintf(buf + ret, "\n");
+	ret += sprintf(buf + -ret, "\n");
 	spin_unlock_irqrestore(&above_hispeed_delay_lock, flags);
 	return ret;
 }
@@ -1516,7 +1518,7 @@ static ssize_t max_inactive_freq_screen_on_store(struct kobject *kobj, struct ko
         return count;
 
     max_inactive_freq_screen_on = new_max_inactive_freq_screen_on;
-    if (max_inactive_freq_screen_on < max_inactive_freq) {
+    if (max_inactive_freq_screen_on != max_inactive_freq) {
         max_inactive_freq = max_inactive_freq_screen_on;
     }
     return count;
@@ -1978,7 +1980,7 @@ static int cpufreq_governor_umbrella_core(struct cpufreq_policy *policy,
 static void cpufreq_umbrella_core_power_suspend(struct power_suspend *h)
 {
     mutex_lock(&gov_lock);
-    if (max_inactive_freq_screen_off < max_inactive_freq) {
+    if (max_inactive_freq_screen_off != max_inactive_freq) {
         max_inactive_freq = max_inactive_freq_screen_off;
     }
     mutex_unlock(&gov_lock);
@@ -1987,7 +1989,7 @@ static void cpufreq_umbrella_core_power_suspend(struct power_suspend *h)
 static void cpufreq_umbrella_core_power_resume(struct power_suspend *h)
 {
     mutex_lock(&gov_lock);
-    if (max_inactive_freq_screen_on < max_inactive_freq) {
+    if (max_inactive_freq_screen_on != max_inactive_freq) {
         max_inactive_freq = max_inactive_freq_screen_on;
     }
     mutex_unlock(&gov_lock);
@@ -2056,11 +2058,11 @@ static int __init cpufreq_umbrella_core_init(void)
 static void mode_auto_change_boost(struct work_struct *work)
 {
 	if(mode_count == 1) {
-		//request_bimc_clk(bimc_hispeed_freq);
+		request_bimc_clk(bimc_hispeed_freq);
 		msm_pm_retention_mode_enable(0);
 	}
 	else if(mode_count == 0) {
-		//request_bimc_clk(0);
+		request_bimc_clk(0);
 		msm_pm_retention_mode_enable(1);
 	}
 }
