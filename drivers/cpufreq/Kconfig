@@ -255,12 +255,6 @@ config CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS
         help
           Use the CPUFreq governor 'smartmax eps' as default
 
-config CPU_FREQ_DEFAULT_GOV_SMARTASS2
-        bool "smartass2"
-        select CPU_FREQ_GOV_SMARTASS2
-        help
-          Use the CPUFreq governor 'smartmax eps' as default
-
 config CPU_FREQ_DEFAULT_GOV_TRIPNDROID
 	bool "tripndroid"
 	select CPU_FREQ_GOV_TRIPNDROID
@@ -602,12 +596,6 @@ config CPU_FREQ_GOV_SMARTMAX_EPS
         select CPU_FREQ_TABLE
         help
           'smartmax EPS' is the extreme powersaving version of smartmax
-
-config CPU_FREQ_GOV_SMARTASS2
-        tristate "'smartass2' cpufreq policy governor"
-        select CPU_FREQ_TABLE
-        help
-          'smartass2' great governor
 
 config CPU_FREQ_GOV_TRIPNDROID
         tristate "'tripndroid' cpufreq governor"
