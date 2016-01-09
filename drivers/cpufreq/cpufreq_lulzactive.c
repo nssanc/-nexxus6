@@ -42,9 +42,11 @@
 #include <linux/suspend.h>
 
 
-#define LULZACTIVE_VERSION      (2)
+#define LULZACTIVE_VERSION	(2)
 #define LULZACTIVE_AUTHOR	"tegrak"
-#define LULZACTIVE_TUNER        "APOPHIS9283"
+
+// if you changed some codes for optimization, just write your name here.
+#define LULZACTIVE_TUNER "zparallax for shamu"
 
 #define LOGI(fmt...) printk(KERN_INFO "[lulzactive] " fmt)
 #define LOGW(fmt...) printk(KERN_WARNING "[lulzactive] " fmt)
@@ -83,19 +85,19 @@ static spinlock_t down_cpumask_lock;
 /*
  * The minimum amount of time to spend at a frequency before we can step up.
  */
-#define DEFAULT_UP_SAMPLE_TIME 40000
+#define DEFAULT_UP_SAMPLE_TIME 30000
 static unsigned long up_sample_time;
 
-#define DEFAULT_UP_SAMPLE_TIME_SLEEP 60000
+#define DEFAULT_UP_SAMPLE_TIME_SLEEP 50000
 static unsigned long up_sample_time_awake;
 
 /*
  * The minimum amount of time to spend at a frequency before we can step down.
  */
-#define DEFAULT_DOWN_SAMPLE_TIME 20000
+#define DEFAULT_DOWN_SAMPLE_TIME 40000
 static unsigned long down_sample_time;
 
-#define DEFAULT_DOWN_SAMPLE_TIME_SLEEP 20000
+#define DEFAULT_DOWN_SAMPLE_TIME_SLEEP 40000
 static unsigned long down_sample_time_awake;
 
 /*
@@ -114,7 +116,7 @@ enum {
 /*
  * CPU freq will be increased if measured load > inc_cpu_load;
  */
-#define DEFAULT_INC_CPU_LOAD 80
+#define DEFAULT_INC_CPU_LOAD 75
 static unsigned long inc_cpu_load;
 
 #define DEFAULT_INC_CPU_LOAD_SLEEP 95
@@ -124,7 +126,7 @@ static unsigned long inc_cpu_load_awake;
  * CPU freq will be decreased if measured load < dec_cpu_load;
  * not implemented yet.
  */
-#define DEFAULT_DEC_CPU_LOAD 40
+#define DEFAULT_DEC_CPU_LOAD 30
 static unsigned long dec_cpu_load;
 static unsigned long dec_cpu_load_awake;
 
@@ -1023,6 +1025,8 @@ static int cpufreq_governor_lulzactive(struct cpufreq_policy *new_policy,
  */
 #ifdef CONFIG_POWERSUSPEND
 static void lulzactive_early_suspend(struct power_suspend *handler)
+#else
+static void lulzactive_early_suspend(struct early_suspend *handler)
 #endif
 {
 	struct cpufreq_lulzactive_cpuinfo *pcpu;
