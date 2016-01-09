@@ -203,15 +203,6 @@ config CPU_FREQ_DEFAULT_GOV_INTELLIACTIVE
         ---help---
           Use the CPUFreq governor 'INTELLIACTIVE' as default.
 
-config CPU_FREQ_DEFAULT_GOV_IMPULSE
-	bool "impulse"
-	select CPU_FREQ_GOV_IMPULSE
-	help
-	  Use the CPUFreq governor 'impulse' as default. This allows
-	  you to get a full dynamic cpu frequency capable system by simply
-	  loading your cpufreq low-level hardware driver, using the
-	  'impulse' governor for latency-sensitive workloads.
-
 config CPU_FREQ_DEFAULT_GOV_LIONHEART
         bool "LIONHEART"
         select CPU_FREQ_GOV_LIONHEART
@@ -248,11 +239,6 @@ config CPU_FREQ_DEFAULT_GOV_ONDEMANDPLUS
 	select CPU_FREQ_GOV_ONDEMANDPLUS
 	help
 
-config CPU_FREQ_DEFAULT_GOV_PRESERVATIVE
-	bool "preservative"
-	select CPU_FREQ_GOV_PRESERVATIVE
-	help
-
 config CPU_FREQ_DEFAULT_GOV_RAGINGMOLASSES
 	bool "ragingmolasses"
 	select CPU_FREQ_GOV_RAGINMOLASSES
@@ -264,12 +250,6 @@ config CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS
         select CPU_FREQ_GOV_SMARTMAX_EPS
         help
           Use the CPUFreq governor 'smartmax eps' as default
-
-config CPU_FREQ_DEFAULT_GOV_TRIPNDROID
-	bool "tripndroid"
-	select CPU_FREQ_GOV_TRIPNDROID
-	help
-	  Select tripndroid cpu governor as default
 
 config CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE
 	bool "umbrella_core"
@@ -553,13 +533,6 @@ config CPU_FREQ_GOV_INTELLIACTIVE
         ---help---
           'INTELLIACTIVE' - a tweaked "ondemand" based smart and smooth optimized governor!
            If in doubt, say Y.
-	  
-config CPU_FREQ_GOV_IMPULSE
-	tristate "'interactive' cpufreq policy governor"
-	help
-	  'impulse' - This driver adds a dynamic cpufreq policy governor
-	  designed for latency-sensitive workloads.
-	  If in doubt, say N.
 
 config CPU_FREQ_GOV_LIONHEART
         tristate "'LIONHEART' cpufreq governor"
@@ -605,14 +578,6 @@ config CPU_FREQ_GOV_ONDEMAND_EPS
 
 config CPU_FREQ_GOV_ONDEMANDPLUS
 	tristate "'ondemandplus' cpufreq governor"
-	
-config CPU_FREQ_GOV_PRESERVATIVE
-	tristate "'preservative' cpufreq governor"
-	depends on CPU_FREQ
-	help
-	  'preservative' - this driver is good in cakes
-
-	  If in doubt, say N.
 
 config CPU_FREQ_GOV_RAGINGMOLASSES
 	tristate "'RAGINGMOLASSES' cpufreq policy governor"
@@ -632,14 +597,6 @@ config CPU_FREQ_GOV_SMARTMAX_EPS
         select CPU_FREQ_TABLE
         help
           'smartmax EPS' is the extreme powersaving version of smartmax
-
-config CPU_FREQ_GOV_TRIPNDROID
-        tristate "'tripndroid' cpufreq governor"
-        depends on CPU_FREQ
-        help
-	  Custom cpu governor designed specificly for multi cpu mobile devices.
-	  Aiming at a balance between performance and battery lifetime, but it
-	  hangs a little bit more towards performance at low latencys.
 
 config CPU_FREQ_GOV_UMBRELLA_CORE
 	tristate "'umbrella_core' cpufreq policy governor"
