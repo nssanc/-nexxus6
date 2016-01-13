@@ -1199,8 +1199,6 @@ static int bcl_probe(struct platform_device *pdev)
 
 	/* For BCL */
 	/* Init default BCL params */
-	bcl->bcl_mode = BCL_DEVICE_DISABLED;
-	bcl_mode_set(bcl->bcl_mode);
 	if (of_property_read_bool(pdev->dev.of_node, "qcom,bcl-enable"))
 		bcl->bcl_mode = BCL_DEVICE_ENABLED;
 	else
@@ -1227,7 +1225,7 @@ static int bcl_probe(struct platform_device *pdev)
 		pr_err("Cannot create bcl sysfs\n");
 		return ret;
 	}
-	
+
 	gbcl = bcl;
 	platform_set_drvdata(pdev, bcl);
 	bcl->battery_monitor_wq = alloc_workqueue(
