@@ -50,6 +50,15 @@ config IOSCHED_DEADLINE
        a new point in the service tree and doing a batch of IO from there
        in case of expiry.
 
+config IOSCHED_FIFO
+	tristate "Fifo I/O scheduler"
+	default y
+	---help---
+	Fifo is similar to no-op I/O scheduler and it's a minimal scheduler that does 		
+        basic   merging and sorting. Ported from: 
+	https://github.com/AndroidDeveloperAlliance/ZenKernel_TUNA/blob/master/block/fifo-
+	iosched.c
+
 config IOSCHED_FIOPS
        tristate "IOPS based I/O scheduler"
        default y
@@ -116,6 +125,9 @@ config DEFAULT_CFQ
 config DEFAULT_DEADLINE
        bool "Deadline" if IOSCHED_DEADLINE=y
 
+config DEFAULT_FIFO
+       bool "FIFO" if IOSCHED_FIFO=y
+
 config DEFAULT_FIOPS
        bool "FIOPS" if IOSCHED_FIOPS=y
 
@@ -144,6 +156,7 @@ config DEFAULT_IOSCHED
         default "bfq" if DEFAULT_BFQ
         default "cfq" if DEFAULT_CFQ
         default "deadline" if DEFAULT_DEADLINE
+        default "fifo" if DEFAULT_FIFO
         default "fiops" if DEFAULT_FIOPS
         default "noop" if DEFAULT_NOOP
         default "row" if DEFAULT_ROW
