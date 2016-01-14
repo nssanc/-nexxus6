@@ -268,11 +268,17 @@ config CPU_FREQ_DEFAULT_GOV_RAGINGMOLASSES
 	help
 	  Use the CPUFreq governor 'ragingmolasses' as default. Work in progress attempt at a goodaround governor that can do either high performance or battery.      Attempts to keep CPU away from max frequ ency as much as possible.
 
+config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
+	bool "smartassv2"
+	select CPU_FREQ_GOV_SMARTASSV2
+ 	help
+	  Use the CPUFreq governor 'smartassv2' as default.
+
 config CPU_FREQ_DEFAULT_GOV_SMARTASSH3
-	bool "smartassH3"
+	bool "smartassh3"
 	select CPU_FREQ_GOV_SMARTASSH3
  	help
-	  Use the CPUFreq governor 'smartassH3' as default.
+	  Use the CPUFreq governor 'smartassh3' as default.
 
 config CPU_FREQ_DEFAULT_GOV_SMARTMAX
             bool "smartmax"
@@ -652,11 +658,17 @@ config CPU_FREQ_GOV_RAGINGMOLASSES
 
 	  If in doubt, say N0.
 
-config CPU_FREQ_GOV_SMARTASSH3
-	tristate "'smartassH3' cpufreq governor"
+config CPU_FREQ_GOV_SMARTASSV2
+	tristate "'smartassv2' cpufreq governor"
  	depends on CPU_FREQ
  	help
-	  'smartassH3' - a "smart" governor
+	  'smartassv2' - a "smart" governor
+
+config CPU_FREQ_GOV_SMARTASSH3
+	tristate "'smartassh3' cpufreq governor"
+ 	depends on CPU_FREQ
+ 	help
+	  'smartassh3' - a "smart" governor
 
 config CPU_FREQ_GOV_SMARTMAX
            tristate "'smartmax' cpufreq governor"
