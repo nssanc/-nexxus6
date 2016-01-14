@@ -53,20 +53,20 @@
  * lowering the frequency towards the ideal frequency is faster than below it.
  */
 
-#define GOV_IDLE_FREQ 345600
+#define GOV_IDLE_FREQ 883200
 
-#define DEFAULT_SUSPEND_IDEAL_FREQ GOV_IDLE_FREQ 
-static unsigned int suspend_ideal_freq = 345600;
+#define DEFAULT_SUSPEND_IDEAL_FREQ GOV_IDLE_FREQ
+static unsigned int suspend_ideal_freq;
 
-#define DEFAULT_AWAKE_IDEAL_FREQ GOV_IDLE_FREQ 
-static unsigned int awake_ideal_freq = 729600;
+#define DEFAULT_AWAKE_IDEAL_FREQ GOV_IDLE_FREQ
+static unsigned int awake_ideal_freq;
 
 /*
  * Freqeuncy delta when ramping up above the ideal freqeuncy.
  * Zero disables and causes to always jump straight to max frequency.
  * When below the ideal freqeuncy we always ramp up to the ideal freq.
  */
-#define DEFAULT_RAMP_UP_STEP 729600
+#define DEFAULT_RAMP_UP_STEP 600000
 static unsigned int ramp_up_step;
 
 /*
@@ -74,19 +74,19 @@ static unsigned int ramp_up_step;
  * Zero disables and will calculate ramp down according to load heuristic.
  * When above the ideal freqeuncy we always ramp down to the ideal freq.
  */
-#define DEFAULT_RAMP_DOWN_STEP 35800
+#define DEFAULT_RAMP_DOWN_STEP 100000
 static unsigned int ramp_down_step;
 
 /*
  * CPU freq will be increased if measured load > max_cpu_load;
  */
-#define DEFAULT_MAX_CPU_LOAD 80 
+#define DEFAULT_MAX_CPU_LOAD 90
 static unsigned int max_cpu_load;
 
 /*
  * CPU freq will be decreased if measured load < min_cpu_load;
  */
-#define DEFAULT_MIN_CPU_LOAD 40
+#define DEFAULT_MIN_CPU_LOAD 50
 static unsigned int min_cpu_load;
 
 /*
@@ -104,7 +104,7 @@ static unsigned int up_rate;
 static unsigned int down_rate;
 
 /* in nsecs */
-#define DEFAULT_SAMPLING_RATE 30000
+#define DEFAULT_SAMPLING_RATE 40000
 static unsigned int sampling_rate;
 
 /* in nsecs */
