@@ -234,6 +234,11 @@ config CPU_FREQ_DEFAULT_GOV_LULZACTIVE
         help
 	  Use the CPUFreq governor 'lulzactive' as default.
 
+config CPU_FREQ_DEFAULT_GOV_MYTHX_PLUG
+	bool "mythx_plug"
+	select CPU_FREQ_GOV_MYTHX_PLUG
+	help
+
 config CPU_FREQ_DEFAULT_GOV_NIGHTMARE
 	bool "nightmare"
 	select CPU_FREQ_GOV_NIGHTMARE
@@ -631,6 +636,10 @@ config CPU_FREQ_GOV_LULZACTIVE
 	  For more information please visit:
 	  http://tegrak2x.blogspot.com/2011/11/lulzactive-governor-v2.html
           If in doubt, say N.
+
+config CPU_FREQ_GOV_MYTHX_PLUG
+	tristate "'mythx_plug' cpufreq governor"
+	depends on CPU_FREQ
 
 config CPU_FREQ_GOV_NIGHTMARE
 	tristate "'nightmare' cpufreq governor"
