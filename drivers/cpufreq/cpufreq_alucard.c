@@ -35,7 +35,11 @@
  */
 
 /* Tuning Interface */
-#define FREQ_RESPONSIVENESS		2457600
+#ifdef CONFIG_MACH_LGE
+#define FREQ_RESPONSIVENESS		2265600
+#else
+#define FREQ_RESPONSIVENESS		1134000
+#endif
 
 #define CPUS_DOWN_RATE			2
 #define CPUS_UP_RATE			1
@@ -507,7 +511,7 @@ static void alucard_check_cpu(struct cpufreq_alucard_cpuinfo *this_alucard_cpuin
 	unsigned int j;
 
 	policy = this_alucard_cpuinfo->cur_policy;
-	if (!policy)
+	if (!policy->cur)
 		return;
 
 	/* Get min, current, max indexes from current cpu policy */
@@ -543,8 +547,7 @@ static void alucard_check_cpu(struct cpufreq_alucard_cpuinfo *this_alucard_cpuin
 	cpufreq_notify_utilization(policy, max_load);
 
 	/* CPUs Online Scale Frequency*/
-	if (policy->cur < freq_responsiveness
-		 && policy->cur > 0) {
+	if (policy->cur < freq_responsiveness) {
 		inc_cpu_load = alucard_tuners_ins.inc_cpu_load_at_min_freq;
 		dec_cpu_load = alucard_tuners_ins.dec_cpu_load_at_min_freq;
 		pump_inc_step = this_alucard_cpuinfo->pump_inc_step_at_min_freq;
@@ -609,7 +612,8 @@ static void do_alucard_timer(struct work_struct *work)
 	delay = usecs_to_jiffies(alucard_tuners_ins.sampling_rate);
 
 	/* We want all CPUs to do sampling nearly on same jiffy */
-	if (num_online_cpus() > 1) {
+	if (num_online_cpus() > 1 
+		 && (jiffies % delay) < delay) {
 		delay -= jiffies % delay;
 	}
 
@@ -629,7 +633,7 @@ static int cpufreq_governor_alucard(struct cpufreq_policy *policy,
 
 	switch (event) {
 	case CPUFREQ_GOV_START:
-		if ((!cpu_online(cpu)) || (!policy))
+		if ((!cpu_online(cpu)) || (!policy->cur))
 			return -EINVAL;
 
 		mutex_lock(&alucard_mutex);
@@ -674,7 +678,8 @@ static int cpufreq_governor_alucard(struct cpufreq_policy *policy,
 
 		delay = usecs_to_jiffies(alucard_tuners_ins.sampling_rate);
 		/* We want all CPUs to do sampling nearly on same jiffy */
-		if (num_online_cpus() > 1) {
+		if (num_online_cpus() > 1 
+			 && (jiffies % delay) < delay) {
 			delay -= jiffies % delay;
 		}
 
@@ -703,8 +708,8 @@ static int cpufreq_governor_alucard(struct cpufreq_policy *policy,
 
 		break;
 	case CPUFREQ_GOV_LIMITS:
-		if (!this_alucard_cpuinfo->cur_policy
-			 || !policy) {
+		if (!this_alucard_cpuinfo->cur_policy->cur
+			 || !policy->cur) {
 			pr_debug("Unable to limit cpu freq due to cur_policy == NULL\n");
 			return -EPERM;
 		}
