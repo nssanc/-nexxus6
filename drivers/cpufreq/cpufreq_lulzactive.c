@@ -46,7 +46,7 @@
 #define LULZACTIVE_AUTHOR	"tegrak"
 
 // if you changed some codes for optimization, just write your name here.
-#define LULZACTIVE_TUNER "zparallax for shamu"
+#define LULZACTIVE_TUNER "APOPHIS9283"
 
 #define LOGI(fmt...) printk(KERN_INFO "[lulzactive] " fmt)
 #define LOGW(fmt...) printk(KERN_WARNING "[lulzactive] " fmt)
@@ -105,10 +105,10 @@ static unsigned long down_sample_time_awake;
  */
 static unsigned long debug_mode;
 enum {
-	LULZACTIVE_DEBUG_EARLY_SUSPEND=1,
-	LULZACTIVE_DEBUG_START_STOP=2,
-	LULZACTIVE_DEBUG_LOAD=4,
-	LULZACTIVE_DEBUG_SUSPEND=8,
+	LULZACTIVE_DEBUG_EARLY_SUSPEND=0,
+	LULZACTIVE_DEBUG_START_STOP=0,
+	LULZACTIVE_DEBUG_LOAD=0,
+	LULZACTIVE_DEBUG_SUSPEND=0,
 };
 //#define DEFAULT_DEBUG_MODE (LULZACTIVE_DEBUG_EARLY_SUSPEND | LULZACTIVE_DEBUG_START_STOP | LULZACTIVE_DEBUG_SUSPEND)
 #define DEFAULT_DEBUG_MODE (0)
@@ -250,7 +250,7 @@ static
 struct cpufreq_governor cpufreq_gov_lulzactive = {
 		.name = "lulzactive",
 		.governor = cpufreq_governor_lulzactive,
-		.max_transition_latency = 9000000,
+		.max_transition_latency = 10000000,
 		.owner = THIS_MODULE,
 };
 
