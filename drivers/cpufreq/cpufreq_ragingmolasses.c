@@ -27,11 +27,11 @@
 #include "cpufreq_governor.h"
 
 
-#define DEF_SAMPLING_RATE                       (20000)
-#define DEF_FREQUENCY_UP_THRESHOLD		(70)
-#define DEF_FREQUENCY_STEP			(30)
+#define DEF_SAMPLING_RATE                       (40000)
+#define DEF_FREQUENCY_UP_THRESHOLD		(80)
+#define DEF_FREQUENCY_STEP			(20)
 
-#define MAX_FREQUENCY_THRESHOLD 		(3091200)
+#define MAX_FREQUENCY_THRESHOLD 		(2899000)
 #define MIN_FREQUENCY_THRESHOLD			(35800)
 
 
