@@ -197,11 +197,11 @@ config CPU_FREQ_DEFAULT_GOV_ELEMENTALX
 	help
 	  Use the CPUFreq governor 'elementalx' as default.
 
-config CPU_FREQ_DEFAULT_GOV_HYPER
-        bool "HYPER"
-        select CPU_FREQ_GOV_HYPER
+config CPU_FREQ_DEFAULT_GOV_HYPERX
+        bool "HYPERX"
+        select CPU_FREQ_GOV_HYPERX
         ---help---
-          Use the CPUFreq governor 'HYPER' as default.
+          Use the CPUFreq governor 'HYPERX' as default.
 
 config CPU_FREQ_DEFAULT_GOV_INTERACTIVE_PRO
         bool "INTERACTIVE_PRO"
@@ -575,11 +575,11 @@ config CPU_FREQ_GOV_ELEMENTALX
 
 	  If in doubt, say N.
 
-config CPU_FREQ_GOV_HYPER
-        tristate "'HYPER' cpufreq governor"
+config CPU_FREQ_GOV_HYPERX
+        tristate "'HYPERX' cpufreq governor"
         depends on CPU_FREQ
         ---help---
-          'HYPER' - a tweaked "ondemand" based smart and smooth optimized governor!
+          'HYPERX' - a tweaked "ondemand" based smart and smooth optimized governor!
 
            If in doubt, say Y.
 
