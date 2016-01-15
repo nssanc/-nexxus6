@@ -44,6 +44,9 @@ int FREQ_HOT = 1728000;
 int FREQ_WARM = 2265600;
 int POLL_INTERVAL = _poll_interval;
 
+// allow full frequency mitigation
+bool full_fm = false;
+module_param(full_fm, bool, 0644);
 
 /* SYSFS */
 
