@@ -267,6 +267,12 @@ config CPU_FREQ_DEFAULT_GOV_PEGASUSQ
 	help
 	  Use the CPUFreq governor 'pegasusq' as default
 
+config CPU_FREQ_DEFAULT_GOV_PSYCHOACTIVE
+	bool "psychoactive"
+	select CPU_FREQ_GOV_PSYCHOACTIVE
+	help
+	  Use the CPUFreq governor 'psychoactive' as default
+
 config CPU_FREQ_DEFAULT_GOV_RAGINGMOLASSES
 	bool "ragingmolasses"
 	select CPU_FREQ_GOV_RAGINMOLASSES
@@ -653,6 +659,9 @@ config CPU_FREQ_GOV_ONDEMANDPLUS
 
 config CPU_FREQ_GOV_PEGASUSQ
 	tristate "'pegasusq' cpufreq policy governor"
+
+config CPU_FREQ_GOV_PSYCHOACTIVE
+	tristate "'PSYCHOACTIVE' cpufreq policy governor"
 
 config CPU_FREQ_GOV_RAGINGMOLASSES
 	tristate "'RAGINGMOLASSES' cpufreq policy governor"
