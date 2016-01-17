@@ -91,6 +91,7 @@
 #include <trace/events/sched.h>
 
 ATOMIC_NOTIFIER_HEAD(migration_notifier_head);
+ATOMIC_NOTIFIER_HEAD(load_alert_notifier_head);
 
 #ifdef smp_mb__before_atomic
 void __smp_mb__before_atomic(void)
@@ -2205,6 +2206,157 @@ static void finish_task_switch(struct rq *rq, struct task_struct *prev)
 
 	tick_nohz_task_switch(current);
 }
+
+
+#ifdef CONFIG_SCHED_FREQ_INPUT
+
+unsigned long sched_get_busy(int cpu)
+{
+	unsigned long flags;
+	struct rq *rq = cpu_rq(cpu);
+	u64 load;
+
+	/*
+	 * This function could be called in timer context, and the
+	 * current task may have been executing for a long time. Ensure
+	 * that the window stats are current by doing an update.
+	 */
+	raw_spin_lock_irqsave(&rq->lock, flags);
+	update_task_ravg(rq->curr, rq, TASK_UPDATE, sched_clock(), 0);
+	load = rq->old_busy_time = rq->prev_runnable_sum;
+	raw_spin_unlock_irqrestore(&rq->lock, flags);
+
+	/*
+	 * Scale load in reference to rq->max_possible_freq.
+	 *
+	 * Note that scale_load_to_cpu() scales load in reference to
+	 * rq->max_freq
+	 */
+	load = scale_load_to_cpu(load, cpu);
+	load = div64_u64(load * (u64)rq->max_freq, (u64)rq->max_possible_freq);
+	load = div64_u64(load, NSEC_PER_USEC);
+
+	trace_sched_get_busy(cpu, load);
+
+	return load;
+}
+
+void sched_set_io_is_busy(int val)
+{
+	sched_io_is_busy = val;
+}
+
+int sched_set_window(u64 window_start, unsigned int window_size)
+{
+	u64 ws, now;
+
+	if (sched_use_pelt ||
+		 (window_size * TICK_NSEC <  MIN_SCHED_RAVG_WINDOW))
+			return -EINVAL;
+
+	mutex_lock(&policy_mutex);
+	update_alignment = 1;
+
+	ws = (window_start - sched_init_jiffy); /* jiffy difference */
+	ws *= TICK_NSEC;
+	ws += sched_clock_at_init_jiffy;
+
+	now = sched_clock();
+	while (ws > now)
+		ws -= (window_size * TICK_NSEC);
+
+	BUG_ON(sched_clock() < ws);
+
+	reset_all_window_stats(ws, window_size);
+
+	mutex_unlock(&policy_mutex);
+
+	return 0;
+}
+
+static void fixup_busy_time(struct task_struct *p, int new_cpu)
+{
+	struct rq *src_rq = task_rq(p);
+	struct rq *dest_rq = cpu_rq(new_cpu);
+	u64 wallclock;
+
+	if (!sched_enable_hmp || !sched_migration_fixup ||
+		 exiting_task(p) || (!p->on_rq && p->state != TASK_WAKING))
+			return;
+
+	if (p->state == TASK_WAKING)
+		double_rq_lock(src_rq, dest_rq);
+
+	if (sched_disable_window_stats)
+		goto done;
+
+	wallclock = sched_clock();
+
+	update_task_ravg(task_rq(p)->curr, task_rq(p),
+			 TASK_UPDATE,
+			 wallclock, 0);
+	update_task_ravg(dest_rq->curr, dest_rq,
+			 TASK_UPDATE, wallclock, 0);
+
+	/*
+	 * In case of migration of task on runqueue, on_rq =1,
+	 * however its load is removed from its runqueue.
+	 * update_task_ravg() below can update its demand, which
+	 * will require its load on runqueue to be adjusted to
+	 * reflect new demand. Restore load temporarily for such
+	 * task on its runqueue
+	 */
+	if (p->on_rq) {
+		inc_cumulative_runnable_avg(src_rq, p);
+		if (p->sched_class == &fair_sched_class)
+			inc_nr_big_small_task(src_rq, p);
+	}
+
+	update_task_ravg(p, task_rq(p), TASK_MIGRATE,
+			 wallclock, 0);
+
+	/*
+	 * Remove task's load from rq as its now migrating to
+	 * another cpu.
+	 */
+	if (p->on_rq) {
+		dec_cumulative_runnable_avg(src_rq, p);
+		if (p->sched_class == &fair_sched_class)
+			dec_nr_big_small_task(src_rq, p);
+	}
+
+	if (p->ravg.curr_window) {
+		src_rq->curr_runnable_sum -= p->ravg.curr_window;
+		dest_rq->curr_runnable_sum += p->ravg.curr_window;
+	}
+
+	if (p->ravg.prev_window) {
+		src_rq->prev_runnable_sum -= p->ravg.prev_window;
+		dest_rq->prev_runnable_sum += p->ravg.prev_window;
+	}
+
+	BUG_ON((s64)src_rq->prev_runnable_sum < 0);
+	BUG_ON((s64)src_rq->curr_runnable_sum < 0);
+
+	trace_sched_migration_update_sum(src_rq, p);
+	trace_sched_migration_update_sum(dest_rq, p);
+
+done:
+	if (p->state == TASK_WAKING)
+		double_rq_unlock(src_rq, dest_rq);
+}
+
+#else
+
+static inline void fixup_busy_time(struct task_struct *p, int new_cpu) { }
+
+static inline int
+heavy_task_wakeup(struct task_struct *p, struct rq *rq, int event)
+{
+	return 0;
+}
+
+#endif	/* CONFIG_SCHED_FREQ_INPUT */
 
 #ifdef CONFIG_SMP
 
