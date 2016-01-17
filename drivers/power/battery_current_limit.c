@@ -349,7 +349,7 @@ static void battery_monitor_work(struct work_struct *work)
 	struct bcl_context *bcl = container_of(work,
 			struct bcl_context, battery_monitor_work);
 
-	if (gbcl->bcl_mode == BCL_DEVICE_ENABLED) {
+	if (gbcl->bcl_mode == BCL_DEVICE_ENABLED && bcl_hotplug_enable) {
 		bcl->btm_mode = BCL_VPH_MONITOR_MODE;
 		update_cpu_freq();
 		if (bcl_hotplug_enable) bcl_handle_hotplug();
