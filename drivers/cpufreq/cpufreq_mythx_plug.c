@@ -93,12 +93,6 @@ static int ntarget_loads = ARRAY_SIZE(default_target_loads);
 static unsigned long min_sample_time = DEFAULT_MIN_SAMPLE_TIME;
 
 /*
-*define a static timer for the boostpulse. This is done to prevent it from taking a dynamic value from the min. sampletime
-*/
-#define DEFAULT_BOOSTPULSE_STATIC_TIMER (20 * USEC_PER_MSEC)
-static unsigned long boostpulse_static_timer = DEFAULT_BOOSTPULSE_STATIC_TIMER; 
-
-/*
  * The sample rate of the timer used to increase frequency
  */
 #define DEFAULT_TIMER_RATE (20 * USEC_PER_MSEC)
@@ -111,10 +105,6 @@ static unsigned long static_timer = DEFAULT_STATIC_TIMER;
 /* Timer for the Sync_FREQ. Used 20ms to not create too much stutter as we're basically adding this to the sampletime here */
 #define SYNCFREQ_TIMER (20 * USEC_PER_MSEC)
 static unsigned long syncfreq_timer = SYNCFREQ_TIMER;
-
-/* The timer to wait 20ms upon loading the syncfreq later in this governor */
-#define SIMPL_TIMER (20 * USEC_PER_MSEC)
-static unsigned long simpl_timer = SIMPL_TIMER;
 
 /*
  * Wait this long before raising speed above hispeed, by default a single
@@ -129,10 +119,6 @@ static int nabove_hispeed_delay = ARRAY_SIZE(default_above_hispeed_delay);
 
 /* Non-zero means indefinite speed boost active */
 static int boost_val;
-/* Duration of a boot pulse in usecs */
-static int boostpulse_duration_val = DEFAULT_BOOSTPULSE_STATIC_TIMER;
-/* End time of boost pulse in ktime converted to usecs */
-static u64 boostpulse_endtime;
 
 /*
  * Max additional time to wait in idle, beyond timer_rate, at speeds above
@@ -292,7 +278,6 @@ static bool simpl_syncfreq = false;
 	unsigned int highfreq;
 	unsigned int lowfreq;
 	unsigned int syncstate;
-	unsigned int simpl_timer;
 	int index;
 
 	freqmin = 0;
@@ -335,10 +320,6 @@ static bool simpl_syncfreq = false;
 	 
 		if (freq == syncfreq) {
 			syncstate = true;
-		 		if (syncstate == true) {
-				simpl_timer;
-				}
-
 			
 
 		if (freq >= freqmax) {
@@ -413,7 +394,7 @@ static u64 update_load(int cpu)
 	unsigned int delta_time;
 	u64 active_time;
 
-	//now_idle = get_cpu_idle_time(cpu, &now, io_is_busy);
+	now_idle = get_cpu_idle_time(cpu, &now, io_is_busy);
 	delta_idle = (unsigned int)(now_idle - pcpu->time_in_idle);
 	delta_time = (unsigned int)(now - pcpu->time_in_idle_timestamp);
 
@@ -462,7 +443,7 @@ static void cpufreq_mythx_plug_timer(unsigned long data)
 	do_div(cputime_speedadj, delta_time);
 	loadadjfreq = (unsigned int)cputime_speedadj * 100;
 	cpu_load = loadadjfreq / pcpu->policy->cur;
-	boosted = boost_val || now < boostpulse_endtime;
+	boosted = boost_val;
 
 	/* Note to myself: There is work to be done here... */
 
@@ -720,10 +701,9 @@ static void cpufreq_mythx_plug_boost(void)
 	int anyboost = 0;
 	unsigned long flags[2];
 	unsigned int syncfreq;
+	struct cpufreq_mythx_plug_cpuinfo *pcpu;
 
 	syncfreq = SYNC_FREQ;
-
-	struct cpufreq_mythx_plug_cpuinfo *pcpu;
 
 	spin_lock_irqsave(&speedchange_cpumask_lock, flags[0]);
 
@@ -1128,7 +1108,6 @@ static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
 		trace_cpufreq_mythx_plug_boost("on");
 		cpufreq_mythx_plug_boost();
 	} else {
-		boostpulse_endtime = ktime_to_us(ktime_get());
 		trace_cpufreq_mythx_plug_unboost("off");
 	}
 
@@ -1136,48 +1115,6 @@ static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
 }
 
 define_one_global_rw(boost);
-
-static ssize_t store_boostpulse(struct kobject *kobj, struct attribute *attr,
-				const char *buf, size_t count)
-{
-	int ret;
-	unsigned long val;
-
-	ret = kstrtoul(buf, 0, &val);
-	if (ret < 0)
-		return ret;
-
-	boostpulse_endtime = ktime_to_us(ktime_get()) + boostpulse_duration_val;
-	trace_cpufreq_mythx_plug_boost("pulse");
-	cpufreq_mythx_plug_boost();
-	return count;
-}
-
-static struct global_attr boostpulse =
-	__ATTR(boostpulse, 0200, NULL, store_boostpulse);
-
-static ssize_t show_boostpulse_duration(
-	struct kobject *kobj, struct attribute *attr, char *buf)
-{
-	return sprintf(buf, "%d\n", boostpulse_duration_val);
-}
-
-static ssize_t store_boostpulse_duration(
-	struct kobject *kobj, struct attribute *attr, const char *buf,
-	size_t count)
-{
-	int ret;
-	unsigned long val;
-
-	ret = kstrtoul(buf, 0, &val);
-	if (ret < 0)
-		return ret;
-
-	boostpulse_duration_val = val;
-	return count;
-}
-
-define_one_global_rw(boostpulse_duration);
 
 static ssize_t show_io_is_busy(struct kobject *kobj,
 			struct attribute *attr, char *buf)
@@ -1210,8 +1147,6 @@ static struct attribute *mythx_plug_attributes[] = {
 	&timer_rate_attr.attr,
 	&timer_slack.attr,
 	&boost.attr,
-	&boostpulse.attr,
-	&boostpulse_duration.attr,
 	&io_is_busy_attr.attr,
 	&max_freq_hysteresis_attr.attr,
 	&align_windows_attr.attr,
