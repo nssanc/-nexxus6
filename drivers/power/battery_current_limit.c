@@ -41,6 +41,8 @@
 
 static bool bcl_hotplug_enable = true;
 module_param(bcl_hotplug_enable, bool, 0644);
+static bool bcl_user_enable = true;
+module_param(bcl_user_enable, bool, 0644);
 
 static char *battery_str = "battery";
 /*
@@ -349,7 +351,7 @@ static void battery_monitor_work(struct work_struct *work)
 	struct bcl_context *bcl = container_of(work,
 			struct bcl_context, battery_monitor_work);
 
-	if (gbcl->bcl_mode == BCL_DEVICE_ENABLED && bcl_hotplug_enable) {
+	if (gbcl->bcl_mode == BCL_DEVICE_ENABLED && bcl_user_enable) {
 		bcl->btm_mode = BCL_VPH_MONITOR_MODE;
 		update_cpu_freq();
 		if (bcl_hotplug_enable) bcl_handle_hotplug();
