@@ -69,44 +69,29 @@ static cpumask_t speedchange_cpumask;
 static spinlock_t speedchange_cpumask_lock;
 static struct mutex gov_lock;
 
-/* Hi speed to bump to from lo speed when load burst (default max) */
-static unsigned int hispeed_freq;
-
 /* Target load.  Lower values result in higher CPU speeds. */
 #define DEFAULT_TARGET_LOAD 90
 static unsigned int default_target_loads[] = {DEFAULT_TARGET_LOAD};
 static spinlock_t target_loads_lock;
-static unsigned int *target_loads = default_target_loads;
-static int ntarget_loads = ARRAY_SIZE(default_target_loads);
 
 /*
  * The minimum amount of time to spend at a frequency before we can ramp down.
  * Decreased to 60ms
  */
 
-/*
-*define a static timer for the boostpulse. This is done to prevent it from taking a dynamic value from the min. sampletime
-*/
-#define DEFAULT_BOOSTPULSE_STATIC_TIMER (20 * USEC_PER_MSEC)
-static unsigned long boostpulse_static_timer = DEFAULT_BOOSTPULSE_STATIC_TIMER; 
 
 /*
  * The sample rate of the timer used to increase frequency
  */
 #define DEFAULT_TIMER_RATE (20 * USEC_PER_MSEC)
-static unsigned long timer_rate = DEFAULT_TIMER_RATE;
 
 /* Static time value to be used throughout this governor */
 #define DEFAULT_STATIC_TIMER (30 * USEC_PER_MSEC)
-static unsigned long static_timer = DEFAULT_STATIC_TIMER;
 
 /* Timer for the Sync_FREQ. Used 20ms to not create too much stutter as we're basically adding this to the sampletime here */
 #define SYNCFREQ_TIMER (20 * USEC_PER_MSEC)
 static unsigned long syncfreq_timer = SYNCFREQ_TIMER;
 
-/* The timer to wait 20ms upon loading the syncfreq later in this governor */
-#define SIMPL_TIMER (20 * USEC_PER_MSEC)
-static unsigned long simpl_timer = SIMPL_TIMER;
 
 /*
  * Wait this long before raising speed above hispeed, by default a single
@@ -116,8 +101,6 @@ static unsigned long simpl_timer = SIMPL_TIMER;
 static unsigned int default_above_hispeed_delay[] = {
 	DEFAULT_ABOVE_HISPEED_DELAY };
 static spinlock_t above_hispeed_delay_lock;
-static unsigned int *above_hispeed_delay = default_above_hispeed_delay;
-static int nabove_hispeed_delay = ARRAY_SIZE(default_above_hispeed_delay);
 
 struct cpufreq_psychoactive_tunables {
 	int usage_count;
@@ -319,7 +302,6 @@ static bool simpl_syncfreq = false;
 	unsigned int highfreq;
 	unsigned int lowfreq;
 	unsigned int syncstate;
-	unsigned int simpl_timer;
 	int index;
 
 	freqmin = 0;
