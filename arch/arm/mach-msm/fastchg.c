@@ -25,7 +25,7 @@
 
 #define FAST_CHARGE_VERSION	"version 1.0 by Paul Reioux"
 
-int force_fast_charge;
+int force_fast_charge = 1;
 
 /* sysfs interface for "force_fast_charge" */
 static ssize_t force_fast_charge_show(struct kobject *kobj,
