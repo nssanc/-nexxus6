@@ -77,7 +77,7 @@ module_param(wakeup_boost, bool, 0644);
 static struct delayed_work input_boost_rem;
 static u64 last_input_time;
 
-static unsigned int min_input_interval = 2000;
+static unsigned int min_input_interval = 1200;
 module_param(min_input_interval, uint, 0644);
 
 
