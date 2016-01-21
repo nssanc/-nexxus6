@@ -1486,6 +1486,10 @@ static int smb135x_set_high_usb_chg_current(struct smb135x_chg *chip,
 	return rc;
 }
 
+#ifdef CONFIG_FORCE_FAST_CHARGE
+extern int force_fast_charge;
+#endif
+
 #define MAX_VERSION			0xF
 #define USB_100_PROBLEM_VERSION		0x2
 /* if APSD results are used
@@ -1503,7 +1507,7 @@ static int smb135x_set_usb_chg_current(struct smb135x_chg *chip,
 	pr_debug("USB current_ma = %d\n", current_ma);
 
 	if (chip->workaround_flags & WRKARND_USB100_BIT) {
-		pr_info("USB requested = %dmA using %dmA\n", current_ma,
+		pr_debug("USB requested = %dmA using %dmA\n", current_ma,
 						CURRENT_500_MA);
 		current_ma = CURRENT_500_MA;
 	}
@@ -1535,7 +1539,7 @@ static int smb135x_set_usb_chg_current(struct smb135x_chg *chip,
 		goto out;
 	}
 	if (current_ma == CURRENT_500_MA) {
-		
+	
 #ifdef CONFIG_FORCE_FAST_CHARGE
 		if (force_fast_charge)
 			rc = smb135x_masked_write(chip, CFG_5_REG, USB_2_3_BIT, USB_2_3_BIT);
@@ -1543,6 +1547,17 @@ static int smb135x_set_usb_chg_current(struct smb135x_chg *chip,
 #endif
 			rc = smb135x_masked_write(chip, CFG_5_REG, USB_2_3_BIT, 0);
 	
+#ifdef CONFIG_FORCE_FAST_CHARGE
+		if (force_fast_charge) {
+			current_ma = CURRENT_900_MA;
+			rc = smb135x_masked_write(chip, CFG_5_REG,
+				USB_2_3_BIT, USB_2_3_BIT);
+		} else
+			rc = smb135x_masked_write(chip, CFG_5_REG,
+				USB_2_3_BIT, 0);
+#else
+		rc = smb135x_masked_write(chip, CFG_5_REG, USB_2_3_BIT, 0);
+#endif
 		rc |= smb135x_masked_write(chip, CMD_INPUT_LIMIT,
 				USB_100_500_AC_MASK, USB_500_VAL);
 		rc |= smb135x_path_suspend(chip, USB, CURRENT, false);
@@ -2174,7 +2189,14 @@ static void smb135x_external_power_changed(struct power_supply *psy)
 
 	if (chip->usb_psy_ma != current_limit) {
 		mutex_lock(&chip->current_change_lock);
+#ifdef CONFIG_FORCE_FAST_CHARGE
+		if (force_fast_charge)
+			chip->usb_psy_ma = 1600;
+		else
+			chip->usb_psy_ma = current_limit;
+#else
 		chip->usb_psy_ma = current_limit;
+#endif
 		rc = smb135x_set_appropriate_current(chip, USB);
 		mutex_unlock(&chip->current_change_lock);
 		if (rc < 0)
@@ -2780,7 +2802,7 @@ static void heartbeat_work(struct work_struct *work)
 		if (!chip->aicl_disabled) {
 			rc = smb135x_read(chip, STATUS_0_REG, &reg);
 			if (rc < 0) {
-				pr_info("Failed to Read Status 0x46\n");
+				pr_debug("Failed to Read Status 0x46\n");
 			} else if (!reg) {
 				dev_warn(chip->dev, "HB Caught Low Rate!\n");
 				toggle_usbin_aicl(chip);
@@ -3193,7 +3215,7 @@ static int usbin_uv_handler(struct smb135x_chg *chip, u8 rt_stat)
 			chip->usb_present, usb_present);
 
 	if (ignore_disconnect) {
-		pr_info("Ignore usbin_uv - usb_present = %d\n", usb_present);
+		pr_debug("Ignore usbin_uv - usb_present = %d\n", usb_present);
 		return 0;
 	}
 
@@ -3238,11 +3260,11 @@ static int usbin_ov_handler(struct smb135x_chg *chip, u8 rt_stat)
 	bool usb_present = !rt_stat;
 	int health;
 
-	pr_info("chip->usb_present = %d usb_present = %d\n",
+	pr_debug("chip->usb_present = %d usb_present = %d\n",
 			chip->usb_present, usb_present);
 
 	if (ignore_disconnect) {
-		pr_info("Ignore usbin_ov - usb_present = %d\n", usb_present);
+		pr_debug("Ignore usbin_ov - usb_present = %d\n", usb_present);
 		return 0;
 	}
 
@@ -3279,11 +3301,11 @@ static void smb135x_notify_vbat(enum qpnp_tm_state state, void *ctx)
 	pr_err("shutdown voltage tripped\n");
 
 	rc = qpnp_vadc_read(chip->vadc_dev, VSYS, &result);
-	pr_info("vbat = %lld, raw = 0x%x\n",
+	pr_debug("vbat = %lld, raw = 0x%x\n",
 		result.physical, result.adc_code);
 
 	smb135x_get_prop_batt_voltage_now(chip, &batt_volt);
-	pr_info("vbat is at %d, state is at %d\n",
+	pr_debug("vbat is at %d, state is at %d\n",
 		 batt_volt, state);
 
 	if (state == ADC_TM_LOW_STATE) {
@@ -3326,7 +3348,7 @@ static int smb135x_setup_vbat_monitoring(struct smb135x_chg *chip)
 		 chip->vbat_monitor_params.high_thr);
 
 	if (!smb135x_get_prop_batt_present(chip)) {
-		pr_info("no battery inserted, vbat monitoring disabled\n");
+		pr_debug("no battery inserted, vbat monitoring disabled\n");
 		chip->vbat_monitor_params.state_request =
 			ADC_TM_HIGH_LOW_THR_DISABLE;
 	} else {
@@ -3338,7 +3360,7 @@ static int smb135x_setup_vbat_monitoring(struct smb135x_chg *chip)
 		}
 	}
 
-	pr_info("vbat monitoring setup complete\n");
+	pr_debug("vbat monitoring setup complete\n");
 	return 0;
 }
 
@@ -3352,7 +3374,7 @@ static int src_detect_handler(struct smb135x_chg *chip, u8 rt_stat)
 {
 	bool usb_present = !!rt_stat;
 
-	pr_info("chip->usb_present = %d usb_present = %d\n",
+	pr_debug("chip->usb_present = %d usb_present = %d\n",
 			chip->usb_present, usb_present);
 
 	if (!chip->usb_present && usb_present) {
@@ -4330,7 +4352,7 @@ static int smb135x_hw_init_fac(struct smb135x_chg *chip)
 {
 	int rc;
 
-	pr_info("Factory Mode I2C Writes Disabled!\n");
+	pr_debug("Factory Mode I2C Writes Disabled!\n");
 	rc = smb135x_masked_write_fac(chip, CMD_I2C_REG,
 				      ALLOW_VOLATILE_BIT,
 				      ALLOW_VOLATILE_BIT);

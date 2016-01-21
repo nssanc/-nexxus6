@@ -475,8 +475,10 @@ int kgsl_context_init(struct kgsl_device_private *dev_priv,
 	 * the context is destroyed. This will also prevent the pagetable
 	 * from being destroyed
 	 */
-	if (!kgsl_process_private_get(dev_priv->process_priv))
+	if (!kgsl_process_private_get(dev_priv->process_priv)) {
+		ret = -EBADF;
 		goto fail_free_id;
+	}
 	context->device = dev_priv->device;
 	context->dev_priv = dev_priv;
 	context->proc_priv = dev_priv->process_priv;
@@ -563,6 +565,15 @@ kgsl_context_destroy(struct kref *kref)
 			KGSL_MEMSTORE_OFFSET(context->id, soptimestamp), 0);
 		kgsl_sharedmem_writel(device, &device->memstore,
 			KGSL_MEMSTORE_OFFSET(context->id, eoptimestamp), 0);
+
+		/* clear device power constraint */
+		if (context->id == device->pwrctrl.constraint.owner_id) {
+			trace_kgsl_constraint(device,
+				device->pwrctrl.constraint.type,
+				device->pwrctrl.active_pwrlevel,
+				0);
+			device->pwrctrl.constraint.type = KGSL_CONSTRAINT_NONE;
+		}
 
 		idr_remove(&device->context_idr, context->id);
 		context->id = KGSL_CONTEXT_INVALID;
@@ -949,8 +960,6 @@ static int kgsl_close_device(struct kgsl_device *device)
 		/* Fail if the wait times out */
 		BUG_ON(atomic_read(&device->active_cnt) > 0);
 
-		/* Force power on to do the stop */
-		kgsl_pwrctrl_enable(device);
 		result = device->ftbl->stop(device);
 		kgsl_pwrctrl_set_state(device, KGSL_STATE_INIT);
 	}
@@ -2185,8 +2194,11 @@ free_cmdbatch:
 	 * -EPROTO is a "success" error - it just tells the user that the
 	 * context had previously faulted
 	 */
-	if (result && result != -EPROTO)
+	if (result && result != -EPROTO) {
+		kgsl_mutex_lock(&device->mutex, &device->mutex_owner);
 		kgsl_cmdbatch_destroy(cmdbatch);
+		kgsl_mutex_unlock(&device->mutex, &device->mutex_owner);
+	}
 
 done:
 	kgsl_context_put(context);
@@ -2237,8 +2249,11 @@ free_cmdbatch:
 	 * -EPROTO is a "success" error - it just tells the user that the
 	 * context had previously faulted
 	 */
-	if (result && result != -EPROTO)
+	if (result && result != -EPROTO) {
+		kgsl_mutex_lock(&device->mutex, &device->mutex_owner);
 		kgsl_cmdbatch_destroy(cmdbatch);
+		kgsl_mutex_unlock(&device->mutex, &device->mutex_owner);
+	}
 
 done:
 	kgsl_context_put(context);
@@ -2616,7 +2631,7 @@ static int memdesc_sg_virt(struct kgsl_memdesc *memdesc, struct file *vmfile)
 	if (ret)
 		goto out;
 
-	if (npages != sglen) {
+	if ((unsigned long) npages != sglen) {
 		ret = -EINVAL;
 		goto out;
 	}

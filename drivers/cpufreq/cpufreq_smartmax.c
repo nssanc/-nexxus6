@@ -53,7 +53,7 @@
  * lowering the frequency towards the ideal frequency is faster than below it.
  */
 
-#define GOV_IDLE_FREQ 883200
+#define GOV_IDLE_FREQ 475000
 
 #define DEFAULT_SUSPEND_IDEAL_FREQ GOV_IDLE_FREQ
 static unsigned int suspend_ideal_freq;
@@ -66,7 +66,7 @@ static unsigned int awake_ideal_freq;
  * Zero disables and causes to always jump straight to max frequency.
  * When below the ideal freqeuncy we always ramp up to the ideal freq.
  */
-#define DEFAULT_RAMP_UP_STEP 600000
+#define DEFAULT_RAMP_UP_STEP 300000
 static unsigned int ramp_up_step;
 
 /*
@@ -74,13 +74,13 @@ static unsigned int ramp_up_step;
  * Zero disables and will calculate ramp down according to load heuristic.
  * When above the ideal freqeuncy we always ramp down to the ideal freq.
  */
-#define DEFAULT_RAMP_DOWN_STEP 100000
+#define DEFAULT_RAMP_DOWN_STEP 150000
 static unsigned int ramp_down_step;
 
 /*
  * CPU freq will be increased if measured load > max_cpu_load;
  */
-#define DEFAULT_MAX_CPU_LOAD 90
+#define DEFAULT_MAX_CPU_LOAD 80
 static unsigned int max_cpu_load;
 
 /*
@@ -93,14 +93,14 @@ static unsigned int min_cpu_load;
  * The minimum amount of time in nsecs to spend at a frequency before we can ramp up.
  * Notice we ignore this when we are below the ideal frequency.
  */
-#define DEFAULT_UP_RATE 60000
+#define DEFAULT_UP_RATE 40000
 static unsigned int up_rate;
 
 /*
  * The minimum amount of time in nsecs to spend at a frequency before we can ramp down.
  * Notice we ignore this when we are above the ideal frequency.
  */
-#define DEFAULT_DOWN_RATE 40000
+#define DEFAULT_DOWN_RATE 80000
 static unsigned int down_rate;
 
 /* in nsecs */
@@ -108,11 +108,11 @@ static unsigned int down_rate;
 static unsigned int sampling_rate;
 
 /* in nsecs */
-#define DEFAULT_INPUT_BOOST_DURATION 0
+#define DEFAULT_INPUT_BOOST_DURATION 50000000
 static unsigned int input_boost_duration;
 
-static unsigned int touch_poke_freq = 0;
-static bool touch_poke = false;
+static unsigned int touch_poke_freq = 760000;
+static bool touch_poke = true;
 
 /*
  * should ramp_up steps during boost be possible
@@ -123,8 +123,8 @@ static bool ramp_up_during_boost = true;
  * external boost interface - boost if duration is written
  * to sysfs for boost_duration
  */
-static unsigned int boost_freq = 0;
-static bool boost = false;
+static unsigned int boost_freq = 760000;
+static bool boost = true;
 
 /* in nsecs */
 static unsigned int boost_duration = 0;
@@ -172,12 +172,12 @@ static DEFINE_PER_CPU(struct smartmax_info_s, smartmax_info);
 #endif
 
 enum {
-	SMARTMAX_DEBUG_JUMPS = 0,
-	SMARTMAX_DEBUG_LOAD = 0,
-	SMARTMAX_DEBUG_ALG = 0,
-	SMARTMAX_DEBUG_BOOST = 0,
-	SMARTMAX_DEBUG_INPUT = 0,
-	SMARTMAX_DEBUG_SUSPEND = 0
+	SMARTMAX_DEBUG_JUMPS = 1,
+	SMARTMAX_DEBUG_LOAD = 2,
+	SMARTMAX_DEBUG_ALG = 4,
+	SMARTMAX_DEBUG_BOOST = 8,
+	SMARTMAX_DEBUG_INPUT = 16,
+	SMARTMAX_DEBUG_SUSPEND = 32
 };
 
 /*
@@ -1009,7 +1009,7 @@ static int cpufreq_smartmax_boost_task(void *data) {
 		mutex_lock(&this_smartmax->timer_mutex);
 
 		if (policy->cur < cur_boost_freq) {
-			boost_running = false;
+			boost_running = true;
 		
 			now = ktime_to_ns(ktime_get());
 			boost_end_time = now + cur_boost_duration;

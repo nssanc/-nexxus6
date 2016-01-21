@@ -236,21 +236,6 @@ static ssize_t kgsl_drv_memstat_show(struct device *dev,
 	return snprintf(buf, PAGE_SIZE, "%u\n", val);
 }
 
-static ssize_t kgsl_drv_histogram_show(struct device *dev,
-				   struct device_attribute *attr,
-				   char *buf)
-{
-	int len = 0;
-	int i;
-
-	for (i = 0; i < 16; i++)
-		len += snprintf(buf + len, PAGE_SIZE - len, "%d ",
-			kgsl_driver.stats.histogram[i]);
-
-	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
-	return len;
-}
-
 static ssize_t kgsl_drv_full_cache_threshold_store(struct device *dev,
 					 struct device_attribute *attr,
 					 const char *buf, size_t count)
@@ -282,7 +267,6 @@ static DEVICE_ATTR(coherent, 0444, kgsl_drv_memstat_show, NULL);
 static DEVICE_ATTR(coherent_max, 0444, kgsl_drv_memstat_show, NULL);
 static DEVICE_ATTR(mapped, 0444, kgsl_drv_memstat_show, NULL);
 static DEVICE_ATTR(mapped_max, 0444, kgsl_drv_memstat_show, NULL);
-static DEVICE_ATTR(histogram, 0444, kgsl_drv_histogram_show, NULL);
 static DEVICE_ATTR(full_cache_threshold, 0644,
 		kgsl_drv_full_cache_threshold_show,
 		kgsl_drv_full_cache_threshold_store);
@@ -296,7 +280,6 @@ static const struct device_attribute *drv_attr_list[] = {
 	&dev_attr_coherent_max,
 	&dev_attr_mapped,
 	&dev_attr_mapped_max,
-	&dev_attr_histogram,
 	&dev_attr_full_cache_threshold,
 	NULL
 };
@@ -314,39 +297,7 @@ kgsl_sharedmem_init_sysfs(void)
 		drv_attr_list);
 }
 
-#ifdef CONFIG_OUTER_CACHE
-static void _outer_cache_range_op(int op, unsigned long addr, size_t size)
-{
-	switch (op) {
-	case KGSL_CACHE_OP_FLUSH:
-		outer_flush_range(addr, addr + size);
-		break;
-	case KGSL_CACHE_OP_CLEAN:
-		outer_clean_range(addr, addr + size);
-		break;
-	case KGSL_CACHE_OP_INV:
-		outer_inv_range(addr, addr + size);
-		break;
-	}
-}
-
-static void outer_cache_range_op_sg(struct scatterlist *sg, int sglen, int op)
-{
-	struct scatterlist *s;
-	int i;
-
-	for_each_sg(sg, s, sglen, i) {
-		unsigned int paddr = kgsl_get_sg_pa(s);
-		_outer_cache_range_op(op, paddr, s->length);
-	}
-}
-
-#else
-static void outer_cache_range_op_sg(struct scatterlist *sg, int sglen, int op)
-{
-}
-#endif
-
+#ifndef CONFIG_ALLOC_BUFFERS_IN_4K_CHUNKS
 static int kgsl_page_alloc_vmfault(struct kgsl_memdesc *memdesc,
 				struct vm_area_struct *vma,
 				struct vm_fault *vmf)
@@ -388,6 +339,29 @@ static int kgsl_page_alloc_vmfault(struct kgsl_memdesc *memdesc,
 
 	return VM_FAULT_SIGBUS;
 }
+#else
+static int kgsl_page_alloc_vmfault(struct kgsl_memdesc *memdesc,
+				struct vm_area_struct *vma,
+				struct vm_fault *vmf)
+{
+	int pgoff;
+	struct scatterlist *s = memdesc->sg;
+	unsigned int offset;
+	struct page *page;
+
+	offset = ((unsigned long) vmf->virtual_address - vma->vm_start);
+
+	if (offset >= memdesc->size)
+		return VM_FAULT_SIGBUS;
+
+	pgoff = offset >> PAGE_SHIFT;
+	page = sg_page(&s[pgoff]);
+	get_page(page);
+	vmf->page = page;
+
+	return 0;
+}
+#endif
 
 /*
  * kgsl_page_alloc_unmap_kernel() - Unmap the memory in memdesc
@@ -425,7 +399,7 @@ static void kgsl_page_alloc_free(struct kgsl_memdesc *memdesc)
 	/* we certainly do not expect the hostptr to still be mapped */
 	BUG_ON(memdesc->hostptr);
 
-	if (memdesc->sg)
+	if (sglen && memdesc->sg)
 		for_each_sg(memdesc->sg, sg, sglen, i)
 			__free_pages(sg_page(sg), get_order(sg->length));
 }
@@ -582,7 +556,6 @@ int kgsl_cache_range_op(struct kgsl_memdesc *memdesc, size_t offset,
 		dmac_inv_range(addr, addr + size);
 		break;
 	}
-	outer_cache_range_op_sg(memdesc->sg, memdesc->sglen, op);
 
 	return 0;
 }
@@ -593,7 +566,7 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 			struct kgsl_pagetable *pagetable,
 			size_t size)
 {
-	int pcount = 0, order, ret = 0;
+	int pcount = 0, ret = 0;
 	int j, len, page_size, sglen_alloc, sglen = 0;
 	struct page **pages = NULL;
 	pgprot_t page_prot = pgprot_writecombine(PAGE_KERNEL);
@@ -679,7 +652,9 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 			 */
 			memdesc->sglen = sglen;
 			memdesc->size = (size - len);
-			sg_mark_end(&memdesc->sg[sglen - 1]);
+
+			if (sglen > 0)
+				sg_mark_end(&memdesc->sg[sglen - 1]);
 
 			KGSL_CORE_ERR(
 				"Out of memory: only allocated %zuKB of %zuKB requested\n",
@@ -741,14 +716,6 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 				step >>= 1;
 		}
 	}
-
-	outer_cache_range_op_sg(memdesc->sg, memdesc->sglen,
-				KGSL_CACHE_OP_FLUSH);
-
-	order = get_order(size);
-
-	if (order < 16)
-		kgsl_driver.stats.histogram[order]++;
 
 done:
 	KGSL_STATS_ADD(memdesc->size, kgsl_driver.stats.page_alloc,
@@ -869,9 +836,9 @@ kgsl_sharedmem_writel(struct kgsl_device *device,
 	WARN_ON(offsetbytes + sizeof(uint32_t) > memdesc->size);
 	if (offsetbytes + sizeof(uint32_t) > memdesc->size)
 		return -ERANGE;
-	kgsl_cffdump_setmem(device,
+	kgsl_cffdump_write(device,
 		memdesc->gpuaddr + offsetbytes,
-		src, sizeof(uint32_t));
+		src);
 	dst = (uint32_t *)(memdesc->hostptr + offsetbytes);
 	*dst = src;
 
@@ -889,7 +856,7 @@ kgsl_sharedmem_set(struct kgsl_device *device,
 	BUG_ON(memdesc == NULL || memdesc->hostptr == NULL);
 	BUG_ON(offsetbytes + sizebytes > memdesc->size);
 
-	kgsl_cffdump_setmem(device,
+	kgsl_cffdump_memset(device,
 		memdesc->gpuaddr + offsetbytes, value,
 		sizebytes);
 	memset(memdesc->hostptr + offsetbytes, value, sizebytes);
