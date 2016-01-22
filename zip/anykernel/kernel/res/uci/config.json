@@ -1,0 +1,4220 @@
+{
+    sections: [
+		{
+	name:INFO,
+		elements:[
+			{ SPane:{
+				title:{
+					en:"General",
+					es:"General"
+				},
+			}},	
+				{ SDescription:{
+					description:"Welcome to UKM."
+				}},
+				{ SDescription:{
+					description:"Created by <a href='http://forum.xda-developers.com/member.php?u=5658634'>apb_axel</a>."
+				}},
+				{ SDescription:{
+					description:"Version 11"
+				}},
+				{ SDescription:{
+					description:"XDA Link: <a href='http://forum.xda-developers.com/android/software/zip-synapse-script-universal-kernel-t2736986'>HERE</a>"
+				}},
+				{ SPane:{
+					title:"Special thanks to"
+				}},
+					{ SDescription:{
+						description:"> <a href='http://forum.xda-developers.com/member.php?u=3685904'>ak</a>"
+					}},
+					{ SDescription:{
+						description:"> <a href='http://forum.xda-developers.com/member.php?u=4167023'>AndreiLux</a>"
+					}},
+					{ SDescription:{
+						description:"> <a href='http://forum.xda-developers.com/member.php?u=4544860'>osm0sis</a>"
+					}},
+					{ SDescription:{
+						description:"> <a href='http://forum.xda-developers.com/member.php?u=3873953'>eng.stk</a>"
+					}},
+			{ SPane:{
+				title:{
+					en:"Device",
+					es:"Dispositivo"
+				},
+				description:"Nexus 6 (shamu)"
+			}},
+			{ SPane:{
+				title:{
+					en:"Android Version",
+					es:"Versión de Android"
+				},
+				description:"6.0.1"
+			}},
+			{ SPane:{
+				title:{
+					en:"Kernel Version",
+					es:"Versión del Núcleo"
+				},
+				description:"Linux version 3.10.94-Singularity-N6-V-3.3-gd090c61 (joe@XPS) (gcc version 5.2.x-sabermod 20151012 (experimental) (GCC) ) #10 SMP PREEMPT Sat Jan 16 23:06:13 EST 2016"
+			}},
+			{ SPane:{
+				title:{
+					en:"ROM Description",
+					es:"Descripción del ROM"
+				},
+				description:"VPBA13.MTV.CORP.GOOGLE.COM"
+			}},
+			{ SPane:{
+				title:{
+					en:"ROM Version",
+					es:"Versión del ROM"
+				},
+				description:""
+			}},
+			{ SPane:{
+				title:{
+					en:"Build Date",
+					es:"Fecha del ROM"
+				},
+				description:"Tue Dec 15 22:16:10 UTC 2015"
+			}},
+		]
+}
+,
+{
+	name:STATUS,
+		elements:[
+			{ SPane:{
+				title:"CPU PVS/SPEED Level:"
+			}},
+				{ SLiveLabel:{
+					refresh:20000,
+					style:italic,
+					action:"live CpuPvsLevel"
+			}},
+			{ SPane:{
+				title:"Battery Temperature:"
+			}},
+				{ SLiveLabel:{
+					refresh:2000,
+					style:italic,
+					action:"live BatteryTemperature"
+				}},
+			{ SPane:{
+				title:"CPU Frequency:"
+			}},
+				{ SLiveLabel:{
+					refresh:2000,
+					style:italic,
+					action:"live CPUFrequency"
+				}},
+			{ SPane:{
+				title:"CPU Temperature:"
+			}},
+				{ SLiveLabel:{
+					refresh:2000,
+					style:italic,
+					action:"live CPUTemperature"
+				}},
+			{ SPane:{
+				title:"GPU Frequency:"
+			}},
+				{ SLiveLabel:{
+					refresh:2000,
+					style:italic,
+					action:"live GPUFrequency"
+				}},
+			{ SPane:{
+				title:"GPU Temperature:"
+			}},
+				{ SLiveLabel:{
+					refresh:2000,
+					style:italic,
+					action:"live GPUTemperature"
+				}},
+			{ SPane:{
+				title:"Memory:"
+			}},
+				{ SLiveLabel:{
+					refresh:2000,
+					style:italic,
+					action:"live Memory"
+				}},
+			{ SPane:{
+				title:"Uptime:"
+			}},
+				{ SLiveLabel:{
+					refresh:0,
+					style:italic,
+					action:"live UpTime"
+				}},
+			{ SPane:{
+				title:"Unused States:"
+			}},
+				{ SLiveLabel:{
+					refresh:0,
+					style:italic,
+					action:"live UnUsed"
+				}},
+			{ SPane:{
+				title:"Time in States:"
+			}},
+				{ SLiveLabel:{
+					refresh:0,
+					style:italic,
+					action:"live Time 0 9"
+				}},
+				{ SLiveLabel:{
+					refresh:0,
+					style:italic,
+					action:"live Time 10 19"
+				}},
+				{ SLiveLabel:{
+					refresh:0,
+					style:italic,
+					action:"live Time 20 29"
+				}},
+			{ SPane:{
+					title:"Kernel Wakelocks (Top 10):"
+				}},
+					{ SLiveLabel:{
+						refresh:0,
+						style:italic,
+						action:"live WakelocksKernel"
+					}},
+		]
+}
+,
+{
+	name:CPU,
+		elements:[
+			
+			{ SPane:{
+					title:"Scaling Frequencies",
+				}},
+				{ SLiveLabel:{
+					title:"Scaling Frequencies",
+					description: "Scaling max-min frequencies are affected by thermal engine/driver, mpdecision hotplug driver and CPU Boost driver.",
+					refresh:1000,
+					action:"live SCALINGFREQ"
+				}},
+			{ STitleBar:{
+				title:"CPU Frequency Scaling"
+			}},
+				{ SSeekBar:{
+						title:"CPU0 Min Frequency (MSM Limiter)",
+						description:"Set the minimum frequency the CPU0 scales down to.",
+						default:300000,
+						action:"generic /sys/kernel/msm_limiter/suspend_min_freq_0",
+						values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+					{ SSeekBar:{
+						title:"CPU1 Min Frequency (MSM Limiter)",
+						description:"Set the minimum frequency the CPU1 scales down to.",
+						default:35800,
+						action:"generic /sys/kernel/msm_limiter/suspend_min_freq_1",
+						values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+					{ SSeekBar:{
+						title:"CPU2 Min Frequency (MSM Limiter)",
+						description:"Set the minimum frequency the CPU2 scales down to.",
+						default:35800,
+						action:"generic /sys/kernel/msm_limiter/suspend_min_freq_2",
+						values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+					{ SSeekBar:{
+						title:"CPU3 Min Frequency (MSM Limiter)",
+						description:"Set the minimum frequency the CPU3 scales down to.",
+						default:35800,
+						action:"generic /sys/kernel/msm_limiter/suspend_min_freq_3",
+						values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+				{ SSeekBar:{
+						title:"CPU0 Max Frequency (MSM Limiter)",
+						description:"Set the maximum frequency the CPU0 scales up to.",
+						default:2956800,
+						action:"generic /sys/kernel/msm_limiter/resume_max_freq_0",
+						values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+					{ SSeekBar:{
+						title:"CPU1 Max Frequency (MSM Limiter)",
+						description:"Set the maximum frequency the CPU1 scales up to.",
+						default:2956800,
+						action:"generic /sys/kernel/msm_limiter/resume_max_freq_1",
+						values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+					{ SSeekBar:{
+						title:"CPU2 Max Frequency (MSM Limiter)",
+						description:"Set the maximum frequency the CPU2 scales up to.",
+						default:2956800,
+						action:"generic /sys/kernel/msm_limiter/resume_max_freq_2",
+						values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+					{ SSeekBar:{
+						title:"CPU3 Max Frequency (MSM Limiter)",
+						description:"Set the maximum frequency the CPU3 scales up to.",
+						default:2956800,
+						action:"generic /sys/kernel/msm_limiter/resume_max_freq_3",
+						values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+				
+				{ SPane:{
+							title:"MSM Limiter"
+						}},
+							{ SCheckBox:{
+								label:"Enable",
+								description:"An in kernel driver that limits CPU frequency. Developed by neobuddy89.",
+								default:0,
+								action:"generic /sys/kernel/msm_limiter/limiter_enabled"
+							}},
+{ SSeekBar:{
+							title:"Suspend Min Frequency",
+							description:"Set the minimum frequency all CPUs scales down to.",
+							default:300000,
+							action:"generic /sys/kernel/msm_limiter/suspend_min_freq",
+							values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+						}},
+{ SSeekBar:{
+							title:"Resume Max Frequency",
+							description:"Set the maximum frequency all CPUs scales up to.",
+							default:2956800,
+							action:"generic /sys/kernel/msm_limiter/resume_max_freq",
+							values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+						}},
+{ SSeekBar:{
+							title:"Suspend Max Frequency",
+							description:"Set the maximum frequency all CPUs scales up to when device is suspended.",
+							default:1267200,
+							action:"generic /sys/kernel/msm_limiter/suspend_max_freq",
+							values:{ 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+						}},
+				{ SPane:{
+							title:"CPU Boost Driver"
+						}},
+{ SSeekBar:{
+								title:"Boost",
+								description:"Minimum interval a CPU is boosted.",
+								unit:" ms",
+								min:0,
+								max:5000,
+								step:10,
+								default:1500,
+								action:"generic /sys/module/cpu_boost/parameters/boost_ms"
+						}},
+{ SSeekBar:{
+							title:"Sync Threshold",
+							description:"When CPU loading crosses the preset threshold, the current CPU is raised to this frequency.",
+							default:0,
+							action:"generic /sys/module/cpu_boost/parameters/sync_threshold",
+							values:{ 0:"Disabled", 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+						}},
+{ SSeekBar:{
+								title:"Input Boost",
+								description:"Minimum interval a CPU is boosted when input is detected.",
+								unit:" ms",
+								min:0,
+								max:5000,
+								step:10,
+								default:1500,
+								action:"generic /sys/module/cpu_boost/parameters/input_boost_ms"
+						}},
+{ SSeekBar:{
+								title:"Min Input Interval",
+								description:"Minimum Input Interval between touches.",
+								unit:" ms",
+								min:100,
+								max:1500,
+								step:10,
+								default:1500,
+								action:"generic /sys/module/cpu_boost/parameters/min_input_interval"
+						}},
+{ SSeekBar:{
+								title:"CPU0 Input Boost Frequency",
+								description:"This will boost your minimum CPU0 speed to the selected frequency when you touch the screen or press a button.",
+								action:"cpuboostibf 0",
+								values:{ 0:"Disabled", 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+							}},
+							{ SSeekBar:{
+								title:"CPU1 Input Boost Frequency",
+								description:"This will boost your minimum CPU1 speed to the selected frequency when you touch the screen or press a button.",
+								action:"cpuboostibf 1",
+								values:{ 0:"Disabled", 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+							}},
+							{ SSeekBar:{
+								title:"CPU2 Input Boost Frequency",
+								description:"This will boost your minimum CPU2 speed to the selected frequency when you touch the screen or press a button.",
+								action:"cpuboostibf 2",
+								values:{ 0:"Disabled", 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+							}},
+							{ SSeekBar:{
+								title:"CPU3 Input Boost Frequency",
+								description:"This will boost your minimum CPU3 speed to the selected frequency when you touch the screen or press a button.",
+								action:"cpuboostibf 3",
+								values:{ 0:"Disabled", 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+							}},
+{ SCheckBox:{
+							label:"Load Based Syncs",
+							description:"",
+							default:1,
+							action:"boolean /sys/module/cpu_boost/parameters/load_based_syncs",
+						}},
+{ SSeekBar:{
+								title:"Migration Load Threshold",
+								description:"",
+								min:0,
+								max:100,
+								step:1,
+								default:70,
+								action:"generic /sys/module/cpu_boost/parameters/migration_load_threshold"
+						}},
+{ SCheckBox:{
+							label:"Hotplug Boost",
+							description:"Hotplug Boost is similar to input boost but it occurs when CPUs go online.",
+							default:0,
+							action:"boolean /sys/module/cpu_boost/parameters/hotplug_boost",
+						}},
+{ SCheckBox:{
+							label:"Wakeup Boost",
+							description:"Wakeup Boost is similar to input boost but it occurs when screen is turned on.",
+							default:1,
+							action:"boolean /sys/module/cpu_boost/parameters/wakeup_boost",
+						}},
+				
+				{ SPane:{
+						title:"Power-efficient Workqueues",
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"This will help to reduce power consumption at the cost of slight performance overhead. PE workqueues are used for unbound scheduled work to save load on sibling CPU cores and queuing work on CPU0.",
+							default:1,
+							action:"boolean /sys/module/workqueue/parameters/power_efficient",
+						}},
+				{ SPane:{
+					title:"Arch Power"
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Arch Power uses arch dependent power functions to be used instead of generic high resolution timer ticks and double ticks to reflect the relative capacity of each core.",
+						default:0,
+						action:"generic /sys/kernel/sched/arch_power"
+					}},
+				
+				{ SPane:{
+					title:"BCL Options"
+				}},
+				{ SCheckBox:{
+						label:"Enable BCL",
+						description:"Uncheck to Disable BCL completely.",
+						default:0,
+						action:"generic /sys/module/battery_current_limit/parameters/bcl_hotplug_enable"
+					}},
+				{ SCheckBox:{
+						label:"Enable Hotplugging",
+						description:"Uncheck to disable BCL Hotplugging.",
+						default:0,
+						action:"generic /sys/module/battery_current_limit/parameters/bcl_hotplug_enable"
+					}},				
+			{ SPane:{
+				title:"CPU Governor",
+				description:"The CPU governor determines how the CPU behaves in response to changes in workload. More info: <a href='http://timos.me/tm/wiki/cpugovernors'>HERE</a>"
+			}},
+				{ SOptionList:{
+						title:"CPU0 (MSM Limiter)",
+						default:elementalx,
+						action:"generic /sys/kernel/msm_limiter/scaling_governor_0",
+						values:[
+"zzmoove",
+"xperience",
+"wheatley",
+"umbrella_core",
+"smartmax_eps",
+"smartmax",
+"smartassV2",
+"smartassH3",
+"ragingmolasses",
+"pegasusq",
+"ondemandplus",
+"ondemand_eps",
+"nightmare",
+"mythx_plug",
+"lulzactive",
+"lionfish",
+"intelliactive",
+"interactive_pro",
+"hyperx",
+"elementalx",
+"electrodemand",
+"dyninteractive",
+"darkness",
+"dancedance",
+"blu_active",
+"barry_allen",
+"alucard",
+"adaptive",
+"abyssplugv2",
+"interactiveX",
+"conservative",
+"ondemand",
+"powersave",
+"wave",
+"Lionheart",
+"bioshock",
+"performance",
+],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"/sys/devices/system/cpu/cpufreq"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"/sys/devices/system/cpu/cpufreq"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU1 (MSM Limiter)",
+						default:elementalx,
+						action:"generic /sys/kernel/msm_limiter/scaling_governor_1",
+						values:[
+"zzmoove",
+"xperience",
+"wheatley",
+"umbrella_core",
+"smartmax_eps",
+"smartmax",
+"smartassV2",
+"smartassH3",
+"ragingmolasses",
+"pegasusq",
+"ondemandplus",
+"ondemand_eps",
+"nightmare",
+"mythx_plug",
+"lulzactive",
+"lionfish",
+"intelliactive",
+"interactive_pro",
+"hyperx",
+"elementalx",
+"electrodemand",
+"dyninteractive",
+"darkness",
+"dancedance",
+"blu_active",
+"barry_allen",
+"alucard",
+"adaptive",
+"abyssplugv2",
+"interactiveX",
+"conservative",
+"ondemand",
+"powersave",
+"wave",
+"Lionheart",
+"bioshock",
+"performance",
+],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"/sys/devices/system/cpu/cpufreq"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"/sys/devices/system/cpu/cpufreq"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU2 (MSM Limiter)",
+						default:elementalx,
+						action:"generic /sys/kernel/msm_limiter/scaling_governor_2",
+						values:[
+"zzmoove",
+"xperience",
+"wheatley",
+"umbrella_core",
+"smartmax_eps",
+"smartmax",
+"smartassV2",
+"smartassH3",
+"ragingmolasses",
+"pegasusq",
+"ondemandplus",
+"ondemand_eps",
+"nightmare",
+"mythx_plug",
+"lulzactive",
+"lionfish",
+"intelliactive",
+"interactive_pro",
+"hyperx",
+"elementalx",
+"electrodemand",
+"dyninteractive",
+"darkness",
+"dancedance",
+"blu_active",
+"barry_allen",
+"alucard",
+"adaptive",
+"abyssplugv2",
+"interactiveX",
+"conservative",
+"ondemand",
+"powersave",
+"wave",
+"Lionheart",
+"bioshock",
+"performance",
+],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"/sys/devices/system/cpu/cpufreq"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"/sys/devices/system/cpu/cpufreq"
+							}
+						]
+					}},
+					{ SOptionList:{
+						title:"CPU3 (MSM Limiter)",
+						default:elementalx,
+						action:"generic /sys/kernel/msm_limiter/scaling_governor_3",
+						values:[
+"zzmoove",
+"xperience",
+"wheatley",
+"umbrella_core",
+"smartmax_eps",
+"smartmax",
+"smartassV2",
+"smartassH3",
+"ragingmolasses",
+"pegasusq",
+"ondemandplus",
+"ondemand_eps",
+"nightmare",
+"mythx_plug",
+"lulzactive",
+"lionfish",
+"intelliactive",
+"interactive_pro",
+"hyperx",
+"elementalx",
+"electrodemand",
+"dyninteractive",
+"darkness",
+"dancedance",
+"blu_active",
+"barry_allen",
+"alucard",
+"adaptive",
+"abyssplugv2",
+"interactiveX",
+"conservative",
+"ondemand",
+"powersave",
+"wave",
+"Lionheart",
+"bioshock",
+"performance",
+],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, CANCEL ],
+								to:"/sys/devices/system/cpu/cpufreq"
+							},
+							{
+								on:REFRESH,
+								do:REFRESH,
+								to:"/sys/devices/system/cpu/cpufreq"
+							}
+						]
+					}},
+			{ SPane:{
+				title:"CPU Governor Tunables"
+			}},
+				{ STreeDescriptor:{
+					path:"/sys/devices/system/cpu/cpufreq",
+					generic: {
+						directory: {
+							STreeDescriptor:{
+								generic: {
+									directory: {},
+									element: {
+										SGeneric: { title:"@BASENAME" }
+									}
+								},
+								exclude: [ 
+									"boost_duration", "boostpulse", "cpu_utilization", "multi_phase_freq_tbl", "profile", "profile_list", "sampling_rate_min", 
+									"up_threshold_h", "up_threshold_l", "version_profiles"
+									"boost_duration", "boostpulse", "cpu_utilization", "multi_phase_freq_tbl", "profile",
+									"up_threshold_h", "up_threshold_l", "version_profiles", "sampling_rate_current", "freq_limit",
+									"music_state", "inputboost_punch_cycles", "inputboost_punch_freq", "inputboost_punch_on_epenmove",
+									"inputboost_punch_on_fingerdown", "inputboost_punch_on_fingermove", "auto_adjust_freq_thresholds",
+									"version", "early_demand", "fast_scaling_up", "fast_scaling_down", "fast_scaling_sleep_up", "fast_scaling_sleep_down"
+									"scaling_up_block_freq", "scaling_block_freq", "inputboost_typingbooster_cores", "music_max_freq", "music_min_freq"
+								]
+							},
+						}
+					},
+					exclude: [ "all_cpus", "kset", "overall_stats", "stats", "vdd_table" ]
+				}},
+		]
+}
+,
+{
+	name:HOTPLUG,
+		elements:[
+			{ SPane:{
+				title:"Info"
+			}},
+				{ SDescription:{
+					description:"Use only one hotplug driver from the following options, using more than at the same time may cause unexpected behavior."
+				}},
+			{ SPane:{
+					title:"Zen Decision"
+				}},
+					{ SCheckBox:{
+						description:"In Kernel Ultra-Light MPDecision Replacement By Bbedward",
+						label:"Enable",
+						default:1,
+						action:"generic /sys/kernel/zen_decision/enabled"
+					}},
+			
+			
+			
+			{ SPane:{
+					title:"IntelliPlug 5.0"
+				}},
+{ SCheckBox:{
+						label:"Enable",
+						description:"An in kernel replacement for Qualcomms MPDecision. Developed by faux123 & neobuddy89.",
+						default:1,
+						action:"generic /sys/kernel/intelli_plug/intelli_plug_active"
+					}},
+{ SCheckBox:{
+						label:"Debug Intelliplug",
+						description:"Allows you to activate debug mask for hotplug operations.",
+						default:0,
+						action:"generic /sys/kernel/intelli_plug/debug_intelli_plug"
+					}},
+{ SOptionList:{
+						title:"Intelliplug Profile",
+						description:"The number in the parentheses indicates the amount of cores online at any time.",
+						default:0,
+						action:"generic /sys/kernel/intelli_plug/full_mode_profile",
+						values:{
+							0:"Balanced (4)", 1:"Performance (4)", 2:"Conservative (4)", 3:"Disabled", 4:"Tri (3)", 5:"Eco (2)", 6:"Strict (1)"
+						}
+					}},
+{ SSeekBar:{
+						title:"CPUs Boosted",
+						description:"Maximum number of CPUs boosted at the same time.",
+						min:0,
+						max:
+4
+,
+						step:1,
+						default:0,
+						action:"generic /sys/kernel/intelli_plug/cpus_boosted"
+					}},
+{ SSeekBar:{
+						title:"Hysteresis Value",
+						description:"Lower = faster hotplug response (more battery drain).",
+						min:0,
+						max:16,
+						step:1,
+						default:4,
+						action:"generic /sys/kernel/intelli_plug/nr_run_hysteresis"
+					}},
+{ SSeekBar:{
+						title:"Min CPUs Online",
+						description:"Minimum CPUs online at any time.",
+						min:1,
+						max:
+4
+,
+						step:1,
+						default:1,
+						action:"generic /sys/kernel/intelli_plug/min_cpus_online"
+					}},
+{ SSeekBar:{
+						title:"Max CPUs Online",
+						description:"Maximum CPUs online at any time.",
+						min:1,
+						max:
+4
+,
+						step:1,
+						default:4,
+						action:"generic /sys/kernel/intelli_plug/max_cpus_online"
+					}},
+{ SSeekBar:{
+						title:"Max CPUs Screen Off",
+						description:"Maximum number of CPUs online when screen is off.",
+						min:1,
+						max:
+4
+,
+						step:1,
+						default:1,
+						action:"generic /sys/kernel/intelli_plug/max_cpus_online_susp"
+					}},
+{ SSeekBar:{
+						title:"Suspend Defer Time",
+						min:0,
+						max:5000,
+						step:10,
+						default:10,
+						action:"generic /sys/kernel/intelli_plug/suspend_defer_time"
+					}},
+{ SSeekBar:{
+						title:"Defer Sampling",
+						min:0,
+						max:1000,
+						unit:" ms",
+						step:1,
+						default:200,
+						action:"generic /sys/kernel/intelli_plug/def_sampling_ms"
+					}},
+{ SSeekBar:{
+							title:"Boost Lock Duration",
+							description:"Minimum interval a CPU is boosted.",
+							unit:" ms",
+							min:1,
+							max:5000,
+							step:1,
+							default:2500,
+							action:"generic /sys/kernel/intelli_plug/boost_lock_duration"
+					}},
+{ SSeekBar:{
+						title:"Down Lock Duration",
+						description:"Minimum interval a CPU is kept online.",
+						unit:" ms",
+						min:1,
+						max:5000,
+						step:1,
+						default:2500,
+						action:"generic /sys/kernel/intelli_plug/down_lock_duration"
+					}},
+{ SSeekBar:{
+						title:"Threshold Value",
+						min:0,
+						max:1000,
+						step:1,
+						default:950,
+						action:"generic /sys/kernel/intelli_plug/cpu_nr_run_threshold"
+					}},
+{ SSeekBar:{
+						title:"FShift",
+						min:0,
+						max:3,
+						step:1,
+						default:3,
+						action:"generic /sys/kernel/intelli_plug/nr_fshift"
+					}},
+			
+			
+			
+			
+			{ SPane:{
+					title:"Blu_Plug"
+				}},
+{ SCheckBox:{
+						label:"Enable",
+						description:"An in kernel replacement for Qualcomms MPDecision. Developed by eng.stk.",
+						default:0,
+						action:"generic /sys/module/blu_plug/parameters/enabled"
+					}},
+{ SSeekBar:{
+						title:"Minimum Online CPU",
+						description:"Minimum number of CPUs that will be always online.",
+						min:1,
+						max:
+4
+,
+						step:1,
+						default:1,
+						action:"generic /sys/module/blu_plug/parameters/min_online"
+					}},
+{ SSeekBar:{
+						title:"Maximum Online CPU",
+						description:"Maximum number of CPUs that will be always online.",
+						min:1,
+						max:
+4
+,
+						step:1,
+						default:4,
+						action:"generic /sys/module/blu_plug/parameters/max_online"
+					}},
+{ SSeekBar:{
+						title:"Max CPUs Screen Off",
+						description:"Maximum number of CPUs online when screen is off.",
+						min:1,
+						max:
+4
+,
+						step:1,
+						default:1,
+						action:"generic /sys/module/blu_plug/parameters/max_cores_screenoff"
+					}},
+{ SSeekBar:{
+						title:"Max Frequency Screen Off",
+						description:"Set the maximum frequency the CPU scales up to when the screen is off.",
+						default:0,
+						action:"generic /sys/module/blu_plug/parameters/max_freq_screenoff",
+						values:{ 0:"Disabled", 
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+{ SSeekBar:{
+						title:"Up Threshold",
+						description:"Over this threshold the driver will put one more CPU online.",
+						unit:"%",
+						min:0,
+						max:100,
+						step:1,
+						default:80,
+						action:"generic /sys/module/blu_plug/parameters/up_threshold"
+					}},
+{ SSeekBar:{
+						title:"Up Timer Control",
+						description:"Control timer for up CPUs.",
+						min:0,
+						max:20,
+						step:1,
+						weight:0.5,
+						default:2,
+						action:"generic /sys/module/blu_plug/parameters/up_timer_cnt"
+					}},
+{ SSeekBar:{
+						title:"Down Timer Control",
+						description:"Control timer for down CPUs.",
+						min:0,
+						max:20,
+						step:1,
+						weight:0.5,
+						default:6,
+						action:"generic /sys/module/blu_plug/parameters/down_timer_cnt"
+					}},
+			{ SPane:{
+					title:"Alucard"
+				}},
+{ SCheckBox:{
+						label:"Enable",
+						description:"An in kernel replacement for Qualcomms MPDecision. Developed by Alucard.",
+						default:0,
+						action:"generic /sys/kernel/alucard_hotplug/hotplug_enable"
+					}},
+{ SSeekBar:{
+							title:"Sampling Rate",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:60000,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_sampling_rate"
+					}},
+{ SSeekBar:{
+							title:"Max Cores Limit",
+							description:"Maximum CPUs online at any time.",
+							min:1,
+							max:
+4
+,
+							step:1,
+							default:4,
+							action:"generic /sys/kernel/alucard_hotplug/maxcoreslimit"
+					}},
+{ SSeekBar:{
+							title:"CPU Down Rate",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:20,
+							action:"generic /sys/kernel/alucard_hotplug/cpu_down_rate"
+					}},
+{ SSeekBar:{
+							title:"CPU Up Rate",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:10,
+							action:"generic /sys/kernel/alucard_hotplug/cpu_up_rate"
+					}},
+{ SSeekBar:{
+							title:"Hotplug Load 1_1",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:65,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_load_1_1"
+					}},
+{ SSeekBar:{
+							title:"Hotplug Load 2_0",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:30,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_load_2_0"
+					}},
+{ SSeekBar:{
+							title:"Hotplug Load 2_1",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:65,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_load_2_1"
+					}},
+{ SSeekBar:{
+							title:"Hotplug Load 3_0",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:30,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_load_3_0"
+					}},
+{ SSeekBar:{
+							title:"Hotplug Load 3_1",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:65,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_load_3_1"
+					}},
+{ SSeekBar:{
+							title:"Hotplug Load 4_0",
+							unit:"%",
+							min:1,
+							max:100,
+							step:1,
+							default:30,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_load_4_0"
+					}},
+{ SSeekBar:{
+							title:"Hotplug RQ 1_1",
+							min:1,
+							max:5000,
+							step:1,
+							default:200,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_rq_1_1"
+					}},
+{ SSeekBar:{
+							title:"Hotplug RQ 2_0",
+							min:1,
+							max:5000,
+							step:1,
+							default:200,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_rq_2_0"
+					}},
+{ SSeekBar:{
+							title:"Hotplug RQ 2_1",
+							min:1,
+							max:5000,
+							step:1,
+							default:200,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_rq_2_1"
+					}},
+{ SSeekBar:{
+							title:"Hotplug RQ 3_0",
+							min:1,
+							max:5000,
+							step:1,
+							default:200,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_rq_3_0"
+					}},
+{ SSeekBar:{
+							title:"Hotplug RQ 3_1",
+							min:1,
+							max:5000,
+							step:1,
+							default:300,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_rq_3_1"
+					}},
+{ SSeekBar:{
+							title:"Hotplug RQ 4_0",
+							min:1,
+							max:5000,
+							step:1,
+							default:300,
+							action:"generic /sys/kernel/alucard_hotplug/hotplug_rq_4_0"
+					}},
+{ SSeekBar:{
+						title:"Frequency 1_1",
+						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_1_1",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+{ SSeekBar:{
+						title:"Frequency 2_0",
+						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_2_0",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+{ SSeekBar:{
+						title:"Frequency 2_1",
+						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_2_1",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+{ SSeekBar:{
+						title:"Frequency 3_0",
+						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_3_0",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+{ SSeekBar:{
+						title:"Frequency 3_1",
+						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_3_1",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+{ SSeekBar:{
+						title:"Frequency 4_0",
+						action:"generic /sys/kernel/alucard_hotplug/hotplug_freq_4_0",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+			{ SPane:{
+					title:"Mako Hotplug Control",
+					description:"An in kernel replacement for Qualcomms MPDecision. Developed by franciscofranco.",
+				}},
+{ SCheckBox:{
+						label:"Enable",
+						default:0,
+						action:"generic /sys/devices/virtual/misc/mako_hotplug_control/enabled"
+					}},
+{ SSeekBar:{
+						title:"CPU Frequency Unplug Limit",
+						action:"generic /sys/devices/virtual/misc/mako_hotplug_control/cpufreq_unplug_limit",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+{ SSeekBar:{
+						title:"High Load Counter",
+						min:0,
+						max:100,
+						step:1,
+						default:10,
+						action:"generic /sys/devices/virtual/misc/mako_hotplug_control/high_load_counter"
+					}},
+{ SSeekBar:{
+						title:"Load Threshold",
+						description:"The threshold to online all CPUs.",
+						unit:"%",
+						min:0,
+						max:100,
+						step:1,
+						default:80,
+						action:"generic /sys/devices/virtual/misc/mako_hotplug_control/load_threshold"
+					}},
+{ SSeekBar:{
+						title:"Max Load Counter",
+						min:0,
+						max:100,
+						step:1,
+						default:20,
+						action:"generic /sys/devices/virtual/misc/mako_hotplug_control/max_load_counter"
+					}},
+{ SSeekBar:{
+						title:"Min Time CPU Online",
+						min:0,
+						max:100,
+						step:1,
+						default:1,
+						action:"generic /sys/devices/virtual/misc/mako_hotplug_control/min_time_cpu_online"
+					}},
+{ SSeekBar:{
+						title:"Timer",
+						min:0,
+						max:100,
+						step:1,
+						default:1,
+						action:"generic /sys/devices/virtual/misc/mako_hotplug_control/timer"
+					}},
+			{ SPane:{
+						title:"AutoSMP"
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"An in kernel replacement for Qualcomms MPDecision. Developed by mrg666.",
+							default:0,
+							action:"boolean /sys/module/autosmp/parameters/enabled"
+						}},
+{ SCheckBox:{
+							label:"Screen off Single Core",
+							description:"Use only one core if screen is off.",
+							default:1,
+							action:"generic /sys/kernel/autosmp/conf/scroff_single_core"
+						}},
+{ SSeekBar:{
+							title:"Min CPUs",
+							description:"Minimum CPUs online at any time.",
+							min:1,
+							max:
+4
+,
+							step:1,
+							default:1,
+							action:"generic /sys/kernel/autosmp/conf/min_cpus",
+						}},
+{ SSeekBar:{
+							title:"Max CPUs",
+							description:"Maximum CPUs online at any time.",
+							min:1,
+							max:
+4
+,
+							step:1,
+							default:4,
+							action:"generic /sys/kernel/autosmp/conf/max_cpus",
+						}},
+{ SSeekBar:{
+							title:"CPU Frequency Down",
+							description:"Percentage values for down rate limits.",
+							min:0,
+							max:100,
+							step:1,
+							unit:"%",
+							default:40,
+							action:"generic /sys/kernel/autosmp/conf/cpufreq_down"
+						}},
+{ SSeekBar:{
+							title:"CPU Frequency Up",
+							description:"Percentage values for up rate limits.",
+							min:0,
+							max:100,
+							step:1,
+							unit:"%",
+							default:90,
+							action:"generic /sys/kernel/autosmp/conf/cpufreq_up"
+						}},
+{ SSeekBar:{
+							title:"Cycle Up",
+							description:"Cycles to wait after the last hotplug event to plug another core.",
+							min:0,
+							max:3,
+							step:1,
+							default:1,
+							action:"generic /sys/kernel/autosmp/conf/cycle_up"
+						}},
+{ SSeekBar:{
+							title:"Cycle Down",
+							description:"Cycles to wait after the last hotplug event to unplug another core.",
+							min:0,
+							max:3,
+							step:1,
+							default:1,
+							action:"generic /sys/kernel/autosmp/conf/cycle_down"
+						}},
+{ SSeekBar:{
+							title:"Delay",
+							min:0,
+							max:500,
+							step:10,
+							default:100,
+							action:"generic /sys/kernel/autosmp/conf/delay"
+					}},
+		]
+}
+,
+{
+    name:THERMAL,
+		elements:[
+			{ SPane:{
+				title:"Info"
+			}},
+				{ SDescription:{
+					description:"Thermal Driver, 4 stage limiting developed by Francisco Franco. Tunables exposed by Yoinx."
+				}},
+			{ SPane:{
+					title:"Temperature Threshold"
+				}},
+					{ SSeekBar:{
+					description:"Begin limiting CPU Frequencies at this temperature to avoid overheating. This is the temperature at which to set the first stage limiting frequency.",
+					unit:"ºC",
+					step:1,
+					min:40,
+					max:90,
+					default:70,
+					action:"generic /sys/module/msm_thermal/parameters/temp_threshold"
+				}},
+			{ SPane:{
+					title:"Temperature Threshold Step"
+				}},
+					{ SSeekBar:{
+					description:"This value modifies the temperature thresholds for stage 2-4. This value is multipled by the stage number and added to the threshold. When that temperature is reached the frequency for that stage is set.",
+					unit:"ºC",
+					step:1,
+					min:1,
+					max:6,
+					default:4,
+					action:"generic /sys/module/msm_thermal/parameters/temp_step"
+				}},
+			{ SPane:{
+					title:"First stage limiting Frequency"
+				}},
+					{ SSeekBar:{
+						description:"This frequency is set as the max frequency once the throttle temperature is reached.",
+						default:2265600,
+						action:"generic /sys/module/msm_thermal/parameters/freq_warm",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+			{ SPane:{
+					title:"Second stage limiting Frequency"
+				}},
+					{ SSeekBar:{
+						description:"This frequency is set as the max frequency for stage 2.",
+						default:1728000,
+						action:"generic /sys/module/msm_thermal/parameters/freq_hot",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+			{ SPane:{
+					title:"Third stage limiting Frequency"
+				}},
+					{ SSeekBar:{
+						description:"This frequency is set as the max frequency for stage 3.",
+						default:1267200,
+						action:"generic /sys/module/msm_thermal/parameters/freq_very_hot",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+			{ SPane:{
+					title:"Fourth stage limiting Frequency"
+				}},
+					{ SSeekBar:{
+						description:"This frequency is set as the max frequency for stage 4.",
+						default:960000,
+						action:"generic /sys/module/msm_thermal/parameters/freq_hell",
+						values:{
+35800:"35 MHz", 
+98300:"98 MHz", 
+223200:"223 MHz", 
+300000:"300 MHz", 
+345600:"345 MHz", 
+422400:"422 MHz", 
+499200:"499 MHz", 
+576000:"576 MHz", 
+652800:"652 MHz", 
+729600:"729 MHz", 
+806400:"806 MHz", 
+883200:"883 MHz", 
+960000:"960 MHz", 
+1036800:"1036 MHz", 
+1113600:"1113 MHz", 
+1190400:"1190 MHz", 
+1267200:"1267 MHz", 
+1344000:"1344 MHz", 
+1420800:"1420 MHz", 
+1497600:"1497 MHz", 
+1574400:"1574 MHz", 
+1651200:"1651 MHz", 
+1728000:"1728 MHz", 
+1804800:"1804 MHz", 
+1881600:"1881 MHz", 
+1958400:"1958 MHz", 
+2035200:"2035 MHz", 
+2112000:"2112 MHz", 
+2188800:"2188 MHz", 
+2265600:"2265 MHz", 
+2342400:"2342 MHz", 
+2419200:"2419 MHz", 
+2496000:"2496 MHz", 
+2572800:"2572 MHz", 
+2649600:"2649 MHz", 
+2726400:"2726 MHz", 
+2803200:"2803 MHz", 
+2880000:"2880 MHz", 
+2956800:"2956 MHz", 
+3033600:"3033 MHz", 
+3091200:"3091 MHz", 
+}
+					}},
+			{ SPane:{
+					title:"Polling Interval"
+				}},
+					{ SSeekBar:{
+					description:"Polling Interval",
+					unit:"µsecs",
+					step:250000,
+					min:250000,
+					max:3000000,
+					default:1000000,
+					action:"generic /sys/module/msm_thermal/parameters/poll_interval"
+				}},
+		]
+}
+,
+{
+	name:CPU VOLT,
+		elements:[
+			
+			
+			{ STitleBar:{
+					title:"CPU Global Voltage"
+				}},
+					{ SSeekBar:{
+						default:0,
+						action:"voltage cpuvoltglobal global",
+						unit:" mV",
+						min:-300,
+						max:300,
+						step:5,
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, APPLY ],
+								to:[
+"voltage cpuvolt 35mhz:",
+"voltage cpuvolt 98mhz:",
+"voltage cpuvolt 223mhz:",
+"voltage cpuvolt 300mhz:",
+"voltage cpuvolt 345mhz:",
+"voltage cpuvolt 422mhz:",
+"voltage cpuvolt 499mhz:",
+"voltage cpuvolt 576mhz:",
+"voltage cpuvolt 652mhz:",
+"voltage cpuvolt 729mhz:",
+"voltage cpuvolt 806mhz:",
+"voltage cpuvolt 883mhz:",
+"voltage cpuvolt 960mhz:",
+"voltage cpuvolt 1036mhz:",
+"voltage cpuvolt 1113mhz:",
+"voltage cpuvolt 1190mhz:",
+"voltage cpuvolt 1267mhz:",
+"voltage cpuvolt 1344mhz:",
+"voltage cpuvolt 1420mhz:",
+"voltage cpuvolt 1497mhz:",
+"voltage cpuvolt 1574mhz:",
+"voltage cpuvolt 1651mhz:",
+"voltage cpuvolt 1728mhz:",
+"voltage cpuvolt 1804mhz:",
+"voltage cpuvolt 1881mhz:",
+"voltage cpuvolt 1958mhz:",
+"voltage cpuvolt 2035mhz:",
+"voltage cpuvolt 2112mhz:",
+"voltage cpuvolt 2188mhz:",
+"voltage cpuvolt 2265mhz:",
+"voltage cpuvolt 2342mhz:",
+"voltage cpuvolt 2419mhz:",
+"voltage cpuvolt 2496mhz:",
+"voltage cpuvolt 2572mhz:",
+"voltage cpuvolt 2649mhz:",
+"voltage cpuvolt 2726mhz:",
+"voltage cpuvolt 2803mhz:",
+"voltage cpuvolt 2880mhz:",
+"voltage cpuvolt 2956mhz:",
+"voltage cpuvolt 3033mhz:",
+"voltage cpuvolt 3091mhz:",
+]
+							}
+						]
+					}},
+			{ SPane:{
+					title:"CPU Frequency Voltage",
+					description:"Decreasing voltages will lower heat and power consumption of the CPU. Increasing it on overclocked frequencies improves stability. Too low voltages may cause instability and freezes."
+				}},
+{ SSeekBar:{
+							title:"35 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:500,
+							action:"voltage cpuvolt 35mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"98 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:550,
+							action:"voltage cpuvolt 98mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"223 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:670,
+							action:"voltage cpuvolt 223mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"300 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:690,
+							action:"voltage cpuvolt 300mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"345 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:700,
+							action:"voltage cpuvolt 345mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"422 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:710,
+							action:"voltage cpuvolt 422mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"499 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:720,
+							action:"voltage cpuvolt 499mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"576 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:730,
+							action:"voltage cpuvolt 576mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"652 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:740,
+							action:"voltage cpuvolt 652mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"729 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:750,
+							action:"voltage cpuvolt 729mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"806 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:760,
+							action:"voltage cpuvolt 806mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"883 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:770,
+							action:"voltage cpuvolt 883mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"960 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:810,
+							action:"voltage cpuvolt 960mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1036 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:820,
+							action:"voltage cpuvolt 1036mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1113 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:830,
+							action:"voltage cpuvolt 1113mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1190 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:840,
+							action:"voltage cpuvolt 1190mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1267 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:850,
+							action:"voltage cpuvolt 1267mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1344 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:860,
+							action:"voltage cpuvolt 1344mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1420 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:870,
+							action:"voltage cpuvolt 1420mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1497 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:870,
+							action:"voltage cpuvolt 1497mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1574 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:890,
+							action:"voltage cpuvolt 1574mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1651 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:900,
+							action:"voltage cpuvolt 1651mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1728 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:910,
+							action:"voltage cpuvolt 1728mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1804 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:920,
+							action:"voltage cpuvolt 1804mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1881 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:930,
+							action:"voltage cpuvolt 1881mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"1958 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:940,
+							action:"voltage cpuvolt 1958mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2035 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:950,
+							action:"voltage cpuvolt 2035mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2112 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:965,
+							action:"voltage cpuvolt 2112mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2188 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:980,
+							action:"voltage cpuvolt 2188mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2265 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:995,
+							action:"voltage cpuvolt 2265mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2342 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1010,
+							action:"voltage cpuvolt 2342mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2419 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1025,
+							action:"voltage cpuvolt 2419mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2496 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1040,
+							action:"voltage cpuvolt 2496mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2572 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1055,
+							action:"voltage cpuvolt 2572mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2649 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1070,
+							action:"voltage cpuvolt 2649mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2726 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1085,
+							action:"voltage cpuvolt 2726mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2803 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1100,
+							action:"voltage cpuvolt 2803mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2880 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1130,
+							action:"voltage cpuvolt 2880mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"2956 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1130,
+							action:"voltage cpuvolt 2956mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"3033 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1145,
+							action:"voltage cpuvolt 3033mhz:"
+						}},
+						
+{ SSeekBar:{
+							title:"3091 MHz",
+							unit:" mV",
+							min:465,
+							max:1450,
+							step:1,
+							default:1170,
+							action:"voltage cpuvolt 3091mhz:"
+						}},
+						
+			
+			
+			
+			
+		]
+}
+,
+{
+	name:I/O,
+		elements:[
+			{ STitleBar:{
+				title:"I/O Control"
+			}},
+				{ SSeekBar:{
+					title:"Read-ahead Size",
+					description:"Set the read-ahead size for the internal storage.",
+					unit:" KB",
+					step:128,
+					min:128,
+					max:4096,
+					default:1536,
+					action:"ioset queue read_ahead_kb"
+				}},
+				{ SOptionList:{
+					title:"I/O Scheduler",
+					description:"The I/O Scheduler decides how to prioritize and handle I/O requests. More info: <a href='http://timos.me/tm/wiki/ioscheduler'>HERE</a>",
+					default:zen,
+					action:"ioset scheduler",
+					values:[
+						"bfq",
+"cfq",
+"deadline",
+"fifo",
+"fiops",
+"noop",
+"row",
+"sioplus",
+"tripndroid",
+"vr",
+"zen",
+					],
+					notify:[
+						{
+							on:APPLY,
+							do:[ REFRESH, CANCEL ],
+							to:"/sys/block/mmcblk0/queue/iosched"
+						},
+						{
+							on:REFRESH,
+							do:REFRESH,
+							to:"/sys/block/mmcblk0/queue/iosched"
+						}
+					]
+				}},
+				
+				
+			{ SPane:{
+				title:"General I/O Tunables",
+				description:"Set the internal storage general tunables"
+			}},
+				{ SCheckBox:{
+					description:"Draw entropy from spinning (rotational) storage.",
+					label:"Add Random",
+					default:0,
+					action:"ioset queue add_random"
+				}},
+				{ SCheckBox:{
+					description:"Maintain I/O statistics for this storage device. Disabling will break I/O monitoring apps.",
+					label:"I/O Stats",
+					default:0,
+					action:"ioset queue iostats"
+				}},
+				{ SCheckBox:{
+					description:"Treat device as rotational storage.",
+					label:"Rotational",
+					default:0,
+					action:"ioset queue rotational"
+				}},				
+				{ SOptionList:{
+					title:"No Merges",
+					description:"Types of merges (prioritization) the scheduler queue for this storage device allows.",
+					default:0,
+					action:"ioset queue nomerges",
+					values:{
+						0:"All", 1:"Simple Only", 2:"None"
+					}
+				}},
+				{ SOptionList:{
+					title:"RQ Affinity",
+					description:"Try to have scheduler requests complete on the CPU core they were made from. Higher is more aggressive. Some kernels only support 0-1.",
+					default:1,
+					action:"ioset queue rq_affinity",
+					values:{
+						0:"Disabled", 1:"Enabled", 2:"Aggressive"
+					}
+				}},
+				{ SSeekBar:{
+					title:"NR Requests",
+					description:"Maximum number of read (or write) requests that can be queued to the scheduler in the block layer.",
+					step:128,
+					min:128,
+					max:2048,
+					default:128,
+					action:"ioset queue nr_requests"
+				}},
+			{ SPane:{
+				title:"I/O Scheduler Tunables"
+			}},
+				{ STreeDescriptor:{
+					path:"/sys/block/mmcblk0/queue/iosched",
+					generic: {
+						directory: {},
+						element: {
+							SGeneric: { title:"@BASENAME" }
+						}
+					},
+					exclude: [ "weights" ]
+				}},
+		]
+}
+,
+{
+	name:GPU,
+		elements:[
+			{ SPane:{
+				title:"GPU Frequency Scaling",
+			}},
+				{ SSeekBar:{
+						title:"GPU Min Frequency",
+						description:"Set the minimum frequency the GPU scales down to.",
+						default:8,
+						action:"gpuset /sys/class/kgsl/kgsl-3d0/min_pwrlevel",
+						values:{
+							9:"700 MHz", 8:"600 MHz", 7:"500 MHz", 6:"430 MHz", 5:"389 MHz", 4:"300 MHz", 3:"220 MHz", 2:"150 MHz", 1:"100 MHz", 
+						}
+					}},
+				{ SSeekBar:{
+						title:"GPU Max Frequency",
+						description:"Set the maximum frequency the GPU scales up to.",
+						default:700000000,
+						action:"generic /sys/class/kgsl/kgsl-3d0/max_gpuclk",
+						values:{
+							100000000:"100 MHz", 150000000:"150 MHz", 220000000:"220 MHz", 300000000:"300 MHz", 389000000:"389 MHz", 430000000:"430 MHz", 500000000:"500 MHz", 600000000:"600 MHz", 700000000:"700 MHz", 
+						}
+				}},
+{ SButton:{
+						label:"Enable GPU Gaming Boost",
+						action:"gpuboost enable"
+				}},
+{ SButton:{
+						label:"Disable GPU Gaming Boost",
+						action:"gpuboost disable"
+				}},
+			{ SPane:{
+					title:"GPU Governor",
+					description:"The GPU Governor makes scaling decisions based on specific algorithm for 2D/3D scenarios."
+				}},
+					{ SOptionList:{
+						default:simple_ondemand,
+						action:"gpuset /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/governor",
+						values:[
+							"cache_hwmon", "cpubw_hwmon", "userspace", "performance", "powersave", "msm-adreno-tz", "simple_ondemand", "msm_cpufreq",
+						]
+					}},
+			{ SPane:{
+					title:"Simple Governor Tunables"
+				}},
+{ SCheckBox:{
+						label:"Enable",
+						description:"An add-on for MSM Adreno TZ GPU Governor. Developed by faux123.",
+						default:1,
+						action:"generic /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate"
+					}},
+{ SSeekBar:{
+						title:"Laziness",
+						description:"Adjusts the number of times the governor skips ramp down requests. Higher = better performance (more battery drain).",
+						default:4,
+						action:"generic /sys/module/simple_gpu_algorithm/parameters/simple_laziness",
+						min:0,
+						max:10,
+						step:1
+					}},
+{ SSeekBar:{
+						title:"Ramp Threshold",
+						description:"Adjusts the threshold to ramp up or down GPU frequencies. Lower = better performance (more battery drain).",
+						default:5000,
+						action:"generic /sys/module/simple_gpu_algorithm/parameters/simple_ramp_threshold",
+						min:0,
+						max:10000,
+						step:1000
+					}},
+			
+			
+{ SPane:{
+						title:"Adreno_Idler Tunables"
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"An add-on for MSM Adreno TZ GPU Governor. Developed by arter97.",
+							default:0,
+							action:"boolean /sys/module/adreno_idler/parameters/adreno_idler_active"
+						}},
+{ SGeneric:{
+							title:"Down Differential",
+							description:"Decrease this value to idle faster. Increase this value to idle slower. ",
+							default:cat /sys/module/adreno_idler/parameters/adreno_idler_downdifferential,
+							action:"adreno_idler /sys/module/adreno_idler/parameters/adreno_idler_downdifferential"
+						}},
+{ SGeneric:{
+							title:"Idle Wait",
+							description:"Time to wait for entering idle, measured in milliseconds. This implementation is to prevent micro-lags on scrolling or playing games, meaning the lower it gets, the slower & low-power it would get.",
+							default:cat /sys/module/adreno_idler/parameters/adreno_idler_idlewait,
+							action:"adreno_idler /sys/module/adreno_idler/parameters/adreno_idler_idlewait"
+						}},
+{ SGeneric:{
+							title:"Idle Workload",
+							description:"Any workload higher than this will be treated as non-idle workload, meaning the higher it gets, the slower & low-power it would get.",
+							default:cat /sys/module/adreno_idler/parameters/adreno_idler_idleworkload,
+							action:"adreno_idler /sys/module/adreno_idler/parameters/adreno_idler_idleworkload"
+						}},
+		]
+}
+,
+{
+	name:GAMMA,
+		elements:[
+		{ SPane:{
+			title:"Gamma Profiles"
+		}},
+			{ SOptionList:{
+				description:"Choose the gamma profile you want to apply and confirm it.",
+				action:"restorebackup pickgammaconfig",
+				default:"None",
+				values:[ "None",
+					
+				],
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"generic /res/uci/files/bck_prof"
+					}
+				]
+			}},
+			{ SDescription:{
+				description:"Click on button below for import the gamma then close/open synapse. After this you have to press the X button on top to load the new settings."
+			}},
+			{ SButton:{
+				label:"Import Selected Profile",
+				action:"sqlite ImportGammaSynapse",
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"restorebackup pickgammaconfig"
+					}
+				]
+			}},
+			{ SPane:{
+						title:"KCAL",
+					}},
+						{ SCheckBox:{
+							label:"Enable",
+							description:"Enables/Disables RGB Multiplier Control",
+							default:1,
+							action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_enable",
+						}},
+{ SPane:{
+						title:"Values",
+					}},
+						{ SGeneric:{
+							title:"KCAL",
+							description:"Controls R/G/B Multipliers",
+							default:256 256 256,
+							action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal",
+						}},
+{ SCheckBox:{
+						label:"KCAL inverted colors",
+						description:"Enables/Disables Display Inversion Mode",
+						default:0,
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_invert"
+					}},
+{ SSeekBar:{
+							title:"KCAL Min",
+							description:"Controls minimum RGB Multiplier value.",
+							min:0,
+							max:255,
+							step:1,
+							default:26,
+							action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_min"
+						}},
+{ SSeekBar:{
+						title:"Contrast",
+						description:"Controls display contrast.",
+						min:128,
+						max:383,
+						step:1,
+						default:256,
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_cont",
+					}},
+{ SSeekBar:{
+						title:"Hue",
+						description:"Controls display hue.",
+						min:0,
+						max:1536,
+						step:1,
+						default:1515,
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_hue",
+					}},
+{ SSeekBar:{
+						title:"Saturation",
+						description:"Controls saturation intensity. Move slider all the way to the left for grayscale mode.",
+						min:128,
+						max:383,
+						step:1,
+						default:245,
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_sat",
+					}},
+{ SSeekBar:{
+						title:"Value",
+						description:"Controls display value.",
+						min:128,
+						max:383,
+						step:1,
+						default:251,
+						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_val",
+					}},
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		]
+}
+,
+{
+	name:SOUND,
+		elements:[
+			{ SLiveLabel:{
+					refresh:0,
+					style:italic,
+					action:"$BB echo FauxSound `$BB cat /sys/kernel/sound_control_3/gpl_sound_control_version`"
+				}},
+				{ SPane:{
+						title:"Sound Profiles",
+						description:"After you apply a profile, turn audio Off/On to update. Select custom profile if you set controls manually."
+					}},
+						{ SOptionList:{
+							default:Custom,
+							action:"soundfaux /res/uci/files/sound_prof",
+							values:[ Custom, LG_Stock, Quality, Loudness, Quiet,
+							],
+							notify:[
+								{
+									on:APPLY,
+									do:[ REFRESH, APPLY ],
+									to:[
+"soundfaux /sys/kernel/sound_control_3/gpl_sound_control_locked",
+"soundfaux /sys/kernel/sound_control_3/gpl_headphone_gain",
+										"soundfaux /sys/kernel/sound_control_3/gpl_speaker_gain",
+"soundfaux /sys/kernel/sound_control_3/gpl_headphone_pa_gain",
+"soundfaux /sys/kernel/sound_control_3/gpl_mic_gain",
+										"soundfaux /sys/kernel/sound_control_3/gpl_cam_mic_gain"
+									]
+								}
+							]
+						}},
+					{ SPane:{
+						title:"Gain Controls",
+					}},
+{ SOptionList:{
+								title:"Sound Control Lock",
+								description:"Have this enabled to prevent the driver from automatically changing your settings.",
+								default:0,
+								action:"soundfaux /sys/kernel/sound_control_3/gpl_sound_control_locked",
+								values:{ 0:"Disabled", 2:"Enabled"
+								}
+							}},
+{ SSeekBar:{
+							title:"Headphone (Left & Right)",
+							min:-30,
+							max:20,
+							default:0,
+							action:"soundfaux /sys/kernel/sound_control_3/gpl_headphone_gain",
+notify:[
+									{
+										on:APPLY,
+										do:[ REFRESH, APPLY ],
+										to:"soundfaux /sys/kernel/sound_control_3/gpl_sound_control_locked"
+									}
+								]
+}},
+						{ SSeekBar:{
+							title:"Speaker",
+							min:-30,
+							max:20,
+							default:0,
+							action:"soundfaux /sys/kernel/sound_control_3/gpl_speaker_gain",
+notify:[
+									{
+										on:APPLY,
+										do:[ REFRESH, APPLY ],
+										to:"soundfaux /sys/kernel/sound_control_3/gpl_sound_control_locked"
+									}
+								]
+}},
+{ SSeekBar:{
+								title:"Headphone PowerAmp (Left & Right)",
+								min:-6,
+								max:6,
+								default:0,
+								action:"soundfaux /sys/kernel/sound_control_3/gpl_headphone_pa_gain",
+								notify:[
+									{
+										on:APPLY,
+										do:[ REFRESH, APPLY ],
+										to:"soundfaux /sys/kernel/sound_control_3/gpl_sound_control_locked"
+									}
+								]
+							}},
+{ SSeekBar:{
+							title:"Handset Microphone",
+							min:-30,
+							max:20,
+							default:0,
+							action:"soundfaux /sys/kernel/sound_control_3/gpl_mic_gain",
+notify:[
+									{
+										on:APPLY,
+										do:[ REFRESH, APPLY ],
+										to:"soundfaux /sys/kernel/sound_control_3/gpl_sound_control_locked"
+									}
+								]
+}},
+						{ SSeekBar:{
+							title:"Camcorder Microphone",
+							min:-30,
+							max:20,
+							default:0,
+							action:"soundfaux /sys/kernel/sound_control_3/gpl_cam_mic_gain",
+notify:[
+									{
+										on:APPLY,
+										do:[ REFRESH, APPLY ],
+										to:"soundfaux /sys/kernel/sound_control_3/gpl_sound_control_locked"
+									}
+								]
+}},
+			
+		]
+}
+,
+{
+    name:MEMORY,
+		elements:[
+			{ SPane:{
+				title:"Z-RAM",
+				description:"Attempts to increase performance by avoiding paging on physical storage, instead using a compressed virtual device in RAM. Paging takes place in RAM until it is necessary to use the swap space on physical storage."
+			}},
+				{ SSeekBar:{
+					unit:" MB",
+					step:1,
+					min:0,
+					max:1024, 
+					default:250,
+					action:"zram /sys/devices/virtual/block/zram0/disksize"
+				}},
+			
+			
+			{ SPane:{
+				title:"Virtual Memory",
+				description:"Tune the operation of the VM subsystem of the Linux kernel and the writeout of dirty data to disk. Swappiness also affects Z-RAM operation on kernels which support swaps."
+			}},
+				{ SSeekBar:{
+					title:"Dirty Background Ratio",
+					description:"Contains, as a % of total system memory, the number of pages at which the pdflush background writeback daemon will start writing out dirty data.",
+					unit:"%",
+					step:1,
+					min:0,
+					max:100,
+					default:5,
+					action:"generic /proc/sys/vm/dirty_background_ratio"
+				}},
+				{ SSeekBar:{
+					title:"Dirty Ratio",
+					description:"Contains, as a % of total system memory, the number of pages at which a process which is generating disk writes will itself start writing out dirty data. Lower the amount of unwritten write cache to reduce lags when a huge write is required.",
+					unit:"%",
+					step:1,
+					min:0,
+					max:100,
+					default:20,
+					action:"generic /proc/sys/vm/dirty_ratio"
+				}},
+{ SSeekBar:{
+					title:"Dirty Expire Centisecs",
+					description:"This tunable is used to define when dirty data is old enough to be eligible for writeout by the kernel flusher threads.  It is expressed in 100'ths of a second.  Data which has been dirty in-memory for longer than this interval will be written out next time a flusher thread wakes up.",
+					unit:"cs",
+					step:10,
+					min:10,
+					max:5000,
+					default:200,
+					action:"generic /proc/sys/vm/dirty_expire_centisecs"
+				}},
+{ SSeekBar:{
+					title:"Dirty Writeback Centisecs",
+					description:"The kernel flusher threads will periodically wake up and write old data out to disk.  This tunable expresses the interval between those wakeups, in 100'ths of a second.  Setting this to zero disables periodic writeback altogether.",
+					unit:"cs",
+					step:100,
+					min:0,
+					max:9000,
+					default:500,
+					action:"generic /proc/sys/vm/dirty_writeback_centisecs"
+				}},
+				{ SOptionList:{
+					title:"Drop Caches (Clear VFS Cache After Boot)",
+					description:"This option will force rebuild of file system cache based on actual app usage rather than boot/startup processes. NOTE: This process can take from 1-2 minutes (Enable for better file system read/write performance).",
+					default:0,
+					action:"dropcaches /res/uci/files/dropcaches_prof",
+					values:{ 0:"Disabled", 1:"Enabled"
+					}
+				}},
+				{ SSeekBar:{
+						title:"Extra Free Kilobytes",
+						unit:" kB",
+						step:50,
+						min:0,
+						max:50000,
+						default:43200,
+						action:"generic /proc/sys/vm/extra_free_kbytes"
+					}},
+				{ SOptionList:{
+					title:"Laptop Mode (Auto FS Writeback Delay Mode)",
+					description:"This option will delay the writebacks of file system bits cached in RAM while screen is ON (Enable for better performance @ slight risk of possible data loss if crashed or sudden loss of power).",
+					default:0,
+					action:"generic /proc/sys/vm/laptop_mode",
+					values:{ 0:"Disabled", 1:"Enabled"
+					}
+				}},
+				{ SSeekBar:{
+					title:"Swappiness",
+					description:"Controls the tendency of the kernel to move processes out of physical memory and onto the swap disk. Because disks are much slower than RAM, this can lead to slower response times for system and applications if processes are too aggressively moved out of memory.",
+					unit:"%",
+					step:1,
+					min:0,
+					max:100,
+					default:60,
+					action:"generic /proc/sys/vm/swappiness"
+				}},
+				{ SSeekBar:{
+					title:"VFS Cache Pressure",
+					description:"Controls the tendency of the kernel to reclaim the memory which is used for caching of directory and inode objects. Lower = prefer to retain dentry and inode cache, higher = prefer to reclaim dentry and inodes cache.",
+					unit:"%",
+					step:1,
+					min:0,
+					max:150,
+					default:100,
+					action:"generic /proc/sys/vm/vfs_cache_pressure"
+				}},
+		]
+}
+,
+{
+	name:WAKE,
+		elements:[
+			{ SPane:{
+				title:"Wake Gestures"
+			}},
+			{ SPane:{
+					title:"DoubleTap2Wake",
+					description:"Allows you to wake the device by double tapping the screen (Causes more battery drain while in pocket). NOTE: Some of these profiles may not be available in your kernel.",
+				}},
+					{ SOptionList:{
+						default:1,
+						values:{ 0:"Disabled", 1:"Center (Default)", 2:"Full", 3:"Bottom half", 4:"Top half"
+						},
+						action:"generic /sys/android_touch/doubletap2wake"
+					}},
+			{ SPane:{
+					title:"DoubleTap2Wake TimeOut",
+				}},
+					{ SSeekBar:{
+						description:"Used to control the time that touches have to occur within to register as a DT2W event Time is in Jiffies (1 Jiffy = 0.01 Secs). Default was traditionally 50.",
+						min:25,
+						max:100,
+						step:1,
+						default:50,
+						action:"generic /sys/android_touch/dt2w_time"
+					}},
+			
+			{ SPane:{
+					title:"DoubleTap2Wake Feather (X axis)",
+				}},
+					{ SSeekBar:{
+						description:"Used to control the allowed distance between tap #1 and tap #2 along the X axis. This will help with unintentional wakes quite a bit. Default was traditionally 150.",
+						min:1,
+						max:500,
+						step:1,
+						default:150,
+						action:"generic /sys/android_touch/dt2w_feather_x"
+					}},
+			{ SPane:{
+					title:"DoubleTap2Wake Feather (Y axis)",
+				}},
+					{ SSeekBar:{
+						description:"Used to control the allowed distance between tap #1 and tap #2 along the Y axis. This will help with unintentional wakes quite a bit. Default was traditionally 150.",
+						min:1,
+						max:500,
+						step:1,
+						default:150,
+						action:"generic /sys/android_touch/dt2w_feather_y"
+					}},
+			{ SPane:{
+					title:"Sweep2Wake",
+					description:"Allows you to wake the device by sweeping.",
+				}},
+					{ SOptionList:{
+						default:15,
+						values:{ 0:"Disabled", 1:"Sweep2Wake"
+						},
+						action:"generic /sys/android_touch/sweep2wake",
+}},
+			{ SPane:{
+					title:"Sweep2Sleep"
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Allows you to turn the screen off by swiping on the navigation bar.",
+						default:0,
+						action:"generic /sys/android_touch/sweep2sleep"
+					}},
+			{ SPane:{
+					title:"Sweep2Wake TimeOut",
+				}},
+					{ SSeekBar:{
+						description:"Used to control the allowed time that a gesture must be completed within. Value is in Jiffies (0.01 Secs per Jiffy). Default was traditionally 30.",
+						min:1,
+						max:200,
+						step:1,
+						default:30,
+						action:"generic /sys/android_touch/sweep_timeout"
+					}},
+			{ SPane:{
+					title:"Vibrator Strength for Wake Controls"
+				}},
+					{ SSeekBar:{
+						description:"Allows to set the intensity of the vibrator while using wake controls.",
+						unit:"%",
+						step:1,
+						min:0,
+						max:90,
+						default:90,
+						action:"generic /sys/android_touch/vib_strength"
+					}},
+		]
+}
+,
+{
+    name:MISC,
+		elements:[
+			{ STitleBar:{
+				title:"TCP Congestion Control"
+			}},
+				{ SOptionList:{
+					description:"Set the algorithm of internet congestion avoidance, to possibly improve speeds and load times. More info: <a href='https://en.wikipedia.org/wiki/TCP_congestion-avoidance_algorithm'>HERE</a>",
+					default:westwood,
+					action:"generic /proc/sys/net/ipv4/tcp_congestion_control",
+					values:[
+						"westwood",
+"cdg",
+"reno",
+"bic",
+"cubic",
+"highspeed",
+"htcp",
+"hybla",
+"illinois",
+"lp",
+"scalable",
+"sociopath",
+"vegas",
+"veno",
+"yeah",
+					]
+				}},
+			{ SPane:{
+					title:"Power Suspend"
+				}},
+{ SOptionList:{
+						title:"Power Suspend Mode",
+						description:"Kernel Mode, LCD Hooks & Highest Level Hook are automatic and managed by the kernel, to manually enable or disable the Power Suspend State choose User Mode.",
+						default:3,
+						action:"generic /sys/kernel/power_suspend/power_suspend_mode",
+						values:{
+							0:"Kernel Mode", 1:"User Mode", 2:"LCD Hooks", 3:"Highest Level Hook"
+						}
+					}},
+			{ SPane:{
+					title:"FSYNC"
+				}},
+					{ SCheckBox:{
+						description:"Disable the sync operations of the filesystem, great increasing speed but decreasing data integrity, also could create reboot and kernel panic.",
+						label:"Enable",
+						default:0,
+						action:"boolean /sys/module/sync/parameters/fsync_enabled"
+					}},
+			
+			
+			
+			
+			
+			{ SPane:{
+					title:"Vibrator Strength PWM"
+				}},
+					{ SSeekBar:{
+						description:"Allows to set the intensity of the vibrator.",
+						step:1,
+						min:1,
+						max:127,
+						default:90,
+						action:"generic /sys/vibrator/pwmvalue"
+					}},
+			{ SPane:{
+					title:"Framebuffer Notifiers"
+				}},
+					{ SCheckBox:{
+						label:"Use FB notifiers (Experimental)",
+						description:"If enabled, many drivers like hotplug, cpu-boost and limiter driver will use FB notifiers instead of State notifers. FB notifiers are useful only when Ambient mode is enabled and will contribute to power conservation by preventing calls to resume routines after suspend if screen is turned on due to Ambient mode notifications.",
+						default:1,
+						action:"boolean /sys/module/state_notifier/parameters/use_fb_notifier"
+					}},
+			{ SPane:{
+				title:"USB Fast Charge"
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"If enabled, device will charge faster when connected through USB. NOTE: Enabling this will disable access to phone storage via USB.",
+						default:1,
+						action:"generic /sys/kernel/fast_charge/force_fast_charge"
+					}},
+			
+			
+			
+			
+			
+			
+			{ SPane:{
+					title:"MSM_HSIC WakeLock"
+				}},
+					{ SCheckBox:{
+						description:"Check Box To Enable MSM_HSIC Wakelock",
+						label:"Enable",
+						default:0,
+						action:"boolean /sys/module/wakeup/parameters/enable_msm_hsic_ws"
+					}},	
+			{ SPane:{
+					title:"Msm_Hsic_Host WakeLock",
+				}},
+					{ SSeekBar:{
+						description:"Adjust Divisor For MSM_HSIC WakeLock (0 = Disable 1 = stock, higher = lower wake time)",
+						step:1,
+						min:0,
+						max:8,
+						default:6,
+						action:"generic /sys/module/xhci_hcd/parameters/wl_divide"
+					}},
+			{ SPane:{
+					title:"BlueSleep WakeLock"
+				}},
+					{ SCheckBox:{
+						description:"Check Box To Enable BlueSleep Wakelock(Stock)",
+						label:"Enable",
+						default:0,
+						action:"boolean /sys/module/wakeup/parameters/enable_bluesleep_ws"
+					}},
+			{ SPane:{
+					title:"SensorInd WakeLock"
+				}},
+					{ SCheckBox:{
+						description:"Check Box To Enable SensorInd Wakelock(Stock)",
+						label:"Enable",
+						default:1,
+						action:"boolean /sys/module/wakeup/parameters/enable_si_ws"
+					}},
+			{ SPane:{
+					title:"SMB135x WakeLock"
+				}},
+					{ SCheckBox:{
+						description:"Check Box To Enable SMB135 Wakelock",
+						label:"Enable",
+						default:0,
+						action:"boolean /sys/module/wakeup/parameters/enable_smb135x_wake_ws"
+					}},
+			{ SPane:{
+					title:"Wlan Ctrl WakeLock"
+				}},
+					{ SCheckBox:{
+						description:"Check Box To Enable Wlan Ctrl Wakelock",
+						label:"Enable",
+						default:1,
+						action:"boolean /sys/module/wakeup/parameters/enable_wlan_ctrl_wake_ws"
+					}},
+			{ SPane:{
+					title:"Wlan RX WakeLock"
+				}},
+					{ SCheckBox:{
+						description:"Check Box To Enable Wlan RX Wakelock",
+						label:"Enable",
+						default:1,
+						action:"boolean /sys/module/wakeup/parameters/enable_wlan_rx_wake_ws"
+					}},
+			{ SPane:{
+					title:"Wlan WakeLock"
+				}},
+					{ SCheckBox:{
+						description:"Check Box To Enable Wlan Wakelock",
+						label:"Enable",
+						default:1,
+						action:"boolean /sys/module/wakeup/parameters/enable_wlan_wake_ws"
+					}},
+			{ SPane:{
+					title:"BCMDHD WakeLock",
+				}},
+					{ SSeekBar:{
+						description:"Adjust Divisor For BCMDHD WakeLock (1 = stock, higher = lower wake time)",
+						step:1,
+						min:1,
+						max:8,
+						default:5,
+						action:"generic /sys/module/bcmdhd/parameters/wl_divide"
+					}},
+		]
+}
+,
+{
+	name:ADV,
+		elements:[
+			{ SPane:{
+					title:"Krait C-States Settings"
+				}},
+{ SCheckBox:{
+						description:"Shallowest Sleep with instant wake up.",
+						label:"C0 (WFI)",
+						default:1,
+						action:"socset /sys/module/msm_pm/modes/cpu0/wfi/idle_enabled wfi"
+					}},
+{ SCheckBox:{
+						description:"Slightly deeper sleep with slight latency when waking up. (Disable this if you encounter screen flickering)",
+						label:"C1 (Retention)",
+						default:1,
+						action:"socset /sys/module/msm_pm/modes/cpu0/retention/idle_enabled retention"
+					}},
+{ SCheckBox:{
+						description:"Deeper sleep with longer latency when waking up.",
+						label:"C2 (Stand Alone Power Collapse)",
+						default:1,
+						action:"socset /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled standalone_power_collapse"
+					}},
+{ SCheckBox:{
+						description:"Really deep sleep with longest latency when waking up.",
+						label:"C3 (Power Collapse)",
+						default:1,
+						action:"socset /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled power_collapse"
+					}},
+			
+			{ SPane:{
+					title:"Ultra Kernel Samepage Merging"
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"UKSM lets the hypervisor system share identical memory pages amongst different processes or virtualized guests. UKSM has a better algorithm than KSM.",
+						default:1,
+						action:"generic /sys/kernel/mm/uksm/run"
+					}},
+					{ SSeekBar:{
+						title:"Sleep",
+						description:"How long will the daemon sleep before it wakes up and starts scanning memory pages.",
+						unit:" ms",
+						step:100,
+						min:0,
+						max:3000,
+						default:100,
+						action:"generic /sys/kernel/mm/uksm/sleep_millisecs"
+					}},
+					{ SOptionList:{
+						title:"CPU Governor",
+						description:"Controls how aggressively the daemon uses CPU power. This sets a preset for the maximum CPU consumption below.",
+						default:full,
+						action:"bracket-option /sys/kernel/mm/uksm/cpu_governor",
+						values:[
+"full",
+"medium",
+"low",
+"quiet",
+],
+						notify:[
+							{
+								on:APPLY,
+								do:[ REFRESH, APPLY ],
+								to:"generic /sys/kernel/mm/uksm/max_cpu_percentage"
+							},
+						]
+					}},
+					{ SSeekBar:{
+						title:"Max CPU Consumption",
+						description:"The maximum CPU consumption the daemon will use while scanning. Higher = better scanning (more battery drain).",
+						unit:"%",
+						step:1,
+						min:10,
+						max:99,
+						default:95,
+						action:"generic /sys/kernel/mm/uksm/max_cpu_percentage"
+					}},
+			{ SPane:{
+					title:"Gentle Fair Sleepers"
+				}},
+					{ SCheckBox:{
+						label:"Enable",
+						description:"Sleeper Fairness is a concept used by CFS which treat sleeping/waiting tasks as if they were in a run queue. This implies tasks which spend most of the time waiting for an user input and such will get a fair share of CPU when they need it. Disabling Gentle Fair Sleepers could improve UI responsiveness.",
+						default:0,
+						action:"generic /sys/kernel/sched/gentle_fair_sleepers"
+					}},
+			{ SPane:{
+				title:"Adaptive LMK"
+			}},
+				{ SCheckBox:{
+					label:"Enable",
+					description:"Adaptive LMK prevents sluggishness and provides very low app launch latency by improving LMK routines. NOTE: If you enable this, Do NOT adjust LMK Values below.",
+					default:1,
+					action:"generic /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk"
+				}},
+			{ SPane:{
+					title:"Manual Low Memory Killer",
+					description:"LMK Minfree controls how much memory each app type can hold, and is responsible for memory management for multitasking."
+				}},
+					{ SOptionList:{
+						title:"LMK Profile",
+						description:"This option will auto-tune LMK minfree values as per selected profile.",
+						default:Custom,
+						action:"lmk profile",
+						values:[ Custom, Low, Medium, Default, Aggressive, Exterminate,
+						],
+						notify:[
+								{
+									on:APPLY,
+									do:[ REFRESH, APPLY ],
+									to:[ 
+											"lmk 1",
+											"lmk 2",
+											"lmk 3",
+											"lmk 4",
+											"lmk 5",
+											"lmk 6"
+									],
+								}
+						]
+					}},
+{ SSeekBar:{ 
+title:"Foreground App", description:"The application currenty on the screen and running."
+, action:"lmk 1",
+						unit:"MB", min:1, max:300 }},
+{ SSeekBar:{ 
+title:"Visible App", description:"The application that is open and running in background."
+, action:"lmk 2",
+						unit:"MB", min:1, max:300 }},
+{ SSeekBar:{ 
+title:"Secondary Server", description:"This is a service an application needs that is alive and ready."
+, action:"lmk 3",
+						unit:"MB", min:1, max:300 }},
+{ SSeekBar:{ 
+title:"Hidden App", description:"An idle process that wakes up on application request."
+, action:"lmk 4",
+						unit:"MB", min:1, max:300 }},
+{ SSeekBar:{ 
+title:"Content Provider", description:"Apps that provide data (content) to the system."
+, action:"lmk 5",
+						unit:"MB", min:1, max:300 }},
+{ SSeekBar:{ 
+title:"Empty App", description:"Apps closed by the user but ready to run."
+, action:"lmk 6",
+						unit:"MB", min:1, max:300 }},
+		]
+}
+,
+{
+	name:BUILD.PROP,
+		elements:[
+			{ SPane:{
+				title:"build.prop Tweaks",
+				description:"A value of -1 on any of the following settings means that setting was not found in your build.prop file.",
+			}},
+				{ SSeekBar:{
+					title:"Wifi Scan Interval",
+					description:"Set the interval on which on wifi will scan for channels. Setting this to a higher value will save battery.",
+					unit:" sec",
+					min:0,
+					max:400,
+					step:1,
+					default:200,
+					action:"buildprop wifi.supplicant_scan_interval",
+				}},
+				{ SSeekBar:{
+					title:"VM Heapsize",
+					description:"Set the maximum amount of heapsize (memory) a single instance of the Dalvik Virtual Machine (application) can obtain.",
+					unit:" MB",
+					min:0,
+					max:1024,
+					step:1,
+					default:512,
+					action:"buildprop dalvik.vm.heapsize",
+				}},
+				{ SCheckBox:{
+					label:"Allow purging of assets",
+					description:"Purging of bitmap memory assets allows the freeing of more RAM when needed.",
+					default:1,
+					action:"buildprop persist.sys.purgeable_assets",
+				}},
+			{ SPane:{
+				title:"ADB over WIFI"
+			}},
+				{ SGeneric:{
+					title:"Device HostName",
+					default:android-9b00979036aa8f76,
+					action:"buildprop net.hostname",
+				}},
+				{ SGeneric:{
+					title:"Wireless Port",
+					default:,
+					action:"buildprop service.adb.tcp.port",
+				}},
+			
+		]
+}
+,
+{
+	name:TOOLS,
+		elements:[
+			{ SPane:{
+				title:"SELinux Status",
+				description:"Allows you to change your SELinux (Security-Enhanced Linux) Status from Enforcing (policy is enforced) to Permissive (prints warnings instead of enforcing).",
+			}},
+				{ SOptionList:{
+					default:Permissive,
+					action:"devtools selinux",
+					values:[ Enforcing, Permissive
+					],
+				}},
+			
+			
+			{ SPane:{
+				title:"Advanced Tools"
+			}},
+				{ SDescription:{
+					description:"Use this button to defrag/reindex all databases found in /data & /sdcard, this increases database read/write performance. NOTE: This process can take from 1-2 minutes."
+				}},
+				{ SButton:{
+					label:"Optimize Databases",
+					action:"devtools optimizedb"
+				}},
+			{ SPane:{
+				title:"Log Creation"
+			}},
+				
+				{ SOptionList:{
+						title:"Kernel Logger",
+						description:"Allows you to toggle dmesg kernel logging.",
+						action:"printk /sys/kernel/printk_mode/printk_mode",
+						values:{
+							0:"Disabled", 1:"Enabled"
+						}
+					}},
+			{ SDescription:{
+				description:"Save the logcat (App/system debug), dmesg (active kernel output) or last_ksmg (same as dmesg but from the last shutdown)."
+			}},
+				{ SButton:{
+					label:"Save logcat",
+					action:"devtools logcat"
+				}},
+				{ SButton:{
+					label:"Save dmesg",
+					action:"devtools dmesg"
+				}},
+				{ SButton:{
+					label:"Save last_kmsg",
+					action:"devtools kmsg"
+				}},
+				{ SButton:{
+					label:"Save pstore",
+					action:"devtools pstore"
+				}},
+			{ STitleBar:{
+				title:"Reboot"
+			}},
+				{ SButton:{
+					label:"Reboot Device",
+					action:"devtools reboot"
+				}},
+				{ SButton:{
+					label:"Reboot to Recovery",
+					action:"devtools reboot recovery"
+				}},
+				{ SButton:{
+					label:"Reboot to Bootloader",
+					action:"devtools reboot bootloader"
+				}}
+		]
+}
+,
+{
+    name:PROFILE,
+    elements:[
+		{ STitleBar:{
+			title:"Profiles"
+		}},
+			{ SOptionList:{
+				title:"Selected Profile",
+				description:"Choose the settings you want and apply your choice in Synapse before using the action buttons below.",
+				action:"restorebackup pickprofile",
+				default:"None",
+				values:[ "None",
+					
+				],
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"generic /res/uci/files/bck_prof"
+					}
+				]
+			}},
+			{ SDescription:{
+				description:"NOTE: After you restore a profile, you have to press the X button on top to load the settings."
+			}},
+			{ SButton:{
+				label:"Restore Selected Profile",
+				action:"restorebackup applyprofile",
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"restorebackup pickprofile"
+					}
+				]
+			}},
+			{ SButton:{
+				label:"Delete Selected Profile",
+				action:"restorebackup delprofile",
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"restorebackup pickprofile"
+					}
+				]
+			}},
+		{ SPane:{
+			title:"Configs"
+		}},
+			{ SOptionList:{
+				title:"Selected Config",
+				description:"Choose the settings you want and apply your choice in Synapse before using the action buttons below.",
+				action:"restorebackup pickconfig",
+				default:"None",
+				values:[ "None",
+					
+				],
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"generic /res/uci/files/bck_prof"
+					}
+				]
+			}},
+			{ SDescription:{
+				description:"NOTE: After you restore a config, you have to press the X button on top to load the settings."
+			}},
+			{ SButton:{
+				label:"Import Selected Config",
+				action:"sqlite ImportConfigSynapse",
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"restorebackup pickconfig"
+					}
+				]
+			}},
+			{ SButton:{
+				label:"Delete Selected Config",
+				action:"restorebackup delconfig",
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"restorebackup pickconfig"
+					}
+				]
+			}},
+		{ SPane:{
+			title:"Backup Actions"
+		}},
+			{ SGeneric:{
+				title:"Profile/Config Name",
+				default:"None",
+				action:"generic /res/uci/files/bck_prof",
+			}},
+			{ SDescription:{
+				description:"First set a name above and apply. After this you can press the Backup Current Profile or Export Current Config button below."
+			}},
+			{ SButton:{
+				label:"Backup Current Profile",
+				action:"restorebackup keepprofile",
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"generic /res/uci/files/bck_prof"
+					}
+				]
+			}},
+			{ SButton:{
+				label:"Export Current Config",
+				action:"sqlite ExportConfigSynapse",
+				notify:[
+					{
+						on:APPLY,
+						do:[ REFRESH, APPLY ],
+						to:"generic /data/UKM/files/bck_prof"
+					}
+				]
+			}},
+		{ SPane:{
+			title:"General Actions",
+			description:"To update/refresh lists, select Restart Synapse below."
+		}},
+			{ SButton:{
+				label:"Restart Synapse",
+				action:"restorebackup restart"
+			}},
+    ]
+}
+    ]
+}
