@@ -1623,20 +1623,18 @@
 					}},
 { SSeekBar:{
 							title:"Sampling Rate",
-							unit:"%",
-							min:1,
-							max:100,
+							unit:"usecs",
+							min:1000,
+							max:10000,
 							step:1,
-							default:60000,
+							default:10000,
 							action:"generic /sys/kernel/alucard_hotplug/hotplug_sampling_rate"
 					}},
 { SSeekBar:{
 							title:"Max Cores Limit",
 							description:"Maximum CPUs online at any time.",
 							min:1,
-							max:
-4
-,
+							max:4,
 							step:1,
 							default:4,
 							action:"generic /sys/kernel/alucard_hotplug/maxcoreslimit"
