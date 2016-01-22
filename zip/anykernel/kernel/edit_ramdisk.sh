@@ -71,13 +71,6 @@ chmod 750 /tmp/ramdisk/fstab.shamu
 cp /tmp/init.shamu.power.rc /tmp/ramdisk/init.shamu.power.rc
 chmod 750 /tmp/ramdisk/init.shamu.power.rc
 
-#copy files for native uci support
-cp -r /tmp/res/* /tmp/ramdisk/res/
-chmod 0755 -R /tmp/ramdisk/res/uci
-cp /tmp/sbin/uci /tmp/ramdisk/sbin/uci
-chmod 0750 /tmp/ramdisk/sbin/uci
-
-
 #copy ChainFire's Modified SEPOLICY Binary
 cp /tmp/sepolicy /tmp/ramdisk/sepolicy
 chmod 750 /tmp/ramdisk/sepolicy
