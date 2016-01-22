@@ -55,28 +55,28 @@
 					en:"Kernel Version",
 					es:"Versión del Núcleo"
 				},
-				description:"Linux version 3.10.94-Singularity-N6-V-3.3-gd090c61 (joe@XPS) (gcc version 5.2.x-sabermod 20151012 (experimental) (GCC) ) #10 SMP PREEMPT Sat Jan 16 23:06:13 EST 2016"
+				description:"Linux version 3.10.94-Singularity-N6-V-3.4-g41efa56 (apophis9283@apophis9283-desktop) (gcc version 5.3.x-sabermod 20160102 (experimental) (GCC) ) #1 SMP PREEMPT Thu Jan 21 21:30:59 EST 2016"
 			}},
 			{ SPane:{
 				title:{
 					en:"ROM Description",
 					es:"Descripción del ROM"
 				},
-				description:"VPBA13.MTV.CORP.GOOGLE.COM"
+				description:"APOPHIS9283-DESKTOP"
 			}},
 			{ SPane:{
 				title:{
 					en:"ROM Version",
 					es:"Versión del ROM"
 				},
-				description:""
+				description:"aicp_shamu_mm-11.0-UNOFFICIAL-20160121"
 			}},
 			{ SPane:{
 				title:{
 					en:"Build Date",
 					es:"Fecha del ROM"
 				},
-				description:"Tue Dec 15 22:16:10 UTC 2015"
+				description:"Thu Jan 21 18:19:26 EST 2016"
 			}},
 		]
 }
@@ -182,6 +182,14 @@
 						style:italic,
 						action:"live WakelocksKernel"
 					}},
+			{ SPane:{
+				title:"Installation Check:"
+			}},
+				{ SLiveLabel:{
+					refresh:0,
+					style:italic,
+					action:"live InstallationCheck"
+				}},
 		]
 }
 ,
@@ -247,13 +255,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 					{ SSeekBar:{
 						title:"CPU1 Min Frequency (MSM Limiter)",
 						description:"Set the minimum frequency the CPU1 scales down to.",
-						default:35800,
+						default:300000,
 						action:"generic /sys/kernel/msm_limiter/suspend_min_freq_1",
 						values:{ 
 35800:"35 MHz", 
@@ -296,13 +303,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 					{ SSeekBar:{
 						title:"CPU2 Min Frequency (MSM Limiter)",
 						description:"Set the minimum frequency the CPU2 scales down to.",
-						default:35800,
+						default:300000,
 						action:"generic /sys/kernel/msm_limiter/suspend_min_freq_2",
 						values:{ 
 35800:"35 MHz", 
@@ -345,13 +351,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 					{ SSeekBar:{
 						title:"CPU3 Min Frequency (MSM Limiter)",
 						description:"Set the minimum frequency the CPU3 scales down to.",
-						default:35800,
+						default:300000,
 						action:"generic /sys/kernel/msm_limiter/suspend_min_freq_3",
 						values:{ 
 35800:"35 MHz", 
@@ -394,13 +399,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 				{ SSeekBar:{
 						title:"CPU0 Max Frequency (MSM Limiter)",
 						description:"Set the maximum frequency the CPU0 scales up to.",
-						default:2956800,
+						default:2726400,
 						action:"generic /sys/kernel/msm_limiter/resume_max_freq_0",
 						values:{ 
 35800:"35 MHz", 
@@ -443,13 +447,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 					{ SSeekBar:{
 						title:"CPU1 Max Frequency (MSM Limiter)",
 						description:"Set the maximum frequency the CPU1 scales up to.",
-						default:2956800,
+						default:2726400,
 						action:"generic /sys/kernel/msm_limiter/resume_max_freq_1",
 						values:{ 
 35800:"35 MHz", 
@@ -492,13 +495,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 					{ SSeekBar:{
 						title:"CPU2 Max Frequency (MSM Limiter)",
 						description:"Set the maximum frequency the CPU2 scales up to.",
-						default:2956800,
+						default:2726400,
 						action:"generic /sys/kernel/msm_limiter/resume_max_freq_2",
 						values:{ 
 35800:"35 MHz", 
@@ -541,13 +543,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 					{ SSeekBar:{
 						title:"CPU3 Max Frequency (MSM Limiter)",
 						description:"Set the maximum frequency the CPU3 scales up to.",
-						default:2956800,
+						default:2726400,
 						action:"generic /sys/kernel/msm_limiter/resume_max_freq_3",
 						values:{ 
 35800:"35 MHz", 
@@ -590,7 +591,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 				
@@ -649,13 +649,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 						}},
 { SSeekBar:{
 							title:"Resume Max Frequency",
 							description:"Set the maximum frequency all CPUs scales up to.",
-							default:2956800,
+							default:2726400,
 							action:"generic /sys/kernel/msm_limiter/resume_max_freq",
 							values:{ 
 35800:"35 MHz", 
@@ -698,13 +697,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 						}},
 { SSeekBar:{
 							title:"Suspend Max Frequency",
 							description:"Set the maximum frequency all CPUs scales up to when device is suspended.",
-							default:1267200,
+							default:960000,
 							action:"generic /sys/kernel/msm_limiter/suspend_max_freq",
 							values:{ 
 35800:"35 MHz", 
@@ -747,7 +745,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 						}},
 				{ SPane:{
@@ -760,7 +757,7 @@
 								min:0,
 								max:5000,
 								step:10,
-								default:1500,
+								default:1200,
 								action:"generic /sys/module/cpu_boost/parameters/boost_ms"
 						}},
 { SSeekBar:{
@@ -809,7 +806,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 						}},
 { SSeekBar:{
@@ -819,7 +815,7 @@
 								min:0,
 								max:5000,
 								step:10,
-								default:1500,
+								default:1200,
 								action:"generic /sys/module/cpu_boost/parameters/input_boost_ms"
 						}},
 { SSeekBar:{
@@ -829,7 +825,7 @@
 								min:100,
 								max:1500,
 								step:10,
-								default:1500,
+								default:1200,
 								action:"generic /sys/module/cpu_boost/parameters/min_input_interval"
 						}},
 { SSeekBar:{
@@ -877,7 +873,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 							}},
 							{ SSeekBar:{
@@ -925,7 +920,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 							}},
 							{ SSeekBar:{
@@ -973,7 +967,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 							}},
 							{ SSeekBar:{
@@ -1021,13 +1014,12 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 							}},
 { SCheckBox:{
 							label:"Load Based Syncs",
 							description:"",
-							default:1,
+							default:0,
 							action:"boolean /sys/module/cpu_boost/parameters/load_based_syncs",
 						}},
 { SSeekBar:{
@@ -1036,7 +1028,7 @@
 								min:0,
 								max:100,
 								step:1,
-								default:70,
+								default:80,
 								action:"generic /sys/module/cpu_boost/parameters/migration_load_threshold"
 						}},
 { SCheckBox:{
@@ -1067,10 +1059,9 @@
 					{ SCheckBox:{
 						label:"Enable",
 						description:"Arch Power uses arch dependent power functions to be used instead of generic high resolution timer ticks and double ticks to reflect the relative capacity of each core.",
-						default:0,
+						default:1,
 						action:"generic /sys/kernel/sched/arch_power"
 					}},
-				
 				{ SPane:{
 					title:"BCL Options"
 				}},
@@ -1092,7 +1083,7 @@
 			}},
 				{ SOptionList:{
 						title:"CPU0 (MSM Limiter)",
-						default:elementalx,
+						default:"interactive_pro",
 						action:"generic /sys/kernel/msm_limiter/scaling_governor_0",
 						values:[
 "zzmoove",
@@ -1148,7 +1139,7 @@
 					}},
 					{ SOptionList:{
 						title:"CPU1 (MSM Limiter)",
-						default:elementalx,
+						default:"interactive_pro",
 						action:"generic /sys/kernel/msm_limiter/scaling_governor_1",
 						values:[
 "zzmoove",
@@ -1204,7 +1195,7 @@
 					}},
 					{ SOptionList:{
 						title:"CPU2 (MSM Limiter)",
-						default:elementalx,
+						default:"interactive_pro",
 						action:"generic /sys/kernel/msm_limiter/scaling_governor_2",
 						values:[
 "zzmoove",
@@ -1260,7 +1251,7 @@
 					}},
 					{ SOptionList:{
 						title:"CPU3 (MSM Limiter)",
-						default:elementalx,
+						default:"interactive_pro",
 						action:"generic /sys/kernel/msm_limiter/scaling_governor_3",
 						values:[
 "zzmoove",
@@ -1373,7 +1364,7 @@
 { SCheckBox:{
 						label:"Enable",
 						description:"An in kernel replacement for Qualcomms MPDecision. Developed by faux123 & neobuddy89.",
-						default:1,
+						default:0,
 						action:"generic /sys/kernel/intelli_plug/intelli_plug_active"
 					}},
 { SCheckBox:{
@@ -1385,7 +1376,7 @@
 { SOptionList:{
 						title:"Intelliplug Profile",
 						description:"The number in the parentheses indicates the amount of cores online at any time.",
-						default:0,
+						default:1,
 						action:"generic /sys/kernel/intelli_plug/full_mode_profile",
 						values:{
 							0:"Balanced (4)", 1:"Performance (4)", 2:"Conservative (4)", 3:"Disabled", 4:"Tri (3)", 5:"Eco (2)", 6:"Strict (1)"
@@ -1589,7 +1580,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 { SSeekBar:{
@@ -1815,7 +1805,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 { SSeekBar:{
@@ -1862,7 +1851,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 { SSeekBar:{
@@ -1909,7 +1897,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 { SSeekBar:{
@@ -1956,7 +1943,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 { SSeekBar:{
@@ -2003,7 +1989,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 { SSeekBar:{
@@ -2050,7 +2035,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 			{ SPane:{
@@ -2106,7 +2090,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 { SSeekBar:{
@@ -2163,7 +2146,7 @@
 { SCheckBox:{
 							label:"Screen off Single Core",
 							description:"Use only one core if screen is off.",
-							default:1,
+							default:0,
 							action:"generic /sys/kernel/autosmp/conf/scroff_single_core"
 						}},
 { SSeekBar:{
@@ -2195,7 +2178,7 @@
 							max:100,
 							step:1,
 							unit:"%",
-							default:40,
+							default:60,
 							action:"generic /sys/kernel/autosmp/conf/cpufreq_down"
 						}},
 { SSeekBar:{
@@ -2318,7 +2301,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 			{ SPane:{
@@ -2369,7 +2351,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 			{ SPane:{
@@ -2420,7 +2401,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 			{ SPane:{
@@ -2471,7 +2451,6 @@
 2880000:"2880 MHz", 
 2956800:"2956 MHz", 
 3033600:"3033 MHz", 
-3091200:"3091 MHz", 
 }
 					}},
 			{ SPane:{
@@ -2549,7 +2528,6 @@
 "voltage cpuvolt 2880mhz:",
 "voltage cpuvolt 2956mhz:",
 "voltage cpuvolt 3033mhz:",
-"voltage cpuvolt 3091mhz:",
 ]
 							}
 						]
@@ -2684,7 +2662,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:810,
+							default:850,
 							action:"voltage cpuvolt 960mhz:"
 						}},
 						
@@ -2694,7 +2672,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:820,
+							default:860,
 							action:"voltage cpuvolt 1036mhz:"
 						}},
 						
@@ -2704,7 +2682,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:830,
+							default:870,
 							action:"voltage cpuvolt 1113mhz:"
 						}},
 						
@@ -2714,7 +2692,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:840,
+							default:880,
 							action:"voltage cpuvolt 1190mhz:"
 						}},
 						
@@ -2724,7 +2702,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:850,
+							default:890,
 							action:"voltage cpuvolt 1267mhz:"
 						}},
 						
@@ -2734,7 +2712,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:860,
+							default:900,
 							action:"voltage cpuvolt 1344mhz:"
 						}},
 						
@@ -2744,7 +2722,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:870,
+							default:910,
 							action:"voltage cpuvolt 1420mhz:"
 						}},
 						
@@ -2754,7 +2732,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:870,
+							default:910,
 							action:"voltage cpuvolt 1497mhz:"
 						}},
 						
@@ -2764,7 +2742,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:890,
+							default:930,
 							action:"voltage cpuvolt 1574mhz:"
 						}},
 						
@@ -2774,7 +2752,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:900,
+							default:940,
 							action:"voltage cpuvolt 1651mhz:"
 						}},
 						
@@ -2784,7 +2762,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:910,
+							default:950,
 							action:"voltage cpuvolt 1728mhz:"
 						}},
 						
@@ -2794,7 +2772,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:920,
+							default:960,
 							action:"voltage cpuvolt 1804mhz:"
 						}},
 						
@@ -2804,7 +2782,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:930,
+							default:970,
 							action:"voltage cpuvolt 1881mhz:"
 						}},
 						
@@ -2814,7 +2792,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:940,
+							default:980,
 							action:"voltage cpuvolt 1958mhz:"
 						}},
 						
@@ -2824,7 +2802,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:950,
+							default:990,
 							action:"voltage cpuvolt 2035mhz:"
 						}},
 						
@@ -2834,7 +2812,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:965,
+							default:1005,
 							action:"voltage cpuvolt 2112mhz:"
 						}},
 						
@@ -2844,7 +2822,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:980,
+							default:1020,
 							action:"voltage cpuvolt 2188mhz:"
 						}},
 						
@@ -2854,7 +2832,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:995,
+							default:1035,
 							action:"voltage cpuvolt 2265mhz:"
 						}},
 						
@@ -2864,7 +2842,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1010,
+							default:1050,
 							action:"voltage cpuvolt 2342mhz:"
 						}},
 						
@@ -2874,7 +2852,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1025,
+							default:1065,
 							action:"voltage cpuvolt 2419mhz:"
 						}},
 						
@@ -2884,7 +2862,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1040,
+							default:1080,
 							action:"voltage cpuvolt 2496mhz:"
 						}},
 						
@@ -2894,7 +2872,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1055,
+							default:1095,
 							action:"voltage cpuvolt 2572mhz:"
 						}},
 						
@@ -2904,7 +2882,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1070,
+							default:1110,
 							action:"voltage cpuvolt 2649mhz:"
 						}},
 						
@@ -2914,7 +2892,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1085,
+							default:1125,
 							action:"voltage cpuvolt 2726mhz:"
 						}},
 						
@@ -2924,7 +2902,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1100,
+							default:1140,
 							action:"voltage cpuvolt 2803mhz:"
 						}},
 						
@@ -2934,7 +2912,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1130,
+							default:1170,
 							action:"voltage cpuvolt 2880mhz:"
 						}},
 						
@@ -2944,7 +2922,7 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1130,
+							default:1170,
 							action:"voltage cpuvolt 2956mhz:"
 						}},
 						
@@ -2954,18 +2932,8 @@
 							min:465,
 							max:1450,
 							step:1,
-							default:1145,
+							default:1185,
 							action:"voltage cpuvolt 3033mhz:"
-						}},
-						
-{ SSeekBar:{
-							title:"3091 MHz",
-							unit:" mV",
-							min:465,
-							max:1450,
-							step:1,
-							default:1170,
-							action:"voltage cpuvolt 3091mhz:"
 						}},
 						
 			
@@ -2988,16 +2956,16 @@
 					step:128,
 					min:128,
 					max:4096,
-					default:1536,
+					default:2048,
 					action:"ioset queue read_ahead_kb"
 				}},
 				{ SOptionList:{
 					title:"I/O Scheduler",
 					description:"The I/O Scheduler decides how to prioritize and handle I/O requests. More info: <a href='http://timos.me/tm/wiki/ioscheduler'>HERE</a>",
-					default:zen,
+					default:"cfq",
 					action:"ioset scheduler",
 					values:[
-						"bfq",
+"bfq",
 "cfq",
 "deadline",
 "fifo",
@@ -3022,7 +2990,15 @@
 						}
 					]
 				}},
-				
+				{ SPane:{
+						title:"Software CRC control"
+					}},
+						{ SCheckBox:{
+							label:"Software CRC control",
+							description:"Enabling software CRCs on the data blocks can be a significant (30%) performance cost. So we allow it to be disabled.",
+							default:0,
+							action:"boolean /sys/module/mmc_core/parameters/use_spi_crc"
+						}},
 				
 			{ SPane:{
 				title:"General I/O Tunables",
@@ -3093,6 +3069,14 @@
 	name:GPU,
 		elements:[
 			{ SPane:{
+				title:"Current GPU Frequency:"
+			}},
+				{ SLiveLabel:{
+					refresh:1000,
+					style:italic,
+					action:"live GPUFrequency"
+				}},
+			{ SPane:{
 				title:"GPU Frequency Scaling",
 			}},
 				{ SSeekBar:{
@@ -3126,7 +3110,7 @@
 					description:"The GPU Governor makes scaling decisions based on specific algorithm for 2D/3D scenarios."
 				}},
 					{ SOptionList:{
-						default:simple_ondemand,
+						default:"msm-adreno-tz",
 						action:"gpuset /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/governor",
 						values:[
 							"cache_hwmon", "cpubw_hwmon", "userspace", "performance", "powersave", "msm-adreno-tz", "simple_ondemand", "msm_cpufreq",
@@ -3138,7 +3122,7 @@
 { SCheckBox:{
 						label:"Enable",
 						description:"An add-on for MSM Adreno TZ GPU Governor. Developed by faux123.",
-						default:1,
+						default:0,
 						action:"generic /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate"
 					}},
 { SSeekBar:{
@@ -3161,14 +3145,17 @@
 					}},
 			
 			
-{ SPane:{
+			{ SPane:{
 						title:"Adreno_Idler Tunables"
 					}},
 						{ SCheckBox:{
 							label:"Enable",
 							description:"An add-on for MSM Adreno TZ GPU Governor. Developed by arter97.",
-							default:0,
+							default:1,
 							action:"boolean /sys/module/adreno_idler/parameters/adreno_idler_active"
+						}},
+						{ SSpacer:{
+							height: 1
 						}},
 { SGeneric:{
 							title:"Down Differential",
@@ -3187,6 +3174,9 @@
 							description:"Any workload higher than this will be treated as non-idle workload, meaning the higher it gets, the slower & low-power it would get.",
 							default:cat /sys/module/adreno_idler/parameters/adreno_idler_idleworkload,
 							action:"adreno_idler /sys/module/adreno_idler/parameters/adreno_idler_idleworkload"
+						}},
+						{ SSpacer:{
+							height: 1
 						}},
 		]
 }
@@ -3256,7 +3246,7 @@
 							min:0,
 							max:255,
 							step:1,
-							default:26,
+							default:35,
 							action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_min"
 						}},
 { SSeekBar:{
@@ -3265,7 +3255,7 @@
 						min:128,
 						max:383,
 						step:1,
-						default:256,
+						default:255,
 						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_cont",
 					}},
 { SSeekBar:{
@@ -3274,7 +3264,7 @@
 						min:0,
 						max:1536,
 						step:1,
-						default:1515,
+						default:0,
 						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_hue",
 					}},
 { SSeekBar:{
@@ -3283,7 +3273,7 @@
 						min:128,
 						max:383,
 						step:1,
-						default:245,
+						default:255,
 						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_sat",
 					}},
 { SSeekBar:{
@@ -3292,7 +3282,7 @@
 						min:128,
 						max:383,
 						step:1,
-						default:251,
+						default:255,
 						action:"gamma /sys/devices/platform/kcal_ctrl.0/kcal_val",
 					}},
 			
@@ -3427,114 +3417,6 @@ notify:[
 		]
 }
 ,
-{
-    name:MEMORY,
-		elements:[
-			{ SPane:{
-				title:"Z-RAM",
-				description:"Attempts to increase performance by avoiding paging on physical storage, instead using a compressed virtual device in RAM. Paging takes place in RAM until it is necessary to use the swap space on physical storage."
-			}},
-				{ SSeekBar:{
-					unit:" MB",
-					step:1,
-					min:0,
-					max:1024, 
-					default:250,
-					action:"zram /sys/devices/virtual/block/zram0/disksize"
-				}},
-			
-			
-			{ SPane:{
-				title:"Virtual Memory",
-				description:"Tune the operation of the VM subsystem of the Linux kernel and the writeout of dirty data to disk. Swappiness also affects Z-RAM operation on kernels which support swaps."
-			}},
-				{ SSeekBar:{
-					title:"Dirty Background Ratio",
-					description:"Contains, as a % of total system memory, the number of pages at which the pdflush background writeback daemon will start writing out dirty data.",
-					unit:"%",
-					step:1,
-					min:0,
-					max:100,
-					default:5,
-					action:"generic /proc/sys/vm/dirty_background_ratio"
-				}},
-				{ SSeekBar:{
-					title:"Dirty Ratio",
-					description:"Contains, as a % of total system memory, the number of pages at which a process which is generating disk writes will itself start writing out dirty data. Lower the amount of unwritten write cache to reduce lags when a huge write is required.",
-					unit:"%",
-					step:1,
-					min:0,
-					max:100,
-					default:20,
-					action:"generic /proc/sys/vm/dirty_ratio"
-				}},
-{ SSeekBar:{
-					title:"Dirty Expire Centisecs",
-					description:"This tunable is used to define when dirty data is old enough to be eligible for writeout by the kernel flusher threads.  It is expressed in 100'ths of a second.  Data which has been dirty in-memory for longer than this interval will be written out next time a flusher thread wakes up.",
-					unit:"cs",
-					step:10,
-					min:10,
-					max:5000,
-					default:200,
-					action:"generic /proc/sys/vm/dirty_expire_centisecs"
-				}},
-{ SSeekBar:{
-					title:"Dirty Writeback Centisecs",
-					description:"The kernel flusher threads will periodically wake up and write old data out to disk.  This tunable expresses the interval between those wakeups, in 100'ths of a second.  Setting this to zero disables periodic writeback altogether.",
-					unit:"cs",
-					step:100,
-					min:0,
-					max:9000,
-					default:500,
-					action:"generic /proc/sys/vm/dirty_writeback_centisecs"
-				}},
-				{ SOptionList:{
-					title:"Drop Caches (Clear VFS Cache After Boot)",
-					description:"This option will force rebuild of file system cache based on actual app usage rather than boot/startup processes. NOTE: This process can take from 1-2 minutes (Enable for better file system read/write performance).",
-					default:0,
-					action:"dropcaches /res/uci/files/dropcaches_prof",
-					values:{ 0:"Disabled", 1:"Enabled"
-					}
-				}},
-				{ SSeekBar:{
-						title:"Extra Free Kilobytes",
-						unit:" kB",
-						step:50,
-						min:0,
-						max:50000,
-						default:43200,
-						action:"generic /proc/sys/vm/extra_free_kbytes"
-					}},
-				{ SOptionList:{
-					title:"Laptop Mode (Auto FS Writeback Delay Mode)",
-					description:"This option will delay the writebacks of file system bits cached in RAM while screen is ON (Enable for better performance @ slight risk of possible data loss if crashed or sudden loss of power).",
-					default:0,
-					action:"generic /proc/sys/vm/laptop_mode",
-					values:{ 0:"Disabled", 1:"Enabled"
-					}
-				}},
-				{ SSeekBar:{
-					title:"Swappiness",
-					description:"Controls the tendency of the kernel to move processes out of physical memory and onto the swap disk. Because disks are much slower than RAM, this can lead to slower response times for system and applications if processes are too aggressively moved out of memory.",
-					unit:"%",
-					step:1,
-					min:0,
-					max:100,
-					default:60,
-					action:"generic /proc/sys/vm/swappiness"
-				}},
-				{ SSeekBar:{
-					title:"VFS Cache Pressure",
-					description:"Controls the tendency of the kernel to reclaim the memory which is used for caching of directory and inode objects. Lower = prefer to retain dentry and inode cache, higher = prefer to reclaim dentry and inodes cache.",
-					unit:"%",
-					step:1,
-					min:0,
-					max:150,
-					default:100,
-					action:"generic /proc/sys/vm/vfs_cache_pressure"
-				}},
-		]
-}
 ,
 {
 	name:WAKE,
@@ -3547,7 +3429,7 @@ notify:[
 					description:"Allows you to wake the device by double tapping the screen (Causes more battery drain while in pocket). NOTE: Some of these profiles may not be available in your kernel.",
 				}},
 					{ SOptionList:{
-						default:1,
+						default:0,
 						values:{ 0:"Disabled", 1:"Center (Default)", 2:"Full", 3:"Bottom half", 4:"Top half"
 						},
 						action:"generic /sys/android_touch/doubletap2wake"
@@ -3591,8 +3473,8 @@ notify:[
 					description:"Allows you to wake the device by sweeping.",
 				}},
 					{ SOptionList:{
-						default:15,
-						values:{ 0:"Disabled", 1:"Sweep2Wake"
+						default:0,
+						values:{ 0:"Disabled", 1:"Sweep2Wake", 15:"All Directions"
 						},
 						action:"generic /sys/android_touch/sweep2wake",
 }},
@@ -3639,13 +3521,13 @@ notify:[
 			}},
 				{ SOptionList:{
 					description:"Set the algorithm of internet congestion avoidance, to possibly improve speeds and load times. More info: <a href='https://en.wikipedia.org/wiki/TCP_congestion-avoidance_algorithm'>HERE</a>",
-					default:westwood,
+					default:"westwood",
 					action:"generic /proc/sys/net/ipv4/tcp_congestion_control",
 					values:[
-						"westwood",
-"cdg",
+"westwood",
 "reno",
 "bic",
+"cdg",
 "cubic",
 "highspeed",
 "htcp",
@@ -3665,7 +3547,7 @@ notify:[
 { SOptionList:{
 						title:"Power Suspend Mode",
 						description:"Kernel Mode, LCD Hooks & Highest Level Hook are automatic and managed by the kernel, to manually enable or disable the Power Suspend State choose User Mode.",
-						default:3,
+						default:2,
 						action:"generic /sys/kernel/power_suspend/power_suspend_mode",
 						values:{
 							0:"Kernel Mode", 1:"User Mode", 2:"LCD Hooks", 3:"Highest Level Hook"
@@ -3693,7 +3575,7 @@ notify:[
 						step:1,
 						min:1,
 						max:127,
-						default:90,
+						default:127,
 						action:"generic /sys/vibrator/pwmvalue"
 					}},
 			{ SPane:{
@@ -3711,7 +3593,7 @@ notify:[
 					{ SCheckBox:{
 						label:"Enable",
 						description:"If enabled, device will charge faster when connected through USB. NOTE: Enabling this will disable access to phone storage via USB.",
-						default:1,
+						default:0,
 						action:"generic /sys/kernel/fast_charge/force_fast_charge"
 					}},
 			
@@ -3726,7 +3608,7 @@ notify:[
 					{ SCheckBox:{
 						description:"Check Box To Enable MSM_HSIC Wakelock",
 						label:"Enable",
-						default:0,
+						default:1,
 						action:"boolean /sys/module/wakeup/parameters/enable_msm_hsic_ws"
 					}},	
 			{ SPane:{
@@ -3746,7 +3628,7 @@ notify:[
 					{ SCheckBox:{
 						description:"Check Box To Enable BlueSleep Wakelock(Stock)",
 						label:"Enable",
-						default:0,
+						default:1,
 						action:"boolean /sys/module/wakeup/parameters/enable_bluesleep_ws"
 					}},
 			{ SPane:{
@@ -3764,7 +3646,7 @@ notify:[
 					{ SCheckBox:{
 						description:"Check Box To Enable SMB135 Wakelock",
 						label:"Enable",
-						default:0,
+						default:1,
 						action:"boolean /sys/module/wakeup/parameters/enable_smb135x_wake_ws"
 					}},
 			{ SPane:{
@@ -3823,19 +3705,19 @@ notify:[
 { SCheckBox:{
 						description:"Slightly deeper sleep with slight latency when waking up. (Disable this if you encounter screen flickering)",
 						label:"C1 (Retention)",
-						default:1,
+						default:0,
 						action:"socset /sys/module/msm_pm/modes/cpu0/retention/idle_enabled retention"
 					}},
 { SCheckBox:{
 						description:"Deeper sleep with longer latency when waking up.",
 						label:"C2 (Stand Alone Power Collapse)",
-						default:1,
+						default:0,
 						action:"socset /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled standalone_power_collapse"
 					}},
 { SCheckBox:{
 						description:"Really deep sleep with longest latency when waking up.",
 						label:"C3 (Power Collapse)",
-						default:1,
+						default:0,
 						action:"socset /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled power_collapse"
 					}},
 			
@@ -3861,7 +3743,7 @@ notify:[
 					{ SOptionList:{
 						title:"CPU Governor",
 						description:"Controls how aggressively the daemon uses CPU power. This sets a preset for the maximum CPU consumption below.",
-						default:full,
+						default:"full",
 						action:"bracket-option /sys/kernel/mm/uksm/cpu_governor",
 						values:[
 "full",
@@ -3902,7 +3784,7 @@ notify:[
 				{ SCheckBox:{
 					label:"Enable",
 					description:"Adaptive LMK prevents sluggishness and provides very low app launch latency by improving LMK routines. NOTE: If you enable this, Do NOT adjust LMK Values below.",
-					default:1,
+					default:0,
 					action:"generic /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk"
 				}},
 			{ SPane:{
@@ -3996,7 +3878,7 @@ title:"Empty App", description:"Apps closed by the user but ready to run."
 			}},
 				{ SGeneric:{
 					title:"Device HostName",
-					default:android-9b00979036aa8f76,
+					default:,
 					action:"buildprop net.hostname",
 				}},
 				{ SGeneric:{
@@ -4018,10 +3900,8 @@ title:"Empty App", description:"Apps closed by the user but ready to run."
 				{ SOptionList:{
 					default:Permissive,
 					action:"devtools selinux",
-					values:[ Enforcing, Permissive
-					],
+					values:[ Enforcing, Permissive ],
 				}},
-			
 			
 			{ SPane:{
 				title:"Advanced Tools"
@@ -4036,6 +3916,7 @@ title:"Empty App", description:"Apps closed by the user but ready to run."
 			{ SPane:{
 				title:"Log Creation"
 			}},
+				
 				
 				{ SOptionList:{
 						title:"Kernel Logger",
@@ -4060,9 +3941,17 @@ title:"Empty App", description:"Apps closed by the user but ready to run."
 					label:"Save last_kmsg",
 					action:"devtools kmsg"
 				}},
+			{ SPane:{
+				title:"General Actions",
+				description:"To update/refresh lists, select Restart Synapse below. To clear data, select Clear Synapse Data (fixes most common issues)."
+			}},
 				{ SButton:{
-					label:"Save pstore",
-					action:"devtools pstore"
+					label:"Restart Synapse",
+					action:"restorebackup restart"
+				}},
+				{ SButton:{
+					label:"Clear Synapse Data",
+					action:"devtools cleardata"
 				}},
 			{ STitleBar:{
 				title:"Reboot"
@@ -4202,7 +4091,7 @@ title:"Empty App", description:"Apps closed by the user but ready to run."
 					{
 						on:APPLY,
 						do:[ REFRESH, APPLY ],
-						to:"generic /data/UKM/files/bck_prof"
+						to:"generic /res/uci/files/bck_prof"
 					}
 				]
 			}},
