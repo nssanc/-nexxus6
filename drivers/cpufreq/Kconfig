@@ -267,6 +267,12 @@ config CPU_FREQ_DEFAULT_GOV_PEGASUSQ
 	help
 	  Use the CPUFreq governor 'pegasusq' as default
 
+config CPU_FREQ_DEFAULT_GOV_PMC
+	bool "pmc"
+	select CPU_FREQ_GOV_PMC
+	help
+	  Use the CPUFreq governor 'pmc' as default
+
 config CPU_FREQ_DEFAULT_GOV_RAGINGMOLASSES
 	bool "ragingmolasses"
 	select CPU_FREQ_GOV_RAGINMOLASSES
@@ -286,10 +292,10 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASSH3
 	  Use the CPUFreq governor 'smartassh3' as default.
 
 config CPU_FREQ_DEFAULT_GOV_SMARTMAX
-            bool "smartmax"
-            select CPU_FREQ_GOV_SMARTMAX
-            help
-              Use the CPUFreq governor 'smartmax' as default.
+	bool "smartmax"
+	select CPU_FREQ_GOV_SMARTMAX
+	help
+	  Use the CPUFreq governor 'smartmax' as default.
 
 config CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS
         bool "smartmax_eps"
@@ -654,6 +660,12 @@ config CPU_FREQ_GOV_ONDEMANDPLUS
 config CPU_FREQ_GOV_PEGASUSQ
 	tristate "'pegasusq' cpufreq policy governor"
 
+config CPU_FREQ_GOV_PMC
+  tristate "'pmc' cpufreq policy governor"	
+  select CPU_FREQ_TABLE	
+  help	
+    'smartmax' tweaked for absolute battery
+
 config CPU_FREQ_GOV_RAGINGMOLASSES
 	tristate "'RAGINGMOLASSES' cpufreq policy governor"
 	help
@@ -680,11 +692,18 @@ config CPU_FREQ_GOV_SMARTASSH3
 	  'smartassh3' - a "smart" governor
 
 config CPU_FREQ_GOV_SMARTMAX
-           tristate "'smartmax' cpufreq governor"
-           depends on CPU_FREQ
-           help
-             smartmax' - a "smart" optimized governor!
-             If in doubt, say N.
+	tristate "'smartmax' cpufreq policy governor"
+	select CPU_FREQ_TABLE
+	help
+	  'smartmax' combined ondemand and smartass2
+
+config CPU_FREQ_GOV_SMARTMAX_30
+	bool "'smartmax' for 3.0 and 3.1 kernels"
+	depends on CPU_FREQ_GOV_SMARTMAX
+
+config CPU_FREQ_GOV_SMARTMAX_SHAMU
+	bool "'smartmax' defaults for shamu"
+	depends on CPU_FREQ_GOV_SMARTMAX
 
 config CPU_FREQ_GOV_SMARTMAX_EPS
         tristate "'smartmax EPS' cpufreq policy governor"
@@ -694,6 +713,10 @@ config CPU_FREQ_GOV_SMARTMAX_EPS
 
 config CPU_FREQ_GOV_UMBRELLA_CORE
 	tristate "'umbrella_core' cpufreq policy governor"
+
+config CPU_BOOST
+	tristate "Event base short term CPU freq boost"
+	depends on CPU_FREQ
 	help
 	  'umbrella_core' - This driver adds a dynamic cpufreq policy governor
 	  designed for latency-sensitive workloads.
