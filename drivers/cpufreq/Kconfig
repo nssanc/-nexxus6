@@ -712,16 +712,6 @@ config CPU_FREQ_GOV_SMARTMAX_SHAMU
 config CPU_FREQ_GOV_UMBRELLA_CORE
 	tristate "'umbrella_core' cpufreq policy governor"
 
-config CPU_BOOST
-	tristate "Event base short term CPU freq boost"
-	depends on CPU_FREQ
-	help
-	  'umbrella_core' - This driver adds a dynamic cpufreq policy governor
-	  designed for latency-sensitive workloads.
-
-	  The governor is based on interactive to provide a resident controller
-	  which interprets unnecessary battery drain as evil.
-
 config CPU_FREQ_GOV_WAVE
         tristate "'wave' cpufreq policy governor"
         select CPU_FREQ_TABLE
