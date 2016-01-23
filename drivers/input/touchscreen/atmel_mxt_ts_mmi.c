@@ -30,6 +30,7 @@
 #include <linux/pinctrl/consumer.h>
 #include <linux/semaphore.h>
 #include <linux/atomic.h>
+#include <linux/drv2605.h>
 
 #ifdef CONFIG_STATE_NOTIFIER
 #include <linux/state_notifier.h>
@@ -257,6 +258,8 @@ struct t9_range {
 #define MXT_MAX_PRESSURE	0xff
 
 #define MXT_PIXELS_PER_MM	20
+
+#define VIBRATE_STRENGTH 20
 
 struct mxt_obj_patch {
 	u8 number;
@@ -1551,6 +1554,8 @@ static void mxt_proc_t93_messages(struct mxt_data *data, u8 *msg)
 #ifdef CONFIG_WAKE_GESTURES
 		set_vibrate(vib_strength);
 #endif
+
+		vibrate(VIBRATE_STRENGTH);
 		input_report_key(input_dev, KEY_POWER, 1);
 		input_report_key(input_dev, KEY_POWER, 0);
 		input_sync(input_dev);
