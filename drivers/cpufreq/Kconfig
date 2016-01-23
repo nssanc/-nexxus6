@@ -215,6 +215,12 @@ config CPU_FREQ_DEFAULT_GOV_INTELLIACTIVE
         ---help---
           Use the CPUFreq governor 'INTELLIACTIVE' as default.
 
+config CPU_FREQ_DEFAULT_GOV_INTELLIMM
+        bool "INTELLIMM"
+        select CPU_FREQ_GOV_INTELLIMM
+        ---help---
+          Use the CPUFreq governor 'INTELLIMM' as default.
+
 config CPU_FREQ_DEFAULT_GOV_LIONHEART
         bool "LIONHEART"
         select CPU_FREQ_GOV_LIONHEART
@@ -597,6 +603,10 @@ config CPU_FREQ_GOV_INTELLIACTIVE
         ---help---
           'INTELLIACTIVE' - a tweaked "ondemand" based smart and smooth optimized governor!
            If in doubt, say Y.
+
+config CPU_FREQ_GOV_INTELLIMM
+        tristate "'INTELLIMM' cpufreq governor"
+        depends on CPU_FREQ
 
 config CPU_FREQ_GOV_LIONHEART
         tristate "'LIONHEART' cpufreq governor"
