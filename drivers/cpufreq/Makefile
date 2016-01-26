@@ -46,6 +46,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_RAGINGMOLASSES)  += cpufreq_ragingmolasses.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSH3)	   += cpufreq_smartassh3.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSV2)	   += cpufreq_smartassv2.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTMAX)	   += cpufreq_smartmax_gov.o
+obj-$(CONFIG_CPU_FREQ_GOV_SMARTMAX_EPS)    += cpufreq_smartmax_eps.o
 obj-$(CONFIG_CPU_FREQ_GOV_UMBRELLA_CORE)   += cpufreq_umbrella_core.o
 obj-$(CONFIG_CPU_FREQ_GOV_WAVE) 	   += cpufreq_wave.o
 obj-$(CONFIG_CPU_FREQ_GOV_WHEATLEY)	   += cpufreq_wheatley.o
