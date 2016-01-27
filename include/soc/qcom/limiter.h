@@ -3,6 +3,7 @@
 #define DEFAULT_SUSPEND_FREQUENCY	960000
 #define DEFAULT_RESUME_FREQUENCY	2726400                         
 #define DEFAULT_MIN_FREQUENCY		300000
+#define PER_CORE_CONTROL		0
 
 static struct cpu_limit {
 	unsigned int limiter_enabled;
@@ -13,6 +14,7 @@ static struct cpu_limit {
 	uint32_t suspend_min_freq[4];
 	struct mutex msm_limiter_mutex[4];
 	struct notifier_block notif;
+	unsigned int per_core_control;
 } limit = {
 	.limiter_enabled = LIMITER_ENABLED,
 	.suspend_max_freq = DEFAULT_SUSPEND_FREQUENCY,
@@ -26,4 +28,5 @@ static struct cpu_limit {
 	.suspend_min_freq[1] = DEFAULT_MIN_FREQUENCY,
 	.suspend_min_freq[2] = DEFAULT_MIN_FREQUENCY,
 	.suspend_min_freq[3] = DEFAULT_MIN_FREQUENCY,
+	.per_core_control = PER_CORE_CONTROL,
 };

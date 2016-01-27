@@ -163,6 +163,32 @@ static ssize_t limiter_enabled_store(struct kobject *kobj,
 	return count;
 }
 
+static ssize_t per_core_control_show(struct kobject *kobj,
+		struct kobj_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%u\n", limit.per_core_control);
+}
+
+static ssize_t per_core_control_store(struct kobject *kobj,
+				      struct kobj_attribute *attr,
+				      const char *buf, size_t count)
+{
+	int ret;
+	unsigned int val;
+
+	ret = sscanf(buf, "%u\n", &val);
+	if (ret != 1 || val < 0 || val > 1)
+		return -EINVAL;
+
+	if (val == limit.per_core_control)
+		return count;
+
+	limit.per_core_control = val;
+
+	return count;
+}
+
+
 static ssize_t debug_mask_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
@@ -442,6 +468,11 @@ static struct kobj_attribute limiter_enabled_attribute =
 	__ATTR(limiter_enabled, 0666,
 		limiter_enabled_show,
 		limiter_enabled_store);
+		
+static struct kobj_attribute per_core_control_attribute =
+	__ATTR(per_core_control, 0666,
+		per_core_control_show,
+		per_core_control_store);
 
 static struct kobj_attribute debug_mask_attribute =
 	__ATTR(debug_mask, 0666,
@@ -486,6 +517,7 @@ static struct attribute *msm_limiter_attrs[] =
 		&live_cur_freq_2.attr,
 		&live_cur_freq_3.attr,
 		&msm_limiter_version_attribute.attr,
+		&per_core_control_attribute.attr,
 		NULL,
 	};
 
