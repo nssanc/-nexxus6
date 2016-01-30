@@ -37,7 +37,7 @@
 #include <linux/gpio.h>
 #include <linux/pm_qos.h>
 #include <linux/pm.h>
-#include <mach/cpuidle.h>
+#include <soc/qcom/pm.h>
 #include "wcd9320.h"
 #include "wcd9xxx-resmgr.h"
 #include "wcd9xxx-common.h"
