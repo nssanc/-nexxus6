@@ -21,7 +21,7 @@
 #include <linux/wait.h>
 #include <linux/bitops.h>
 #include <linux/mfd/wcd9xxx/core.h>
-#include <linux/mfd/wcd9xxx/wcd9xxx_registers.h>
+//#include <linux/mfd/wcd9xxx/wcd9xxx_registers.h>
 #include <uapi/linux/mfd/wcd9xxx/wcd9320_registers.h>
 #include <linux/mfd/wcd9xxx/pdata.h>
 #include <linux/regulator/consumer.h>
