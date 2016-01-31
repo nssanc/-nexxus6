@@ -19,7 +19,6 @@
 #include <linux/kobject.h>
 #include <linux/sysfs.h>
 #include <linux/mfd/wcd9xxx/core.h>
-//#include <linux/mfd/wcd9xxx/wcd9320_registers.h>
 #include <uapi/linux/mfd/wcd9xxx/wcd9320_registers.h>
 
 #define SOUND_CONTROL_MAJOR_VERSION	3

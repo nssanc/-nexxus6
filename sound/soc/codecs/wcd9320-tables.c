@@ -10,7 +10,7 @@
 * GNU General Public License for more details.
 */
 
-#include <linux/mfd/wcd9xxx/wcd9320_registers.h>
+#include <uapi/linux/mfd/wcd9xxx/wcd9320_registers.h>
 #include "wcd9320.h"
 
 const u8 taiko_reg_readable[TAIKO_CACHE_SIZE] = {
