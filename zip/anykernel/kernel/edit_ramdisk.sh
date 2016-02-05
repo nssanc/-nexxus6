@@ -17,10 +17,10 @@ cd /
 #remove cmdline parameters we do not want
 #maxcpus=2 in this case, which limits smp activation to the first 2 cpus
 echo $(cat /tmp/boot.img-cmdline | sed -e 's/maxcpus=[^ ]\+//')>/tmp/boot.img-cmdline
-//if [ ![ $(cat /tmp/boot.img-cmdline) == *"enforcing=0 androidboot.selinux=permissive"* ]]
-//then
-echo $(cat /tmp/boot.img-cmdline) enforcing=0 androidboot.selinux=permissive > /tmp/boot.img-cmdline
-//fi
+if [[ $(cat /tmp/boot.img-cmdline) != *"enforcing=0 androidboot.selinux=permissive"* ]]
+then
+echo $(/tmp/cat boot.img-cmdline) enforcing=0 androidboot.selinux=permissive > /tmp/boot.img-cmdline
+fi
 
 
 #Don't force encryption
