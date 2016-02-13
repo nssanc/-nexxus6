@@ -1,5 +1,5 @@
 #define MSM_LIMITER			"msm_limiter"
-#define LIMITER_ENABLED			0
+#define LIMITER_ENABLED			1
 #define DEFAULT_SUSPEND_FREQUENCY	1190400
 #define DEFAULT_RESUME_FREQUENCY	2726400                         
 #define DEFAULT_MIN_FREQUENCY		300000
