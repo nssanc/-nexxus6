@@ -1510,6 +1510,12 @@ config ALUCARD_HOTPLUG
 	help
 	  Generic Alucard-hotplug cpu hotplug driver for ARM SOCs
 
+config BRICKED_HOTPLUG
+	bool "Enable kernel based mpdecision"
+	default y
+	help
+	  This enables kernel based multi core control.
+
 config MSM_SLEEPER
 	bool "CPU hotplug driver"
 	default y
