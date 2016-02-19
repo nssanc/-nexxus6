@@ -289,7 +289,7 @@ static void detect_sweep2wake_v(int x, int y, bool st)
 								report_gesture(3);
 							} else {
 #endif
-								set_vibrate(100);
+								set_vibrate(vib_strength);
 								wake_pwrtrigger();
 #if (WAKE_GESTURES_ENABLED)
 							}		
