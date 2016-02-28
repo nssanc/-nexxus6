@@ -1,4 +1,6 @@
 on charger
+    #disable zen decision
+    write /sys/kernel/zen_decision/enabled 0
     #low power governing
     write /sys/devices/system/cpu/cpu0/online 1
     write /sys/devices/system/cpu/cpu1/online 1
@@ -12,6 +14,7 @@ on charger
     write /sys/module/msm_pm/modes/cpu0/retention/idle_enabled 1
 
 on boot
+    # Shamu boots with performance governor.
     chown system system /dev/cpuctl/cpu.notify_on_migrate
     chmod 0660 /dev/cpuctl/cpu.notify_on_migrate
 
