@@ -111,6 +111,8 @@ extern int dhd_socram_dump(struct dhd_bus *bus);
 static void dngl_host_event_process(dhd_pub_t *dhdp, bcm_dngl_event_t *event, size_t pktlen);
 static int dngl_host_event(dhd_pub_t *dhdp, void *pktdata, size_t pktlen);
 #endif /* DNGL_EVENT_SUPPORT */
+static void dngl_host_event_process(dhd_pub_t *dhdp, bcm_dngl_event_t *event, size_t pktlen);
+static int dngl_host_event(dhd_pub_t *dhdp, void *pktdata, size_t pktlen);
 bool ap_cfg_running = FALSE;
 bool ap_fw_loaded = FALSE;
 
@@ -1516,8 +1518,10 @@ int wl_host_event(dhd_pub_t *dhd_pub, int *ifidx, void *pktdata, size_t pktlen,
 #ifdef DNGL_EVENT_SUPPORT
 	/* If it is a DNGL event process it first */
 	if (dngl_host_event(dhd_pub, pktdata, pktlen) == BCME_OK) {
+
 		/* Return error purposely to prevent DNGL event being processed as BRCM event */
 		return BCME_ERROR;
+		return BCME_OK;
 	}
 #endif /* DNGL_EVENT_SUPPORT */
 
