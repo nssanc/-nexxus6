@@ -24,7 +24,6 @@ obj-$(CONFIG_CPU_FREQ_GOV_BARRY_ALLEN)	   += cpufreq_barry_allen.o
 obj-$(CONFIG_CPU_FREQ_GOV_BIOSHOCK)	   += cpufreq_bioshock.o
 obj-$(CONFIG_CPU_FREQ_GOV_BLU_ACTIVE)      += cpufreq_blu_active.o
 obj-$(CONFIG_CPU_FREQ_GOV_CONSERVATIVEX)   += cpufreq_conservativex.o
-obj-$(CONFIG_CPU_FREQ_GOV_DANCEDANCE)	   += cpufreq_dancedance.o
 obj-$(CONFIG_CPU_FREQ_GOV_DARKNESS)	   += cpufreq_darkness.o
 obj-$(CONFIG_CPU_FREQ_GOV_DESPAIR)	   += cpufreq_despair.o
 obj-$(CONFIG_CPU_FREQ_GOV_DYNAMIC_INTERACTIVE) += cpufreq_dynamic_interactive.o
