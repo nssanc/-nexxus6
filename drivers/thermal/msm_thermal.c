@@ -33,6 +33,7 @@
 /* Default the poll interval to 1 second. Time in usecs */
 #define _poll_interval		1000000
 
+int ENABLED = 1;
 int TEMP_THRESHOLD = _temp_threshold;
 int TEMP_STEP = _temp_step;
 int LEVEL_VERY_HOT = _temp_threshold + _temp_step;
@@ -49,6 +50,30 @@ bool full_fm = false;
 module_param(full_fm, bool, 0644);
 
 /* SYSFS */
+
+/* Enable toggle */
+static int set_enabled(const char *val, const struct kernel_param *kp)
+{
+	int ret = 0;
+	int i;
+
+	ret = kstrtouint(val, 10, &i);
+	if (ret)
+		return -EINVAL;
+	if (i < 0 || i > 1)
+		return -EINVAL;
+		
+	ret = param_set_int(val, kp);
+
+	return ret;
+}
+
+static struct kernel_param_ops enabled_ops = {
+	.set = set_enabled,
+	.get = param_get_int,
+};
+
+module_param_cb(enabled, &enabled_ops, &ENABLED, 0644);
 
 /* Temperature Threshold Storage */
 static int set_temp_threshold(const char *val, const struct kernel_param *kp)
@@ -258,6 +283,10 @@ static void check_temp(struct work_struct *work)
 
 	tsens_dev.sensor_num = msm_thermal_info.sensor_id;
 	tsens_get_temp(&tsens_dev, &temp);
+
+	if (!ENABLED) {
+		return;
+	}
 
 	if (info.throttling)
 	{
