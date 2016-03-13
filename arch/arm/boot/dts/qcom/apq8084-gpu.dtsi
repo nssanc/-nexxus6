@@ -84,10 +84,11 @@
 
 			compatible = "qcom,gpu-pwrlevels";
 
-                        qcom,gpu-pwrlevel@0 {
+			qcom,gpu-pwrlevel@0 {
 				reg = <0>;
 				qcom,gpu-freq = <700000000>;
 				qcom,bus-freq = <16>;
+			};
 			
 			qcom,gpu-pwrlevel@1 {
 				reg = <1>;
