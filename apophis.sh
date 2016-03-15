@@ -12,7 +12,7 @@ echo "Copy kernel and build generate anykernel zip."
 mv arch/arm/boot/zImage-dtb zip/anykernel/kernel/zImage
 
 cd zip/anykernel
-zip -9 -r ../SINGULARITY-V-.zip .
+zip -9 -r ../SINGULARITY.zip .
 cd ../..
 
 echo "Finished Zipping."
