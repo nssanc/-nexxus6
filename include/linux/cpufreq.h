@@ -479,9 +479,6 @@ extern struct cpufreq_governor cpufreq_gov_impulse;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTELLIACTIVE)
 extern struct cpufreq_governor cpufreq_gov_intelliactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_intelliactive)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTELLIMM)
-extern struct cpufreq_governor cpufreq_gov_intellimm;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_intellimm)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTERACTIVE_PRO)
 extern struct cpufreq_governor cpufreq_gov_interactive_pro;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_interactive_pro)
@@ -491,9 +488,6 @@ extern struct cpufreq_governor cpufreq_gov_despair;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE)
 extern struct cpufreq_governor cpufreq_gov_dynamic_interactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_dynamic_interactive)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ELECTRODEMAND)
-extern struct cpufreq_governor cpufreq_gov_dynamic_electrodemand;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_electrodemand)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ELEMENTALX)
 extern struct cpufreq_governor cpufreq_gov_elementalx;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_elementalx)
@@ -554,9 +548,6 @@ extern struct cpufreq_governor cpufreq_gov_tripndroid;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE)
 extern struct cpufreq_governor cpufreq_gov_umbrella_core;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_umbrella_core)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE)
-extern struct cpufreq_governor cpufreq_gov_userspace;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_userspace)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_WAVE)
 extern struct cpufreq_governor cpufreq_gov_wave;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_wave)
