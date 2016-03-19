@@ -28,9 +28,16 @@
 #include <linux/cpumask.h>
 #include <linux/hrtimer.h>
 
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#endif
+
+#ifdef CONFIG_HAS_EARLYSUSPEND
+#include <linux/earlysuspend.h>
+#endif
+
 #define HOTPLUG_ENABLED 0
 #define DEBUG 0
-
 #define ASMP_TAG "AutoSMP: "
 #define ASMP_STARTDELAY 20000
 
@@ -53,8 +60,8 @@ static struct asmp_param_struct {
 	unsigned int cycle_down;
 } asmp_param = {
 	.delay = 100,
-	.scroff_single_core = true,
-	.max_cpus = CONFIG_NR_CPUS,
+	.scroff_single_core = false,
+	.max_cpus = 4,
 	.min_cpus = 1,
 	.cpufreq_up = 90,
 	.cpufreq_down = 60,
@@ -64,7 +71,7 @@ static struct asmp_param_struct {
 
 static unsigned int cycle = 0, delay0 = 0;
 static unsigned long delay_jif = 0;
-static int enabled __read_mostly = 1;
+static int enabled __read_mostly = 0;
 
 static void __cpuinit asmp_work_fn(struct work_struct *work) {
 	unsigned int cpu = 0, slow_cpu = 0;
@@ -130,7 +137,12 @@ static void __cpuinit asmp_work_fn(struct work_struct *work) {
 	queue_delayed_work(asmp_workq, &asmp_work, delay_jif);
 }
 
-static void asmp_early_suspend(struct early_suspend *h) {
+#ifdef CONFIG_POWERSUSPEND
+static void asmp_early_suspend(struct power_suspend *handler)
+#else
+static void asmp_early_suspend(struct early_suspend *h) 
+#endif
+{
 	unsigned int cpu;
 
 	/* unplug online cpu cores */
@@ -146,7 +158,12 @@ static void asmp_early_suspend(struct early_suspend *h) {
 	pr_info(ASMP_TAG"suspended\n");
 }
 
-static void __cpuinit asmp_late_resume(struct early_suspend *h) {
+#ifdef CONFIG_POWERSUSPEND
+static void __ref asmp_late_resume(struct power_suspend *handler)
+#else
+static void __ref asmp_late_resume(struct early_suspend *h)
+#endif
+{
 	unsigned int cpu;
 
 	/* hotplug offline cpu cores */
@@ -165,11 +182,21 @@ static void __cpuinit asmp_late_resume(struct early_suspend *h) {
 	pr_info(ASMP_TAG"resumed\n");
 }
 
+
+#ifdef CONFIG_POWERSUSPEND
+static struct power_suspend asmp_power_suspend_handler = {
+	.suspend = asmp_early_suspend,
+	.resume = asmp_late_resume,
+};
+#endif  /* CONFIG_POWERSUSPEND */
+
+#ifdef CONFIG_HAS_EARLYSUSPEND
 static struct early_suspend __refdata asmp_early_suspend_handler = {
 	.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN,
 	.suspend = asmp_early_suspend,
 	.resume = asmp_late_resume,
 };
+#endif	/* CONFIG_HAS_EARLYSUSPEND */
 
 static int __cpuinit set_enabled(const char *val, const struct kernel_param *kp) {
 	int ret;
@@ -306,8 +333,12 @@ static int __init asmp_init(void) {
 	if (enabled)
 		queue_delayed_work(asmp_workq, &asmp_work,
 				   msecs_to_jiffies(ASMP_STARTDELAY));
-
+#ifdef CONFIG_POWERSUSPEND
+	register_power_suspend(&asmp_power_suspend_handler);
+#endif
+#ifdef CONFIG_HAS_EARLYSUSPEND
 	register_early_suspend(&asmp_early_suspend_handler);
+#endif
 
 	asmp_kobject = kobject_create_and_add("autosmp", kernel_kobj);
 	if (asmp_kobject) {
