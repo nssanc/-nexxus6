@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2013 Stratos Karafotis <stratosk@semaphore.gr> (dyn_hotplug for mako)
  *
- * Copyright (C) 2015 engstk <eng.stk@sapo.pt> (hammerhead & shamu implementation, fixes and changes to blu_plug)
+ * Copyright (C) 2014-2016 engstk <eng.stk@sapo.pt> (hammerhead,shamu, osprey and onyx implementation, fixes and changes to blu_plug)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -21,28 +21,22 @@
 #include <linux/workqueue.h>
 #include <linux/sched.h>
 #include <linux/timer.h>
-#include <linux/fb.h>
-#include <soc/qcom/cpufreq.h>
 #include <linux/cpufreq.h>
+#include <linux/fb.h>
 #include <linux/delay.h>
 #include <linux/slab.h>
 
 #define INIT_DELAY		(60 * HZ) /* Initial delay to 60 sec, 4 cores while boot */
 #define DELAY			(HZ / 2)
-#define UP_THRESHOLD		(80)
-#define MIN_ONLINE		(1)
+#define UP_THRESHOLD		(90)
+#define MIN_ONLINE		(2)
 #define MAX_ONLINE		(4)
 #define DEF_DOWN_TIMER_CNT	(6)	/* 3 secs */
 #define DEF_UP_TIMER_CNT	(2)	/* 1 sec */
-#define MAX_CORES_SCREENOFF     (1)
-#define MAX_FREQ_SCREENOFF      (0)
-#define MAX_FREQ_PLUG           (3091200)
-#define DEF_PLUG_THRESHOLD      (70)
-#define BLU_PLUG_ENABLED	(0)
+#define MAX_CORES_SCREENOFF (2)
+#define DEF_PLUG_THRESHOLD 0
 
-static unsigned int blu_plug_enabled = BLU_PLUG_ENABLED;
-
-static unsigned int up_threshold = UP_THRESHOLD;
+static unsigned int up_threshold = UP_THRESHOLD;;
 static unsigned int delay = DELAY;
 static unsigned int min_online = MIN_ONLINE;
 static unsigned int max_online = MAX_ONLINE;
@@ -51,8 +45,6 @@ static unsigned int up_timer;
 static unsigned int down_timer_cnt = DEF_DOWN_TIMER_CNT;
 static unsigned int up_timer_cnt = DEF_UP_TIMER_CNT;
 static unsigned int max_cores_screenoff = MAX_CORES_SCREENOFF;
-static unsigned int max_freq_screenoff = MAX_FREQ_SCREENOFF;
-static unsigned int max_freq_plug = MAX_FREQ_PLUG;
 static unsigned int plug_threshold[MAX_ONLINE] = {[0 ... MAX_ONLINE-1] = DEF_PLUG_THRESHOLD};
 
 static struct delayed_work dyn_work;
@@ -185,58 +177,25 @@ static __ref void load_timer(struct work_struct *work)
 	queue_delayed_work_on(0, dyn_workq, &dyn_work, delay);
 }
 
-/* 
- * Manages driver behavior on screenoff mode
- * It sets max online CPUs to max_cores_screenoff and freq to max_freq_screenoff
- * Restores previous values on resume work
- *
- */
-static __ref void max_screenoff(bool screenoff)
-{
-	uint32_t cpu, freq;
-	
-	if (screenoff) {
-		max_freq_plug = cpufreq_quick_get_max(0);
-		freq = min(max_freq_screenoff, max_freq_plug);
-
-		cancel_delayed_work_sync(&dyn_work);
-		
-		for_each_possible_cpu(cpu) {
-			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, freq);
-			
-			if (cpu && num_online_cpus() > max_cores_screenoff)
-				cpu_down(cpu);
-		}
-		cpufreq_update_policy(cpu);
-	}
-	else {
-		freq = max_freq_plug;
-		
-		up_all();
-		
-		for_each_possible_cpu(cpu) {
-			msm_cpufreq_set_freq_limits(cpu, MSM_CPUFREQ_NO_LIMIT, freq);
-		}
-		cpufreq_update_policy(cpu);
-		
-		queue_delayed_work_on(0, dyn_workq, &dyn_work, delay);
-	}
-	
-#if DEBUG
-	pr_debug("%s: num_online_cpus: %u, freq_online_cpus: %u\n", __func__, num_online_cpus(), freq);
-#endif
-}
 
 /* On suspend put offline all cores except cpu0*/
 static void dyn_lcd_suspend(struct work_struct *work)
 {	
-	max_screenoff(true);
+	unsigned int cpu;
+	
+	cancel_delayed_work_sync(&dyn_work);
+
+	for_each_online_cpu(cpu)
+		if (cpu && num_online_cpus() > max_cores_screenoff)
+			cpu_down(cpu);
 }
 
 /* On resume bring online CPUs until max_online to prevent lags */
-static void dyn_lcd_resume(struct work_struct *work)
+static __ref void dyn_lcd_resume(struct work_struct *work)
 {
-	max_screenoff(false);
+	up_all();
+	
+	queue_delayed_work_on(0, dyn_workq, &dyn_work, delay);
 }
 
 static int fb_notifier_callback(struct notifier_block *self, unsigned long event, void *data)
@@ -378,30 +337,6 @@ static struct kernel_param_ops max_cores_screenoff_ops = {
 
 module_param_cb(max_cores_screenoff, &max_cores_screenoff_ops, &max_cores_screenoff, 0644);
 
-/* max_freq_screenoff */
-static int set_max_freq_screenoff(const char *val, const struct kernel_param *kp)
-{
-	int ret = MAX_FREQ_SCREENOFF;
-	unsigned int i;
-
-	ret = kstrtouint(val, 10, &i);
-	if (ret)
-		return -EINVAL;
-	if (i < 35800 || i > 3091200)
-		return -EINVAL;
-
-	ret = param_set_uint(val, kp);
-	
-	return ret;
-}
-
-static struct kernel_param_ops max_freq_screenoff_ops = {
-	.set = set_max_freq_screenoff,
-	.get = param_get_uint,
-};
-
-module_param_cb(max_freq_screenoff, &max_freq_screenoff_ops, &max_freq_screenoff, 0644);
-
 /* down_timer_cnt */
 static int set_down_timer_cnt(const char *val, const struct kernel_param *kp)
 {
@@ -458,11 +393,8 @@ module_param_array(plug_threshold, uint, NULL, 0644);
 
 /***************** end of module parameters *****************/
 
-static int dyn_hp_init(void)
+static int __init dyn_hp_init(void)
 {
-	if (!blu_plug_enabled) {
-		return 0;
-	}
 	notify.notifier_call = fb_notifier_callback;
 	if (fb_register_client(&notify) != 0)
 		pr_info("%s: Failed to register FB notifier callback\n", __func__);
@@ -481,7 +413,7 @@ static int dyn_hp_init(void)
 	return 0;
 }
 
-static void dyn_hp_exit(void)
+static void __exit dyn_hp_exit(void)
 {
 	cancel_delayed_work_sync(&dyn_work);
 	fb_unregister_client(&notify);
@@ -489,39 +421,6 @@ static void dyn_hp_exit(void)
 	
 	pr_info("%s: deactivated\n", __func__);
 }
-
-
-/* enabled */
-static int set_enabled(const char *val, const struct kernel_param *kp)
-{
-	int ret = 0;
-	unsigned int i;
-	int blu = 0;
-
-	ret = kstrtouint(val, 10, &i);
-	if (ret)
-		return -EINVAL;
-	if (i < 0 || i > 1)
-		return 0;
-		
-	if (i == blu_plug_enabled)
-		return i;
-
-	ret = param_set_uint(val, kp);
-	blu_plug_enabled = i;
-	if ((blu_plug_enabled == 1))
-		blu = dyn_hp_init();
-	if ((blu_plug_enabled == 0))
-		dyn_hp_exit();
-	return i;
-}
-
-static struct kernel_param_ops enabled_ops = {
-	.set = set_enabled,
-	.get = param_get_uint,
-};
-
-module_param_cb(enabled, &enabled_ops, &blu_plug_enabled, 0644);
 
 MODULE_AUTHOR("Stratos Karafotis <stratosk@semaphore.gr");
 MODULE_AUTHOR("engstk <eng.stk@sapo.pt>");
