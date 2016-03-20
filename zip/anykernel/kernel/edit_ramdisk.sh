@@ -22,6 +22,10 @@ then
 echo $(/tmp/cat boot.img-cmdline) enforcing=0 androidboot.selinux=permissive > /tmp/boot.img-cmdline
 fi
 
+# Force Permissive on cmdline
+sed -ri 's/ enforcing=[0-1]//g' /tmp/boot.img-cmdline
+sed -ri 's/ androidboot.selinux=permissive|androidboot.selinux=enforcing|androidboot.selinux=disabled//g' /tmp/boot.img-cmdline
+echo $(cat /tmp/boot.img-cmdline) enforcing=0 androidboot.selinux=permissive >/tmp/boot.img-cmdline
 
 #Don't force encryption
 if  grep -qr forceencrypt /tmp/ramdisk/fstab.shamu; then
