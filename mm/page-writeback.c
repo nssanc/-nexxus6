@@ -79,24 +79,24 @@ int dirty_background_ratio = 20;
  * dirty_background_bytes starts at 0 (disabled) so that it is a function of
  * dirty_background_ratio * the amount of dirtyable memory
  */
-unsigned long dirty_background_bytes;
+unsigned long dirty_background_bytes = 0;
 
 /*
  * free highmem will not be subtracted from the total free memory
  * for calculating free ratios if vm_highmem_is_dirtyable is true
  */
-int vm_highmem_is_dirtyable=1;
+int vm_highmem_is_dirtyable = 1;
 
 /*
  * The generator of dirty data starts writeback at this percentage
  */
-int vm_dirty_ratio = 15;
+int vm_dirty_ratio = 20;
 
 /*
  * vm_dirty_bytes starts at 0 (disabled) so that it is a function of
  * vm_dirty_ratio * the amount of dirtyable memory
  */
-unsigned long vm_dirty_bytes;
+unsigned long vm_dirty_bytes = 0;
 
 /*
  * The default intervals between `kupdate'-style writebacks
@@ -134,7 +134,7 @@ EXPORT_SYMBOL_GPL(dirty_writeback_suspend_interval);
  * The longest time for which data is allowed to remain dirty
  */
 #define DEFAULT_DIRTY_EXPIRE_INTERVAL 2000 /* centiseconds */
-#define DEFAULT_SUSPEND_DIRTY_EXPIRE_INTERVAL 12000 /* centiseconds */
+#define DEFAULT_SUSPEND_DIRTY_EXPIRE_INTERVAL 10000 /* centiseconds */
 unsigned int dirty_expire_interval,
 	resume_dirty_expire_interval;
 unsigned int sleep_dirty_expire_interval,
