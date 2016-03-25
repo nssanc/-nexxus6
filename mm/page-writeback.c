@@ -79,7 +79,7 @@ int dirty_background_ratio = 20;
  * dirty_background_bytes starts at 0 (disabled) so that it is a function of
  * dirty_background_ratio * the amount of dirtyable memory
  */
-unsigned long dirty_background_bytes = 0;
+unsigned long dirty_background_bytes;
 
 /*
  * free highmem will not be subtracted from the total free memory
@@ -96,7 +96,7 @@ int vm_dirty_ratio = 20;
  * vm_dirty_bytes starts at 0 (disabled) so that it is a function of
  * vm_dirty_ratio * the amount of dirtyable memory
  */
-unsigned long vm_dirty_bytes = 0;
+unsigned long vm_dirty_bytes;
 
 /*
  * The default intervals between `kupdate'-style writebacks
@@ -149,7 +149,7 @@ int block_dump;
  * Flag that puts the machine in "laptop mode". Doubles as a timeout in jiffies:
  * a full sync is triggered after this time elapses without any disk activity.
  */
-int laptop_mode = 1;
+int laptop_mode;
 
 EXPORT_SYMBOL(laptop_mode);
 
