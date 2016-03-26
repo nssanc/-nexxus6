@@ -78,7 +78,7 @@ static struct input_dev *gesture_dev;
 
 /* Resources */
 int s2w_switch = S2W_DEFAULT;
-static bool dt2w_switch = true;
+bool dt2w_switch;
 static int s2s_switch = S2S_DEFAULT;
 static int touch_x = 0, touch_y = 0;
 static bool touch_x_called = false, touch_y_called = false;
@@ -624,7 +624,7 @@ static ssize_t doubletap2wake_dump(struct device *dev,
 	if (input < 0 || input > 1)
 		input = 0;	
 
-	dt2w_switch = (input) ? true : false;		
+	dt2w_switch = true;		
 	
 	if (s2w_switch == 0)
 		set_internal_dt(dt2w_switch);
