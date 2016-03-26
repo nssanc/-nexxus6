@@ -243,7 +243,8 @@ queue_store_##name(struct request_queue *q, const char *page, size_t count) \
 	return ret;							\
 }
 
-QUEUE_SYSFS_BIT_FNS(nonrot, NONROT, 1);
+QUEUE_SYSFS_BIT_FNS(rq_affinity, RQ_AFFINITY, 0);     
+QUEUE_SYSFS_BIT_FNS(nonrot, NONROT, 0);
 QUEUE_SYSFS_BIT_FNS(random, ADD_RANDOM, 0);
 QUEUE_SYSFS_BIT_FNS(iostats, IO_STAT, 0);
 #undef QUEUE_SYSFS_BIT_FNS
