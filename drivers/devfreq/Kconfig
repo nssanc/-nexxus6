@@ -38,30 +38,11 @@ config DEVFREQ_GOV_SIMPLE_ONDEMAND
 	  values that imply the usage rate. A device may provide tuned
 	  values to the governor with data field at devfreq_add_device().
 
-config DEVFREQ_GOV_PERFORMANCE
-	tristate "Performance"
+config SIMPLE_GPU_ALGORITHM
+	bool "Simple GPU algorithm"
+	depends on DEVFREQ_GOV_MSM_ADRENO_TZ
 	help
-	  Sets the frequency at the maximum available frequency.
-	  This governor always returns UINT_MAX as frequency so that
-	  the DEVFREQ framework returns the highest frequency available
-	  at any time.
-
-config DEVFREQ_GOV_POWERSAVE
-	tristate "Powersave"
-	help
-	  Sets the frequency at the minimum available frequency.
-	  This governor always returns 0 as frequency so that
-	  the DEVFREQ framework returns the lowest frequency available
-	  at any time.
-
-config DEVFREQ_GOV_USERSPACE
-	tristate "Userspace"
-	help
-	  Sets the frequency at the user specified one.
-	  This governor returns the user configured frequency if there
-	  has been an input to /sys/devices/.../power/devfreq_set_freq.
-	  Otherwise, the governor does not change the frequnecy
-	  given at the initialization.
+	  Simple user configurable GPU controlling algorithm
 
 config DEVFREQ_GOV_MSM_ADRENO_TZ
 	tristate "MSM Adreno Trustzone"
@@ -79,6 +60,14 @@ config ADRENO_IDLER
 	  just for calculating frequency for idle to reduce the
 	  wasted power coming from stock Adreno TZ while
 	  maintaining high-performance.
+
+config DEVFREQ_GOV_PERFORMANCE
+	tristate "Performance"
+	help
+	  Sets the frequency at the maximum available frequency.
+	  This governor always returns UINT_MAX as frequency so that
+	  the DEVFREQ framework returns the highest frequency available
+	  at any time.
 
 config DEVFREQ_GOV_MSM_CPUFREQ
 	bool "MSM CPUfreq"
@@ -109,12 +98,6 @@ config DEVFREQ_GOV_MSM_CACHE_HWMON
 	  of the L2.  Since this governor uses some of the PM counters it can
 	  conflict with existing profiling tools.  This governor is unlikely
 	  to be useful for other devices.
-
-config SIMPLE_GPU_ALGORITHM
-	bool "Simple GPU algorithm"
-	depends on DEVFREQ_GOV_MSM_ADRENO_TZ
-	help
-	  Simple user configurable GPU controlling algorithm
 
 comment "DEVFREQ Drivers"
 
