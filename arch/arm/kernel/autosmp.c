@@ -36,7 +36,7 @@
 #include <linux/earlysuspend.h>
 #endif
 
-#define HOTPLUG_ENABLED 1
+#define HOTPLUG_ENABLED (0)
 #define DEBUG 0
 #define ASMP_TAG "AutoSMP: "
 #define ASMP_STARTDELAY 20000
