@@ -1496,19 +1496,17 @@ config BLU_PLUG
 	help
 	  The Dynamic hotplug driver automatically online/offline CPUs proportional to system load.
 
-config INTELLI_HOTPLUG
-	bool "Intelli hotplug driver"
-	depends on HOTPLUG_CPU
-	default y
-	help
-	  An intelligent cpu hotplug driver for
-	  Low Latency Frequency Transition capable processors.
-
 config ALUCARD_HOTPLUG
 	bool "Enable alucard-hotplug cpu hotplug driver"
 	default y
 	help
 	  Generic Alucard-hotplug cpu hotplug driver for ARM SOCs
+
+config AUTOSMP
+	bool "Enable autosmp cpu hotplug driver"
+	default y
+	help
+	  Generic autosmp cpu hotplug driver for ARM SOCs
 
 config BRICKED_HOTPLUG
 	bool "Enable kernel based mpdecision"
@@ -1517,18 +1515,14 @@ config BRICKED_HOTPLUG
 	  This enables kernel based multi core control.
 
 config INTELLI_PLUG
-	bool "CPU hotplug driver"
+	bool "Intelli hotplug driver"
+	depends on HOTPLUG_CPU
 	default y
 	help
-	  This enables kernel based multi core control.
+	  An intelligent cpu hotplug driver for
+	  Low Latency Frequency Transition capable processors.
 
 config MSM_SLEEPER
-	bool "CPU hotplug driver"
-	default y
-	help
-	  CPU hotplug driver
-
-config THUNDERPLUG
 	bool "CPU hotplug driver"
 	default y
 	help
@@ -1540,6 +1534,12 @@ config MSM_LIMITER
 	help
 	  The MSM Frequency Limiter Driver controls max frequency limit for each CPU
 	  to desired value on suspend/resume
+
+config THUNDERPLUG
+	bool "CPU hotplug driver"
+	default y
+	help
+	  CPU hotplug driver
 	  
 config PVS_LEVEL_INTERFACE
 	bool "Expose PVS level information in sys fs"
