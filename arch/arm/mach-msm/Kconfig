@@ -1516,7 +1516,19 @@ config BRICKED_HOTPLUG
 	help
 	  This enables kernel based multi core control.
 
+config INTELLI_PLUG
+	bool "CPU hotplug driver"
+	default y
+	help
+	  This enables kernel based multi core control.
+
 config MSM_SLEEPER
+	bool "CPU hotplug driver"
+	default y
+	help
+	  CPU hotplug driver
+
+config THUNDERPLUG
 	bool "CPU hotplug driver"
 	default y
 	help
