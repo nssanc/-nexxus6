@@ -1,8 +1,8 @@
 #define MSM_LIMITER			"msm_limiter"
 #define LIMITER_ENABLED			1
-#define DEFAULT_SUSPEND_FREQUENCY	883200
+#define DEFAULT_SUSPEND_FREQUENCY	960000
 #define DEFAULT_RESUME_FREQUENCY	2649600                         
-#define DEFAULT_MIN_FREQUENCY		98300 
+#define DEFAULT_MIN_FREQUENCY		223200 
 
 static struct cpu_limit {
 	unsigned int limiter_enabled;
