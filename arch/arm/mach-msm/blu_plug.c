@@ -29,11 +29,11 @@
 #define INIT_DELAY		(60 * HZ) /* Initial delay to 60 sec, 4 cores while boot */
 #define DELAY			(HZ / 2)
 #define UP_THRESHOLD		(90)
-#define MIN_ONLINE		(2)
+#define MIN_ONLINE		(1)
 #define MAX_ONLINE		(4)
 #define DEF_DOWN_TIMER_CNT	(6)	/* 3 secs */
 #define DEF_UP_TIMER_CNT	(2)	/* 1 sec */
-#define MAX_CORES_SCREENOFF     (2)
+#define MAX_CORES_SCREENOFF     (1)
 #define DEF_PLUG_THRESHOLD      (0)
 #define BLU_PLUG_ENABLED	(1)
 
