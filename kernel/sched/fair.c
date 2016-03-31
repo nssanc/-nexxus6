@@ -4192,10 +4192,6 @@ static int move_tasks(struct lb_env *env)
 		env->imbalance -= load;
 		per_cpu(dbs_boost_load_moved, env->dst_cpu) += pct_task_load(p);
 
-#ifdef CONFIG_THUNDERPLUG_CONTROL
-EXPORT_SYMBOL_GPL(sched_set_boost);
-#endif
-
 #ifdef CONFIG_PREEMPT
 		/*
 		 * NEWIDLE balancing is a source of latency, so preemptible
