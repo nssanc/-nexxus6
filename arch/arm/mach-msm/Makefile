@@ -150,6 +150,6 @@ obj-$(CONFIG_BLU_PLUG)        += blu_plug.o
 obj-$(CONFIG_BRICKED_HOTPLUG) += bricked_hotplug.o
 obj-$(CONFIG_INTELLI_PLUG)    += intelli_plug.o
 obj-$(CONFIG_MSM_SLEEPER)     += msm-sleeper.o
-# obj-$(CONFIG_THUNDERPLUG)     += thunderplug.o
+obj-$(CONFIG_THUNDERPLUG_CONTROL) += thunderplug.o
 
 obj-$(CONFIG_MSM_LIMITER)     += msm_limiter.o

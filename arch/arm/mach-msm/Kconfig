@@ -1535,11 +1535,10 @@ config MSM_LIMITER
 	  The MSM Frequency Limiter Driver controls max frequency limit for each CPU
 	  to desired value on suspend/resume
 
-config THUNDERPLUG
-	bool "CPU hotplug driver"
-	default y
-	help
-	  CPU hotplug driver
+config THUNDERPLUG_CONTROL
+ 	bool "Enable plugging down/up of cores using powersuspend"
+ 	help
+ 	  This driver uses powersuspend to take down the cpu cores on a octa core device.
 	  
 config PVS_LEVEL_INTERFACE
 	bool "Expose PVS level information in sys fs"
