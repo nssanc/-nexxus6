@@ -20,7 +20,7 @@
 /* Try not to change below values. */
 #define MSM_LIMITER			"msm_limiter"
 #define MSM_LIMITER_MAJOR		5
-#define MSM_LIMITER_MINOR		0
+#define MSM_LIMITER_MINOR		1
 
 /* Recommended to set below values from userspace. */
 #define FREQ_CONTROL			0
@@ -36,9 +36,8 @@
  * Passing single value to above parameters will apply that value to 
  * all the CPUs present. Otherwise, you can pass value in token:value
  * pair to apply value individually.
- * TODO: Get max-min freq dynamically if SOC is not
- * defined.
  */
+
 #define DEFAULT_RESUME_MAX_FREQUENCY	2649600
 #define DEFAULT_MIN_FREQUENCY		98300 
 #endif
@@ -46,15 +45,11 @@
 static struct notifier_block notif;
 static unsigned int freq_control = FREQ_CONTROL;
 
-static struct cpu_limit {
+struct cpu_limit {
 	unsigned int suspend_max_freq;
 	unsigned int resume_max_freq;
 	unsigned int suspend_min_freq;
 	struct mutex msm_limiter_mutex;
-} limit = {
-	.suspend_max_freq = DEFAULT_SUSP_MAX_FREQUENCY,
-	.resume_max_freq = DEFAULT_RESUME_MAX_FREQUENCY,
-	.suspend_min_freq = DEFAULT_MIN_FREQUENCY,
 };
 
 static DEFINE_PER_CPU(struct cpu_limit, limit);
@@ -607,7 +602,7 @@ static struct kobject *msm_limiter_kobj;
 
 static int msm_limiter_init(void)
 {
-	int ret;
+	int ret, cpu;
 
 	msm_limiter_kobj =
 		kobject_create_and_add(MSM_LIMITER, kernel_kobj);
@@ -623,6 +618,19 @@ static int msm_limiter_init(void)
 		pr_err("%s: sysfs create failed!\n",
 			MSM_LIMITER);
 		goto err_dev;
+	}
+
+	/* One-time init of required values. */
+	for_each_possible_cpu(cpu) {		
+#if defined(CONFIG_ARCH_MSM8916) || defined(CONFIG_ARCH_APQ8084)
+		per_cpu(limit, cpu).suspend_max_freq = DEFAULT_SUSP_MAX_FREQUENCY;
+		per_cpu(limit, cpu).resume_max_freq = DEFAULT_RESUME_MAX_FREQUENCY;
+		per_cpu(limit, cpu).suspend_min_freq = DEFAULT_MIN_FREQUENCY;
+#else
+		per_cpu(limit, cpu).suspend_max_freq =  cpuinfo_get_max(cpu);
+		per_cpu(limit, cpu).resume_max_freq =  cpuinfo_get_max(cpu);
+		per_cpu(limit, cpu).suspend_min_freq =  cpuinfo_get_min(cpu);
+#endif
 	}
 
 	if (freq_control)
