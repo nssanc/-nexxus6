@@ -2419,6 +2419,12 @@ int cpufreq_set_freq(unsigned int max_freq, unsigned int min_freq,
 	if (!max_freq && !min_freq)
 		return ret;
 
+	if (max_freq)
+		msm_thermal_set_frequency(cpu, max_freq, true);
+
+	if (min_freq)
+		msm_thermal_set_frequency(cpu, min_freq, false);
+
 	get_online_cpus();
 	if (!cpu_online(cpu)) {
 		if (max_freq)
