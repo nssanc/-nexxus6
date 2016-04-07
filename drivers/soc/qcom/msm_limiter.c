@@ -39,8 +39,23 @@
  * TODO: Get max-min freq dynamically if SOC is not
  * defined.
  */
+
+#if defined(CONFIG_ARCH_MSM8916)
+#define DEFAULT_SUSP_MAX_FREQUENCY	998400
+#else
+#define DEFAULT_SUSP_MAX_FREQUENCY	1728000
+#endif
+#if defined(CONFIG_ARCH_APQ8084)
 #define DEFAULT_RESUME_MAX_FREQUENCY	2649600
-#define DEFAULT_MIN_FREQUENCY		98300 
+#elif defined(CONFIG_ARCH_MSM8916)
+#define DEFAULT_RESUME_MAX_FREQUENCY	1209600
+#else
+#define DEFAULT_RESUME_MAX_FREQUENCY	2265600
+#endif
+#if defined(CONFIG_ARCH_MSM8916)
+#define DEFAULT_MIN_FREQUENCY		200000
+#else
+#define DEFAULT_MIN_FREQUENCY		300000
 #endif
 
 static struct notifier_block notif;
