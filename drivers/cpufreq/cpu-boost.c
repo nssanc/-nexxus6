@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2016, Pranav Vashi <neobuddy89@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -48,44 +49,50 @@ static struct workqueue_struct *cpu_boost_wq;
 
 static struct work_struct input_boost_work;
 
+#ifdef CONFIG_STATE_NOTIFIER
 static struct notifier_block notif;
+#endif
 
-static unsigned int boost_ms = 1500;
+static unsigned int boost_ms;
 module_param(boost_ms, uint, 0644);
 
 static unsigned int sync_threshold;
 module_param(sync_threshold, uint, 0644);
 
-static unsigned int input_boost_enabled = 0;
-module_param(input_boost_enabled, uint, 0644);
+static bool input_boost_enabled;
 
-static unsigned int input_boost_ms = 1500;
+static unsigned int input_boost_ms = 40;
 module_param(input_boost_ms, uint, 0644);
 
-static unsigned int migration_load_threshold = 80;
+static unsigned int migration_load_threshold = 30;
 module_param(migration_load_threshold, uint, 0644);
 
-static bool load_based_syncs = 0;
+static bool load_based_syncs;
 module_param(load_based_syncs, bool, 0644);
+
+static bool sched_boost_on_input;
+module_param(sched_boost_on_input, bool, 0644);
+
+static bool sched_boost_active;
 
 static bool hotplug_boost;
 module_param(hotplug_boost, bool, 0644);
 
-bool wakeup_boost = 1;
+bool wakeup_boost;
 module_param(wakeup_boost, bool, 0644);
 
 static struct delayed_work input_boost_rem;
 static u64 last_input_time;
 
-static unsigned int min_input_interval = 1500;
+static unsigned int min_input_interval = 150;
 module_param(min_input_interval, uint, 0644);
-
 
 static int set_input_boost_freq(const char *buf, const struct kernel_param *kp)
 {
 	int i, ntokens = 0;
 	unsigned int val, cpu;
 	const char *cp = buf;
+	bool enabled = false;
 
 	while ((cp = strpbrk(cp + 1, " :")))
 		ntokens++;
@@ -96,7 +103,7 @@ static int set_input_boost_freq(const char *buf, const struct kernel_param *kp)
 			return -EINVAL;
 		for_each_possible_cpu(i)
 			per_cpu(sync_info, i).input_boost_freq = val;
-		goto out;
+		goto check_enable;
 	}
 
 	/* CPU:value pair */
@@ -115,7 +122,15 @@ static int set_input_boost_freq(const char *buf, const struct kernel_param *kp)
 		cp++;
 	}
 
-out:
+check_enable:
+	for_each_possible_cpu(i) {
+		if (per_cpu(sync_info, i).input_boost_freq) {
+			enabled = true;
+			break;
+		}
+	}
+	input_boost_enabled = enabled;
+
 	return 0;
 }
 
@@ -205,7 +220,7 @@ static void update_policy_online(void)
 
 static void do_input_boost_rem(struct work_struct *work)
 {
-	unsigned int i;
+	unsigned int i, ret;
 	struct cpu_sync *i_sync_info;
 
 	/* Reset the input_boost_min for all CPUs in the system */
@@ -217,6 +232,13 @@ static void do_input_boost_rem(struct work_struct *work)
 
 	/* Update policies for all online CPUs */
 	update_policy_online();
+
+	if (sched_boost_active) {
+		ret = sched_set_boost(0);
+		if (ret)
+			pr_err("cpu-boost: HMP boost disable failed\n");
+		sched_boost_active = false;
+	}
 }
 
 static int boost_migration_should_run(unsigned int cpu)
@@ -320,6 +342,11 @@ static int boost_migration_notify(struct notifier_block *nb,
 	unsigned long flags;
 	struct cpu_sync *s = &per_cpu(sync_info, mnd->dest_cpu);
 
+#ifdef CONFIG_STATE_NOTIFIER
+	if (state_suspended)
+		return NOTIFY_OK;
+#endif
+
 	if (load_based_syncs && (mnd->load <= migration_load_threshold))
 		return NOTIFY_OK;
 
@@ -354,10 +381,14 @@ static struct notifier_block boost_migration_nb = {
 
 static void do_input_boost(struct work_struct *work)
 {
-	unsigned int i;
+	unsigned int i, ret;
 	struct cpu_sync *i_sync_info;
 
 	cancel_delayed_work_sync(&input_boost_rem);
+	if (sched_boost_active) {
+		sched_set_boost(0);
+		sched_boost_active = false;
+	}
 
 	/* Set the input_boost_min for all CPUs in the system */
 	pr_debug("Setting input boost min for all CPUs\n");
@@ -369,6 +400,17 @@ static void do_input_boost(struct work_struct *work)
 	/* Update policies for all online CPUs */
 	update_policy_online();
 
+	/* Enable scheduler boost to migrate tasks to big cluster */
+	if (sched_boost_on_input) {
+		ret = sched_set_boost(1);
+		if (ret) {
+			sched_boost_on_input = false;
+			pr_err("cpu-boost: HMP boost enable failed\n");
+		} else {
+			sched_boost_active = true;
+		}
+	}
+
 	queue_delayed_work(cpu_boost_wq, &input_boost_rem,
 					msecs_to_jiffies(input_boost_ms));
 }
@@ -378,6 +420,11 @@ static void cpuboost_input_event(struct input_handle *handle,
 {
 	u64 now;
 	unsigned int min_interval;
+
+#ifdef CONFIG_STATE_NOTIFIER
+	if (state_suspended)
+		return;
+#endif
 
 	if (!input_boost_enabled || work_pending(&input_boost_work))
 		return;
@@ -470,21 +517,22 @@ static struct input_handler cpuboost_input_handler = {
 static int cpuboost_cpu_callback(struct notifier_block *cpu_nb,
 				 unsigned long action, void *hcpu)
 {
+#ifdef CONFIG_STATE_NOTIFIER
+	if (state_suspended)
+		return NOTIFY_OK;
+#endif
+
 	switch (action & ~CPU_TASKS_FROZEN) {
-	case CPU_UP_PREPARE:
-	case CPU_DEAD:
-	case CPU_UP_CANCELED:
-		break;
-	case CPU_ONLINE:
-		if (!hotplug_boost || !input_boost_enabled ||
-		     work_pending(&input_boost_work))
+		case CPU_ONLINE:
+			if (!hotplug_boost || !input_boost_enabled ||
+			     work_pending(&input_boost_work))
+				break;
+			pr_debug("Hotplug boost for CPU%lu\n", (long)hcpu);
+			queue_work(cpu_boost_wq, &input_boost_work);
+			last_input_time = ktime_to_us(ktime_get());
 			break;
-		pr_debug("Hotplug boost for CPU%d\n", (int)hcpu);
-		queue_work(cpu_boost_wq, &input_boost_work);
-		last_input_time = ktime_to_us(ktime_get());
-		break;
-	default:
-		break;
+		default:
+			break;
 	}
 	return NOTIFY_OK;
 }
@@ -493,6 +541,7 @@ static struct notifier_block __refdata cpu_nblk = {
         .notifier_call = cpuboost_cpu_callback,
 };
 
+#ifdef CONFIG_STATE_NOTIFIER
 static void __wakeup_boost(void)
 {
 	if (!wakeup_boost || !input_boost_enabled ||
@@ -503,7 +552,6 @@ static void __wakeup_boost(void)
 	last_input_time = ktime_to_us(ktime_get());
 }
 
-#ifdef CONFIG_STATE_NOTIFIER
 static int state_notifier_callback(struct notifier_block *this,
 				unsigned long event, void *data)
 {
