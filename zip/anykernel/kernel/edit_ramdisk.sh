@@ -59,9 +59,9 @@ if [ "$found" != 'run-parts /system/etc/init.d' ]; then
                 bblocation=${bblocation#.};
         else
                 echo "BUSYBOX NOT FOUND! init.d support will not work without busybox!";
-                echo "Setting busybox location to /system/xbin/busybox! (install it and init.d will work)";
+                echo "Setting busybox location to /su/xbin/busybox! (install it and init.d will work)";
                 #set default location since we couldn't find busybox
-                bblocation="/system/xbin/busybox";
+                bblocation="/su/xbin/busybox";
         fi
 	#append the new lines for this option at the bottom
         echo "" >> /tmp/ramdisk/init.rc
