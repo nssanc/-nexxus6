@@ -169,11 +169,9 @@ config INTELLI_PLUG
   	An intelligent cpu hotplug driver for
   	Low Latency Frequency Transition capable processors.
 
+
 config MAKO_HOTPLUG
 	bool "CPU hotplug driver"
-	default y
-	help
-	  CPU hotplug driver
 
 config MSM_HOTPLUG
 	bool "MSM hotplug driver"
@@ -201,6 +199,11 @@ config MSM_LIMITER
 	help
 	  The MSM Frequency Limiter Driver controls max frequency limit for each CPU
 	  to desired value on suspend/resume
+
+config STATE_HELPER
+        bool "State Helper"
+	depends on STATE_NOTIFIER
+	default y
 
 config STATE_NOTIFIER
         bool "State Notifier"
