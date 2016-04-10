@@ -167,6 +167,11 @@ config MSM_SLEEPER
 	help
 	  CPU hotplug driver
 
+config STATE_HELPER
+        bool "State Helper"
+	depends on STATE_NOTIFIER
+	default y
+
 config MSM_LIMITER
 	bool "MSM Frequency Limiter Driver"
 	default y
