@@ -20,7 +20,7 @@
 /* Try not to change below values. */
 #define MSM_LIMITER			"msm_limiter"
 #define MSM_LIMITER_MAJOR		5
-#define MSM_LIMITER_MINOR		2
+#define MSM_LIMITER_MINOR		3
 
 /* Recommended to set below values from userspace. */
 #define FREQ_CONTROL			0
