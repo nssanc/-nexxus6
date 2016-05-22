@@ -21,15 +21,15 @@
 #include <linux/workqueue.h>
 
 #define STATE_HELPER			"state_helper"
-#define HELPER_ENABLED			0
+#define HELPER_ENABLED			1
 #define DELAY_MSEC			100
 #define DEFAULT_MAX_CPUS_ONLINE		NR_CPUS
 #define DEFAULT_SUSP_CPUS		1
 #define DEFAULT_MAX_CPUS_ECONOMIC	2
 #define DEFAULT_MAX_CPUS_CRITICAL	1
-#define DEFAULT_BATT_ECONOMIC		25
-#define DEFAULT_BATT_CRITICAL		15
-#define DEBUG_MASK			1
+#define DEFAULT_BATT_ECONOMIC		35
+#define DEFAULT_BATT_CRITICAL		20
+#define DEBUG_MASK			0
 
 static struct state_helper {
 	unsigned int enabled;
