@@ -39,21 +39,9 @@
  * pair to apply value individually.
  */
 
-#if defined(CONFIG_ARCH_MSM8916)
-#define DEFAULT_SUSP_MAX_FREQUENCY	998400
-#elif defined(CONFIG_ARCH_APQ8084)
-#define DEFAULT_SUSP_MAX_FREQUENCY	1728000
-#endif
-#if defined(CONFIG_ARCH_MSM8916)
-#define DEFAULT_RESUME_MAX_FREQUENCY	1209600
-#elif defined(CONFIG_ARCH_APQ8084)
+#define DEFAULT_SUSP_MAX_FREQUENCY	960000
 #define DEFAULT_RESUME_MAX_FREQUENCY	2649600
-#endif
-#if defined(CONFIG_ARCH_MSM8916)
-#define DEFAULT_MIN_FREQUENCY		200000
-#elif defined(CONFIG_ARCH_APQ8084)
-#define DEFAULT_MIN_FREQUENCY		300000
-#endif
+#define DEFAULT_MIN_FREQUENCY		268800
 
 static struct notifier_block notif;
 static unsigned int freq_control = FREQ_CONTROL;
@@ -209,32 +197,6 @@ static ssize_t freq_control_store(struct kobject *kobj,
 }
 
 static ssize_t mpd_enabled_show(struct kobject *kobj,
-
-		struct kobj_attribute *attr, char *buf)
-{
-	return sprintf(buf, "%u\n", limit.mpd_enabled);
-}
-
-static ssize_t mpd_enabled_store(struct kobject *kobj,
-				      struct kobj_attribute *attr,
-				      const char *buf, size_t count)
-{
-	int ret;
-	unsigned int val;
-
-	ret = sscanf(buf, "%u\n", &val);
-	if (ret != 1 || val < 0 || val > 1)
-		return -EINVAL;
-
-	if (val == limit.mpd_enabled)
-		return count;
-
-	limit.mpd_enabled = val;
-
-	return count;
-}
-
-static ssize_t debug_mask_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
 	return sprintf(buf, "%u\n", mpd_enabled);
@@ -614,14 +576,6 @@ static struct kobj_attribute mpd_enabled_attr =
 
 static struct kobj_attribute debug_mask_attr =
 	__ATTR(debug_mask, 0644,
-
-static struct kobj_attribute mpd_enabled_attribute =
-	__ATTR(mpd_enabled, 0666,
-		mpd_enabled_show,
-		mpd_enabled_store);
-
-static struct kobj_attribute debug_mask_attribute =
-	__ATTR(debug_mask, 0666,
 		debug_mask_show,
 		debug_mask_store);
 
@@ -631,10 +585,6 @@ static struct attribute *msm_limiter_attrs[] =
 		&mpd_enabled_attr.attr,
 		&debug_mask_attr.attr,
 		&suspend_max_freq.attr,
-		&limiter_enabled_attribute.attr,
-		&mpd_enabled_attribute.attr,
-		&debug_mask_attribute.attr,
-		&suspend_max_freq_attribute.attr,
 		&resume_max_freq.attr,
 		&suspend_min_freq.attr,
 		&scaling_governor.attr,
