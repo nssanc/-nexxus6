@@ -66,4 +66,6 @@ static inline int msm_thermal_device_init(void)
 }
 #endif
 
+#endif
+
 #endif /*__MSM_THERMAL_H*/
