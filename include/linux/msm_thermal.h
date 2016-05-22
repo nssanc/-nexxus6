@@ -49,9 +49,6 @@ struct msm_thermal_data {
 	int32_t therm_reset_temp_degC;
 };
 
-#if defined (CONFIG_THERMAL_MONITOR) || defined (CONFIG_INTELLI_THERMAL)
-extern struct msm_thermal_data msm_thermal_info;
-
 #ifdef CONFIG_THERMAL_MONITOR
 extern int msm_thermal_init(struct msm_thermal_data *pdata);
 extern int msm_thermal_device_init(void);
@@ -64,8 +61,6 @@ static inline int msm_thermal_device_init(void)
 {
 	return -ENOSYS;
 }
-#endif
-
 #endif
 
 #endif /*__MSM_THERMAL_H*/
