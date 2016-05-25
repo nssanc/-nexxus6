@@ -21,15 +21,15 @@
 #include <linux/workqueue.h>
 
 #define STATE_HELPER			"state_helper"
-#define HELPER_ENABLED			1
+#define HELPER_ENABLED			0
 #define DELAY_MSEC			100
 #define DEFAULT_MAX_CPUS_ONLINE		NR_CPUS
 #define DEFAULT_SUSP_CPUS		1
 #define DEFAULT_MAX_CPUS_ECONOMIC	2
 #define DEFAULT_MAX_CPUS_CRITICAL	1
-#define DEFAULT_BATT_ECONOMIC		35
-#define DEFAULT_BATT_CRITICAL		20
-#define DEBUG_MASK			0
+#define DEFAULT_BATT_ECONOMIC		25
+#define DEFAULT_BATT_CRITICAL		15
+#define DEBUG_MASK			1
 
 static struct state_helper {
 	unsigned int enabled;
@@ -94,8 +94,8 @@ static void __ref state_helper_work(struct work_struct *work)
 	target_cpus_calc();
 
 	if (info.target_cpus < num_online_cpus()) {
-		for(cpu = NR_CPUS-1; cpu > 0; cpu--) {
-			if (!cpu_online(cpu))
+		for_each_online_cpu(cpu) {
+			if (cpu == 0)
 				continue;
 			dprintk("%s: Switching CPU%u offline\n",
 				STATE_HELPER, cpu);
@@ -104,15 +104,15 @@ static void __ref state_helper_work(struct work_struct *work)
 				break;
 		}
 	} else if (info.target_cpus > num_online_cpus()) {
-		for(cpu = 1; cpu < NR_CPUS; cpu++) {
-			if (cpu_online(cpu) ||
-				msm_thermal_info.cpus_offlined & BIT(cpu))
-				continue;
-			cpu_up(cpu);
-			dprintk("%s: Switching CPU%u online\n",
-				STATE_HELPER, cpu);
+		for_each_possible_cpu(cpu) {
 			if (info.target_cpus <= num_online_cpus())
 				break;
+			if (!cpu_online(cpu) &&
+			!(msm_thermal_info.cpus_offlined & BIT(cpu))) {
+				cpu_up(cpu);
+				dprintk("%s: Switching CPU%u online\n",
+					STATE_HELPER, cpu);
+			}
 		}
 	} else {
 		dprintk("%s: Target already achieved: %u\n",
@@ -180,7 +180,7 @@ void batt_level_notify(int k)
 	if (!helper.enabled)
 		return;
 
-	dprintk("%s: Received Battery Level Notification: %u\n",
+	dprintk("%s: Received new BCL Notification: %u\n",
 			STATE_HELPER, info.batt_level);
 
 	/* Reschedule only if required. */

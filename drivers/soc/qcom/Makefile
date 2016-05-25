@@ -12,8 +12,6 @@ obj-$(CONFIG_MSM_IPC_ROUTER_SMD_XPRT) += ipc_router_smd_xprt.o
 obj-$(CONFIG_MSM_MEMORY_DUMP) += memory_dump.o
 obj-$(CONFIG_MSM_QMI_INTERFACE) += qmi_interface.o
 
-obj-$(CONFIG_MSM_RUN_QUEUE_STATS) += msm_rq_stats.o
-
 obj-$(CONFIG_MSM_SCM) += scm.o
 
 obj-$(CONFIG_MSM_SMEM) += smem.o smem_debug.o
@@ -24,12 +22,14 @@ obj-y		+= socinfo.o
 obj-$(CONFIG_QCOM_EARLY_RANDOM)	+= early_random.o
 
 obj-$(CONFIG_ZEN_DECISION)    += msm_zen_decision.o
+
 obj-$(CONFIG_ALUCARD_HOTPLUG) += alucard_hotplug.o
 obj-$(CONFIG_AUTOSMP)         += autosmp.o
 obj-$(CONFIG_BLU_PLUG)        += blu_plug.o
 obj-$(CONFIG_BRICKED_HOTPLUG) += bricked_hotplug.o
 obj-$(CONFIG_INTELLI_PLUG)    += intelli_plug.o
 obj-$(CONFIG_MSM_SLEEPER)     += msm-sleeper.o
+obj-$(CONFIG_THUNDERPLUG_CONTROL) += thunderplug.o
 obj-$(CONFIG_MSM_LIMITER)     += msm_limiter.o
 obj-$(CONFIG_STATE_NOTIFIER)  += state_notifier.o
 obj-$(CONFIG_STATE_HELPER)    += state_helper.o
