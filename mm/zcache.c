@@ -40,30 +40,20 @@
 #include <linux/zbud.h>
 
 /*
-<<<<<<< HEAD
  * Enable/disable zcache (enabled by default)
  */
 static bool zcache_enabled = true;
-=======
- * Enable/disable zcache (disabled by default)
- */
-static bool zcache_enabled __read_mostly;
->>>>>>> 76ea5be... mm: zcache: add core files
 module_param_named(enabled, zcache_enabled, bool, 0);
 
 /*
  * Compressor to be used by zcache
  */
 #define ZCACHE_COMPRESSOR_DEFAULT "lzo"
-<<<<<<< HEAD
 #ifndef CONFIG_CRYPTO_LZ4
 static char *zcache_compressor = ZCACHE_COMPRESSOR_DEFAULT;
 #else
 static char *zcache_compressor = "lz4";
 #endif
-=======
-static char *zcache_compressor = ZCACHE_COMPRESSOR_DEFAULT;
->>>>>>> 76ea5be... mm: zcache: add core files
 module_param_named(compressor, zcache_compressor, charp, 0);
 
 /*
@@ -72,18 +62,14 @@ module_param_named(compressor, zcache_compressor, charp, 0);
 static unsigned int zcache_max_pool_percent = 10;
 module_param_named(max_pool_percent, zcache_max_pool_percent, uint, 0644);
 
-<<<<<<< HEAD
 static unsigned int zcache_clear_percent = 4;
 module_param_named(clear_percent, zcache_clear_percent, uint, 0644);
-=======
->>>>>>> 76ea5be... mm: zcache: add core files
 /*
  * zcache statistics
  */
 static u64 zcache_pool_limit_hit;
 static u64 zcache_dup_entry;
 static u64 zcache_zbud_alloc_fail;
-<<<<<<< HEAD
 static u64 zcache_evict_zpages;
 static u64 zcache_evict_filepages;
 static u64 zcache_inactive_pages_refused;
@@ -104,10 +90,6 @@ static atomic_t zcache_stored_zero_pages = ATOMIC_INIT(0);
  * indirect ptr or exceptional entry.
  */
 #define ZERO_HANDLE	((void *)~(~0UL >> 1))
-=======
-static u64 zcache_pool_pages;
-static atomic_t zcache_stored_pages = ATOMIC_INIT(0);
->>>>>>> 76ea5be... mm: zcache: add core files
 
 /*
  * Zcache receives pages for compression through the Cleancache API and is able
@@ -139,10 +121,7 @@ static atomic_t zcache_stored_pages = ATOMIC_INIT(0);
 struct zcache_pool {
 	struct rb_root rbtree;
 	rwlock_t rb_lock;		/* Protects rbtree */
-<<<<<<< HEAD
 	u64 size;
-=======
->>>>>>> 76ea5be... mm: zcache: add core files
 	struct zbud_pool *pool;         /* Zbud pool used */
 };
 
@@ -175,7 +154,6 @@ struct zcache_ra_handle {
 	int rb_index;			/* Redblack tree index */
 	int ra_index;			/* Radix tree index */
 	int zlen;			/* Compressed page size */
-<<<<<<< HEAD
 	struct zcache_pool *zpool;	/* Finding zcache_pool during evict */
 };
 
@@ -190,10 +168,6 @@ u64 zcache_pages(void)
 	return count;
 }
 
-=======
-};
-
->>>>>>> 76ea5be... mm: zcache: add core files
 static struct kmem_cache *zcache_rbnode_cache;
 static int zcache_rbnode_cache_create(void)
 {
@@ -205,7 +179,6 @@ static void zcache_rbnode_cache_destroy(void)
 	kmem_cache_destroy(zcache_rbnode_cache);
 }
 
-<<<<<<< HEAD
 static unsigned long zcache_count(struct shrinker *s,
 				  struct shrink_control *sc)
 {
@@ -290,8 +263,6 @@ static struct shrinker zcache_shrinker = {
 	.seeks = DEFAULT_SEEKS * 16
 };
 
-=======
->>>>>>> 76ea5be... mm: zcache: add core files
 /*
  * Compression functions
  * (Below functions are copyed from zswap!)
@@ -432,17 +403,12 @@ cleanup:
  */
 static bool zcache_is_full(void)
 {
-<<<<<<< HEAD
 	long file = global_page_state(NR_FILE_PAGES);
 
 	return ((totalram_pages * zcache_max_pool_percent / 100 <
 			zcache_pages()) ||
 			(totalram_pages * zcache_clear_percent / 100 >
 			file));
-=======
-	return totalram_pages * zcache_max_pool_percent / 100 <
-			zcache_pool_pages;
->>>>>>> 76ea5be... mm: zcache: add core files
 }
 
 /*
@@ -549,11 +515,7 @@ static void zcache_rbnode_isolate(struct zcache_pool *zpool,
  * Store zaddr which allocated by zbud_alloc() to the hierarchy rbtree-ratree.
  */
 static int zcache_store_zaddr(struct zcache_pool *zpool,
-<<<<<<< HEAD
 		int ra_index, int rb_index, unsigned long zaddr)
-=======
-		struct zcache_ra_handle *zhandle, unsigned long zaddr)
->>>>>>> 76ea5be... mm: zcache: add core files
 {
 	unsigned long flags;
 	struct zcache_rbnode *rbnode, *tmp;
@@ -561,38 +523,23 @@ static int zcache_store_zaddr(struct zcache_pool *zpool,
 	int ret;
 	void *dup_zaddr;
 
-<<<<<<< HEAD
 	rbnode = zcache_find_get_rbnode(zpool, rb_index);
 	if (!rbnode) {
 		/* alloc and init a new rbnode */
 		rbnode = kmem_cache_alloc(zcache_rbnode_cache,
 			GFP_ZCACHE);
-=======
-	rbnode = zcache_find_get_rbnode(zpool, zhandle->rb_index);
-	if (!rbnode) {
-		/* alloc and init a new rbnode */
-		rbnode = kmem_cache_alloc(zcache_rbnode_cache, GFP_KERNEL);
->>>>>>> 76ea5be... mm: zcache: add core files
 		if (!rbnode)
 			return -ENOMEM;
 
 		INIT_RADIX_TREE(&rbnode->ratree, GFP_ATOMIC|__GFP_NOWARN);
 		spin_lock_init(&rbnode->ra_lock);
-<<<<<<< HEAD
 		rbnode->rb_index = rb_index;
-=======
-		rbnode->rb_index = zhandle->rb_index;
->>>>>>> 76ea5be... mm: zcache: add core files
 		kref_init(&rbnode->refcount);
 		RB_CLEAR_NODE(&rbnode->rb_node);
 
 		/* add that rbnode to rbtree */
 		write_lock_irqsave(&zpool->rb_lock, flags);
-<<<<<<< HEAD
 		tmp = zcache_find_rbnode(&zpool->rbtree, rb_index,
-=======
-		tmp = zcache_find_rbnode(&zpool->rbtree, zhandle->rb_index,
->>>>>>> 76ea5be... mm: zcache: add core files
 				&parent, &link);
 		if (tmp) {
 			/* somebody else allocated new rbnode */
@@ -610,7 +557,6 @@ static int zcache_store_zaddr(struct zcache_pool *zpool,
 
 	/* Succfully got a zcache_rbnode when arriving here */
 	spin_lock_irqsave(&rbnode->ra_lock, flags);
-<<<<<<< HEAD
 	dup_zaddr = radix_tree_delete(&rbnode->ratree, ra_index);
 	if (unlikely(dup_zaddr)) {
 		if (dup_zaddr == ZERO_HANDLE) {
@@ -620,19 +566,10 @@ static int zcache_store_zaddr(struct zcache_pool *zpool,
 			atomic_dec(&zcache_stored_pages);
 			zpool->size = zbud_get_pool_size(zpool->pool);
 		}
-=======
-	dup_zaddr = radix_tree_delete(&rbnode->ratree, zhandle->ra_index);
-	if (unlikely(dup_zaddr)) {
-		WARN_ON("duplicated, will be replaced!\n");
-		zbud_free(zpool->pool, (unsigned long)dup_zaddr);
-		atomic_dec(&zcache_stored_pages);
-		zcache_pool_pages = zbud_get_pool_size(zpool->pool);
->>>>>>> 76ea5be... mm: zcache: add core files
 		zcache_dup_entry++;
 	}
 
 	/* Insert zcache_ra_handle to ratree */
-<<<<<<< HEAD
 	ret = radix_tree_insert(&rbnode->ratree, ra_index,
 				(void *)zaddr);
 	spin_unlock_irqrestore(&rbnode->ra_lock, flags);
@@ -646,14 +583,6 @@ static int zcache_store_zaddr(struct zcache_pool *zpool,
 		spin_unlock(&rbnode->ra_lock);
 		write_unlock_irqrestore(&zpool->rb_lock, flags);
 	}
-=======
-	ret = radix_tree_insert(&rbnode->ratree, zhandle->ra_index,
-				(void *)zaddr);
-	if (unlikely(ret))
-		if (zcache_rbnode_empty(rbnode))
-			zcache_rbnode_isolate(zpool, rbnode, 0);
-	spin_unlock_irqrestore(&rbnode->ra_lock, flags);
->>>>>>> 76ea5be... mm: zcache: add core files
 
 	kref_put(&rbnode->refcount, zcache_rbnode_release);
 	return ret;
@@ -679,7 +608,6 @@ static void *zcache_load_delete_zaddr(struct zcache_pool *zpool,
 
 	spin_lock_irqsave(&rbnode->ra_lock, flags);
 	zaddr = radix_tree_delete(&rbnode->ratree, ra_index);
-<<<<<<< HEAD
 	spin_unlock_irqrestore(&rbnode->ra_lock, flags);
 
 	/* rb_lock and ra_lock must be taken again in the given sequence */
@@ -689,18 +617,12 @@ static void *zcache_load_delete_zaddr(struct zcache_pool *zpool,
 		zcache_rbnode_isolate(zpool, rbnode, 1);
 	spin_unlock(&rbnode->ra_lock);
 	write_unlock_irqrestore(&zpool->rb_lock, flags);
-=======
-	if (zcache_rbnode_empty(rbnode))
-		zcache_rbnode_isolate(zpool, rbnode, 0);
-	spin_unlock_irqrestore(&rbnode->ra_lock, flags);
->>>>>>> 76ea5be... mm: zcache: add core files
 
 	kref_put(&rbnode->refcount, zcache_rbnode_release);
 out:
 	return zaddr;
 }
 
-<<<<<<< HEAD
 static bool zero_page(struct page *page)
 {
 	unsigned long *ptr = kmap_atomic(page);
@@ -717,27 +639,19 @@ out:
 	return ret;
 }
 
-=======
->>>>>>> 76ea5be... mm: zcache: add core files
 static void zcache_store_page(int pool_id, struct cleancache_filekey key,
 		pgoff_t index, struct page *page)
 {
 	struct zcache_ra_handle *zhandle;
 	u8 *zpage, *src, *dst;
-<<<<<<< HEAD
 	/* Address of zhandle + compressed data(zpage) */
 	unsigned long zaddr = 0;
 	unsigned int zlen = PAGE_SIZE;
 	bool zero = 0;
-=======
-	unsigned long zaddr; /* Address of zhandle + compressed data(zpage) */
-	unsigned int zlen = PAGE_SIZE;
->>>>>>> 76ea5be... mm: zcache: add core files
 	int ret;
 
 	struct zcache_pool *zpool = zcache.pools[pool_id];
 
-<<<<<<< HEAD
 	/*
 	 * Zcache will be ineffective if the compressed memory pool is full with
 	 * compressed inactive file pages and most of them will never be used
@@ -764,11 +678,6 @@ static void zcache_store_page(int pool_id, struct cleancache_filekey key,
 		 */
 		zcache_evict_filepages++;
 		zpool->size = zbud_get_pool_size(zpool->pool);
-=======
-	if (zcache_is_full()) {
-		zcache_pool_limit_hit++;
-		return;
->>>>>>> 76ea5be... mm: zcache: add core files
 	}
 
 	/* compress */
@@ -785,11 +694,7 @@ static void zcache_store_page(int pool_id, struct cleancache_filekey key,
 
 	/* store zcache handle together with compressed page data */
 	ret = zbud_alloc(zpool->pool, zlen + sizeof(struct zcache_ra_handle),
-<<<<<<< HEAD
 			GFP_ZCACHE, &zaddr);
-=======
-			__GFP_NORETRY | __GFP_NOWARN, &zaddr);
->>>>>>> 76ea5be... mm: zcache: add core files
 	if (ret) {
 		zcache_zbud_alloc_fail++;
 		put_cpu_var(zcache_dstmem);
@@ -797,20 +702,13 @@ static void zcache_store_page(int pool_id, struct cleancache_filekey key,
 	}
 
 	zhandle = (struct zcache_ra_handle *)zbud_map(zpool->pool, zaddr);
-<<<<<<< HEAD
 
-=======
-	zhandle->ra_index = index;
-	zhandle->rb_index = key.u.ino;
-	zhandle->zlen = zlen;
->>>>>>> 76ea5be... mm: zcache: add core files
 	/* Compressed page data stored at the end of zcache_ra_handle */
 	zpage = (u8 *)(zhandle + 1);
 	memcpy(zpage, dst, zlen);
 	zbud_unmap(zpool->pool, zaddr);
 	put_cpu_var(zcache_dstmem);
 
-<<<<<<< HEAD
 zero:
 	if (zero)
 		zaddr = (unsigned long)ZERO_HANDLE;
@@ -837,28 +735,12 @@ zero:
 	}
 
 	return;
-=======
-	/* store zcache handle */
-	ret = zcache_store_zaddr(zpool, zhandle, zaddr);
-	if (ret) {
-		pr_err("%s: store handle error %d\n", __func__, ret);
-		zbud_free(zpool->pool, zaddr);
-	}
-
-	/* update stats */
-	atomic_inc(&zcache_stored_pages);
-	zcache_pool_pages = zbud_get_pool_size(zpool->pool);
->>>>>>> 76ea5be... mm: zcache: add core files
 }
 
 static int zcache_load_page(int pool_id, struct cleancache_filekey key,
 			pgoff_t index, struct page *page)
 {
-<<<<<<< HEAD
 	int ret = 0;
-=======
-	int ret;
->>>>>>> 76ea5be... mm: zcache: add core files
 	u8 *src, *dst;
 	void *zaddr;
 	unsigned int dlen = PAGE_SIZE;
@@ -868,11 +750,8 @@ static int zcache_load_page(int pool_id, struct cleancache_filekey key,
 	zaddr = zcache_load_delete_zaddr(zpool, key.u.ino, index);
 	if (!zaddr)
 		return -ENOENT;
-<<<<<<< HEAD
 	else if (zaddr == ZERO_HANDLE)
 		goto map;
-=======
->>>>>>> 76ea5be... mm: zcache: add core files
 
 	zhandle = (struct zcache_ra_handle *)zbud_map(zpool->pool,
 			(unsigned long)zaddr);
@@ -880,7 +759,6 @@ static int zcache_load_page(int pool_id, struct cleancache_filekey key,
 	src = (u8 *)(zhandle + 1);
 
 	/* decompress */
-<<<<<<< HEAD
 map:
 	dst = kmap_atomic(page);
 	if (zaddr != ZERO_HANDLE) {
@@ -893,11 +771,6 @@ map:
 		atomic_dec(&zcache_stored_zero_pages);
 		goto out;
 	}
-=======
-	dst = kmap_atomic(page);
-	ret = zcache_comp_op(ZCACHE_COMPOP_DECOMPRESS, src, zhandle->zlen, dst,
-			&dlen);
->>>>>>> 76ea5be... mm: zcache: add core files
 	kunmap_atomic(dst);
 	zbud_unmap(zpool->pool, (unsigned long)zaddr);
 	zbud_free(zpool->pool, (unsigned long)zaddr);
@@ -907,13 +780,9 @@ map:
 
 	/* update stats */
 	atomic_dec(&zcache_stored_pages);
-<<<<<<< HEAD
 	zpool->size = zbud_get_pool_size(zpool->pool);
 out:
 	SetPageWasActive(page);
-=======
-	zcache_pool_pages = zbud_get_pool_size(zpool->pool);
->>>>>>> 76ea5be... mm: zcache: add core files
 	return ret;
 }
 
@@ -924,19 +793,12 @@ static void zcache_flush_page(int pool_id, struct cleancache_filekey key,
 	void *zaddr = NULL;
 
 	zaddr = zcache_load_delete_zaddr(zpool, key.u.ino, index);
-<<<<<<< HEAD
 	if (zaddr && (zaddr != ZERO_HANDLE)) {
 		zbud_free(zpool->pool, (unsigned long)zaddr);
 		atomic_dec(&zcache_stored_pages);
 		zpool->size = zbud_get_pool_size(zpool->pool);
 	} else if (zaddr == ZERO_HANDLE) {
 		atomic_dec(&zcache_stored_zero_pages);
-=======
-	if (zaddr) {
-		zbud_free(zpool->pool, (unsigned long)zaddr);
-		atomic_dec(&zcache_stored_pages);
-		zcache_pool_pages = zbud_get_pool_size(zpool->pool);
->>>>>>> 76ea5be... mm: zcache: add core files
 	}
 }
 
@@ -950,7 +812,6 @@ static void zcache_flush_ratree(struct zcache_pool *zpool,
 	unsigned long index = 0;
 	int count, i;
 	struct zcache_ra_handle *zhandle;
-<<<<<<< HEAD
 	void *zaddr = NULL;
 
 	do {
@@ -979,24 +840,6 @@ static void zcache_flush_ratree(struct zcache_pool *zpool,
 			zbud_free(zpool->pool, (unsigned long)zaddrs[i]);
 			atomic_dec(&zcache_stored_pages);
 			zpool->size = zbud_get_pool_size(zpool->pool);
-=======
-
-	do {
-		void *zaddrs[FREE_BATCH];
-
-		count = radix_tree_gang_lookup(&rbnode->ratree, (void **)zaddrs,
-				index, FREE_BATCH);
-
-		for (i = 0; i < count; i++) {
-			zhandle = (struct zcache_ra_handle *)zbud_map(
-					zpool->pool, (unsigned long)zaddrs[i]);
-			index = zhandle->ra_index;
-			radix_tree_delete(&rbnode->ratree, index);
-			zbud_unmap(zpool->pool, (unsigned long)zaddrs[i]);
-			zbud_free(zpool->pool, (unsigned long)zaddrs[i]);
-			atomic_dec(&zcache_stored_pages);
-			zcache_pool_pages = zbud_get_pool_size(zpool->pool);
->>>>>>> 76ea5be... mm: zcache: add core files
 		}
 
 		index++;
@@ -1073,7 +916,6 @@ static void zcache_flush_fs(int pool_id)
 }
 
 /*
-<<<<<<< HEAD
  * Evict compressed pages from zcache pool on an LRU basis after the compressed
  * pool is full.
  */
@@ -1109,18 +951,6 @@ static int zcache_evict_zpage(struct zbud_pool *pool, unsigned long zaddr)
 
 static struct zbud_ops zcache_zbud_ops = {
 	.evict = zcache_evict_zpage
-=======
- * Evict pages from zcache pool on an LRU basis after the compressed pool is
- * full.
- */
-static int zcache_evict_entry(struct zbud_pool *pool, unsigned long zaddr)
-{
-	return -EINVAL;
-}
-
-static struct zbud_ops zcache_zbud_ops = {
-	.evict = zcache_evict_entry
->>>>>>> 76ea5be... mm: zcache: add core files
 };
 
 /* Return pool id */
@@ -1230,7 +1060,6 @@ static struct cleancache_ops zcache_ops = {
  */
 #ifdef CONFIG_DEBUG_FS
 #include <linux/debugfs.h>
-<<<<<<< HEAD
 
 static int pool_pages_get(void *_data, u64 *val)
 {
@@ -1240,8 +1069,6 @@ static int pool_pages_get(void *_data, u64 *val)
 
 DEFINE_SIMPLE_ATTRIBUTE(pool_page_fops, pool_pages_get, NULL, "%llu\n");
 
-=======
->>>>>>> 76ea5be... mm: zcache: add core files
 static struct dentry *zcache_debugfs_root;
 
 static int __init zcache_debugfs_init(void)
@@ -1259,7 +1086,6 @@ static int __init zcache_debugfs_init(void)
 			&zcache_zbud_alloc_fail);
 	debugfs_create_u64("duplicate_entry", S_IRUGO, zcache_debugfs_root,
 			&zcache_dup_entry);
-<<<<<<< HEAD
 	debugfs_create_file("pool_pages", S_IRUGO, zcache_debugfs_root, NULL,
 			&pool_page_fops);
 	debugfs_create_atomic_t("stored_pages", S_IRUGO, zcache_debugfs_root,
@@ -1282,12 +1108,6 @@ static int __init zcache_debugfs_init(void)
 			zcache_debugfs_root, &zcache_pool_shrink_pages);
 	debugfs_create_u64("store_fail", S_IRUGO,
 			zcache_debugfs_root, &zcache_store_failed);
-=======
-	debugfs_create_u64("pool_pages", S_IRUGO, zcache_debugfs_root,
-			&zcache_pool_pages);
-	debugfs_create_atomic_t("stored_pages", S_IRUGO, zcache_debugfs_root,
-			&zcache_stored_pages);
->>>>>>> 76ea5be... mm: zcache: add core files
 	return 0;
 }
 
@@ -1333,10 +1153,7 @@ static int __init init_zcache(void)
 
 	if (zcache_debugfs_init())
 		pr_warn("debugfs initialization failed\n");
-<<<<<<< HEAD
 	register_shrinker(&zcache_shrinker);
-=======
->>>>>>> 76ea5be... mm: zcache: add core files
 	return 0;
 pcpufail:
 	zcache_comp_exit();
@@ -1352,7 +1169,3 @@ late_initcall(init_zcache);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Bob Liu <bob.liu@xxxxxxxxxx>");
 MODULE_DESCRIPTION("Compressed cache for clean file pages");
-<<<<<<< HEAD
-=======
-
->>>>>>> 76ea5be... mm: zcache: add core files
