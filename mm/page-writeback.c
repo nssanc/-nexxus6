@@ -73,7 +73,7 @@ static long ratelimit_pages = 32;
 /*
  * Start background writeback (via writeback threads) at this percentage
  */
-int dirty_background_ratio = 20;
+int dirty_background_ratio = 30;
 
 /*
  * dirty_background_bytes starts at 0 (disabled) so that it is a function of
@@ -90,7 +90,7 @@ int vm_highmem_is_dirtyable = 1;
 /*
  * The generator of dirty data starts writeback at this percentage
  */
-int vm_dirty_ratio = 20;
+int vm_dirty_ratio = 30;
 
 /*
  * vm_dirty_bytes starts at 0 (disabled) so that it is a function of
@@ -149,7 +149,7 @@ int block_dump;
  * Flag that puts the machine in "laptop mode". Doubles as a timeout in jiffies:
  * a full sync is triggered after this time elapses without any disk activity.
  */
-int laptop_mode;
+int laptop_mode = 1;
 
 EXPORT_SYMBOL(laptop_mode);
 
