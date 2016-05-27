@@ -12,7 +12,7 @@
 #include <linux/string.h>
 #include <linux/fastcharge.h>
 
-int force_fast_charge = 1;
+int force_fast_charge = 0;
 
 static ssize_t force_fast_charge_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
