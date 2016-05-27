@@ -40,20 +40,16 @@
 #include <linux/zbud.h>
 
 /*
- * Enable/disable zcache (enabled by default)
+ * Enable/disable zcache (disabled by default)
  */
-static bool zcache_enabled = true;
+static bool zcache_enabled __read_mostly;
 module_param_named(enabled, zcache_enabled, bool, 0);
 
 /*
  * Compressor to be used by zcache
  */
 #define ZCACHE_COMPRESSOR_DEFAULT "lzo"
-#ifndef CONFIG_CRYPTO_LZ4
 static char *zcache_compressor = ZCACHE_COMPRESSOR_DEFAULT;
-#else
-static char *zcache_compressor = "lz4";
-#endif
 module_param_named(compressor, zcache_compressor, charp, 0);
 
 /*
@@ -154,76 +150,6 @@ static void zcache_rbnode_cache_destroy(void)
 {
 	kmem_cache_destroy(zcache_rbnode_cache);
 }
-
-static int zcache_shrink(struct shrinker *s, struct shrink_control *sc)
-{
-	unsigned long active_file;
-	unsigned long file;
-	long file_gap;
-	unsigned long freed = 0;
-	unsigned long pool;
-	static bool running;
-	int i = 0;
-	int retries;
-
-	if (running)
-		goto end;
-
-	running = true;
-	active_file = global_page_state(NR_ACTIVE_FILE);
-	file = global_page_state(NR_FILE_PAGES);
-	pool = zcache_pages();
-
-	file_gap = pool - file;
-
-	if ((file_gap >= 0) &&
-		(totalram_pages * zcache_clear_percent / 100 > file)) {
-		file_gap = pool;
-		zcache_pool_shrink++;
-		goto reclaim;
-	}
-
-	/*
-	 * file_gap == 0 means that the number of pages
-	 * stored by zcache is around twice as many as the
-	 * number of active file pages.
-	 */
-	file_gap = pool - active_file;
-	if (file_gap < 0)
-		file_gap = 0;
-	else
-		zcache_pool_shrink++;
-
-reclaim:
-	retries = file_gap;
-	while ((file_gap > 0) && retries) {
-		struct zcache_pool *zpool =
-			zcache.pools[i++ % MAX_ZCACHE_POOLS];
-		if (!zpool || !zpool->size)
-			continue;
-		if (zbud_reclaim_page(zpool->pool, 8)) {
-			zcache_pool_shrink_fail++;
-			retries--;
-			continue;
-		}
-		freed++;
-		file_gap--;
-	}
-
-	zcache_pool_shrink_pages += freed;
-	for (i = 0; (i < MAX_ZCACHE_POOLS) && zcache.pools[i]; i++)
-		zcache.pools[i]->size =
-			zbud_get_pool_size(zcache.pools[i]->pool);
-
-	running = false;
-end:
-	return freed;
-}
-
-static struct shrinker zcache_shrinker = {
-	.shrink = zcache_shrink,
-	.seeks = DEFAULT_SEEKS * 16
-};
 
 /*
  * Compression functions
@@ -520,13 +446,6 @@ static int zcache_store_zaddr(struct zcache_pool *zpool,
 		zbud_free(zpool->pool, (unsigned long)dup_zaddr);
 		atomic_dec(&zcache_stored_pages);
 		zcache_pool_pages = zbud_get_pool_size(zpool->pool);
-		if (dup_zaddr == ZERO_HANDLE) {
-			atomic_dec(&zcache_stored_zero_pages);
-		} else {
-			zbud_free(zpool->pool, (unsigned long)dup_zaddr);
-			atomic_dec(&zcache_stored_pages);
-			zpool->size = zbud_get_pool_size(zpool->pool);
-		}
 		zcache_dup_entry++;
 	}
 
