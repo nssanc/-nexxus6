@@ -290,12 +290,6 @@ config CPU_FREQ_DEFAULT_GOV_WAVE
 	help
 	Use the CPUfreq governor 'wave' as default.
 
-config CPU_FREQ_DEFAULT_GOV_WHEATLEY
-	bool "wheatley"
-	select CPU_FREQ_GOV_WHEATLEY
-	help
-	Use the CPUfreq governor 'wheatley' as default.
-
 config CPU_FREQ_DEFAULT_GOV_XPERIENCE
 	bool "xperience"
 	select CPU_FREQ_GOV_XPERIENCE
@@ -648,12 +642,6 @@ config CPU_FREQ_GOV_WAVE
         select CPU_FREQ_TABLE
         help
           'wave' great governor
-
-config CPU_FREQ_GOV_WHEATLEY
-        tristate "'wheatley' cpufreq policy governor"
-        select CPU_FREQ_TABLE
-        help
-          'wheatley' great governor
 
 config CPU_FREQ_GOV_XPERIENCE
 	 tristate "'xperience' cpufreq governor"
