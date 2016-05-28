@@ -36,10 +36,10 @@
 #define DRIVER_SUBVER                 0
 #endif
 
-#define DEFAULT_CPU_LOAD_THRESHOLD   (65)
+#define DEFAULT_CPU_LOAD_THRESHOLD   (90)
 #define MIN_CPU_LOAD_THRESHOLD       (10)
 
-#define HOTPLUG_ENABLED              (0)
+#define HOTPLUG_ENABLED              (1)
 #define DEFAULT_HOTPLUG_STYLE         HOTPLUG_SCHED
 #define DEFAULT_SCHED_MODE            BALANCED
 
