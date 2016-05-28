@@ -28,8 +28,12 @@
 
 #define THUNDERPLUG                  "thunderplug"
 
+#ifdef CONFIG_SCHED_HMP
 #define DRIVER_VERSION                5
+#else
+#define DRIVER_VERSION                3
 #define DRIVER_SUBVER                 0
+#endif
 
 #define DEFAULT_CPU_LOAD_THRESHOLD   (65)
 #define MIN_CPU_LOAD_THRESHOLD       (10)
