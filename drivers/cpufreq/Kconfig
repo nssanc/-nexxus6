@@ -123,19 +123,6 @@ config CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE
 	bool "dynamic_interactive"
 	select CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 
-config CPU_FREQ_DEFAULT_GOV_ELEMENTALX
-	bool "elementalx"
-	select CPU_FREQ_GOV_ELEMENTALX
-	select CPU_FREQ_GOV_PERFORMANCE
-	help
-	  Use the CPUFreq governor 'elementalx' as default.
-
-config CPU_FREQ_DEFAULT_GOV_HYPERX
-        bool "HYPERX"
-        select CPU_FREQ_GOV_HYPERX
-        ---help---
-          Use the CPUFreq governor 'HYPERX' as default.
-
 config CPU_FREQ_DEFAULT_GOV_IMPULSE
 	bool "impulse"
 	select CPU_FREQ_GOV_IMPULSE
@@ -255,12 +242,6 @@ config CPU_FREQ_DEFAULT_GOV_RAGINGMOLASSES
           Work in progress attempt at a goodaround governor that can do either high performance or battery.
           Attempts to keep CPU away from max frequ ency as much as possible.
 
-config CPU_FREQ_DEFAULT_GOV_SMARTASSH3
-	bool "smartassh3"
-	select CPU_FREQ_GOV_SMARTASSH3
- 	help
-	  Use the CPUFreq governor 'smartassh3' as default.
-
 config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
 	bool "smartassv2"
 	select CPU_FREQ_GOV_SMARTASSV2
@@ -287,18 +268,6 @@ config CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'umbrella_core' governor for latency-sensitive workloads.
-
-config CPU_FREQ_DEFAULT_GOV_WAVE
-	bool "wave"
-	select CPU_FREQ_GOV_WAVE
-	help
-	Use the CPUfreq governor 'wave' as default.
-
-config CPU_FREQ_DEFAULT_GOV_XPERIENCE
-	bool "xperience"
-	select CPU_FREQ_GOV_XPERIENCE
-	help
-	Use the CPUfreq governor 'xperience' as default.
 
 config CPU_FREQ_DEFAULT_GOV_ZZMOOVE
 	  bool "zzmoove"
@@ -435,27 +404,6 @@ config CPU_FREQ_GOV_DARKNESS
 config CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 	tristate "'dynamic_interactive' cpufreq governor"
 	depends on CPU_FREQ
-
-config CPU_FREQ_GOV_ELEMENTALX
-	tristate "'elementalx' cpufreq policy governor"
-	select CPU_FREQ_TABLE
-	help
-	  'elementalx' - This driver adds a dynamic cpufreq policy governor.
-
-	  To compile this driver as a module, choose M here: the
-	  module will be called cpufreq_elementalx.
-
-	  For details, take a look at linux/Documentation/cpu-freq.
-
-	  If in doubt, say N.
-
-config CPU_FREQ_GOV_HYPERX
-        tristate "'HYPERX' cpufreq governor"
-        depends on CPU_FREQ
-        ---help---
-          'HYPERX' - a tweaked "ondemand" based smart and smooth optimized governor!
-
-           If in doubt, say Y.
 
 config CPU_FREQ_GOV_IMPULSE
 	tristate "'interactive' cpufreq policy governor"
@@ -609,12 +557,6 @@ config CPU_FREQ_GOV_RAGINGMOLASSES
 
 	  If in doubt, say N0.
 
-config CPU_FREQ_GOV_SMARTASSH3
-	tristate "'smartassh3' cpufreq governor"
- 	depends on CPU_FREQ
- 	help
-	  'smartassh3' - a "smart" governor
-
 config CPU_FREQ_GOV_SMARTASSV2
 	tristate "'smartassv2' cpufreq governor"
  	depends on CPU_FREQ
@@ -643,18 +585,6 @@ config CPU_FREQ_GOV_SMARTMAX_SHAMU
 
 config CPU_FREQ_GOV_UMBRELLA_CORE
 	tristate "'umbrella_core' cpufreq policy governor"
-
-config CPU_FREQ_GOV_WAVE
-        tristate "'wave' cpufreq policy governor"
-        select CPU_FREQ_TABLE
-        help
-          'wave' great governor
-
-config CPU_FREQ_GOV_XPERIENCE
-	 tristate "'xperience' cpufreq governor"
-	 depends on CPU_FREQ
-	 help
-	'XPerience' - a "powered and smart" governor
 
 config CPU_FREQ_GOV_ZZMOOVE
 	tristate "'zzmoove' cpufreq governor"
