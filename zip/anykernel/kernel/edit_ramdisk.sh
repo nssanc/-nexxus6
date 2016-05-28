@@ -49,15 +49,17 @@ fi
 #this is no longer needed as the ramdisk now inserts our modules, but we will
 #keep this here for user comfort, since having run-parts init.d support is a
 #good idea anyway.
-found=$(find /tmp/ramdisk/init.rc -type f | xargs grep -oh "start /system/bin/sysinit");
-if [ "$found" != 'start /system/bin/sysinit' ]; then
-	#append the new lines for this option at the bottom
-        echo "" >> /tmp/ramdisk/init.rc
-        echo "# Sysinit will run scripts in init.d folder" >> /tmp/ramdisk/init.rc
-	#Edit the property to one which is sure to not change so far
-        echo "on property:ro.build.version.sdk=23" >> /tmp/ramdisk/init.rc
-        echo "    start /system/bin/sysinit" >> /tmp/ramdisk/init.rc
-fi
+#found=$(find /tmp/ramdisk/init.rc -type f | xargs grep -oh "start /system/bin/sysinit");
+#if [ "$found" != 'start /system/bin/sysinit' ]; then
+#	echo "Sysinit launcher already created"
+#else
+#	#append the new lines for this option at the bottom
+#        echo "" >> /tmp/ramdisk/init.rc
+#        echo "# Sysinit will run scripts in init.d folder" >> /tmp/ramdisk/init.rc
+#	#Edit the property to one which is sure to not change so far
+#        echo "on property:???" >> /tmp/ramdisk/init.rc
+#        echo "    start /system/bin/sysinit" >> /tmp/ramdisk/init.rc
+#fi
 #Editing the sysinit to match /su/bin or /su/xbin location
 if [ -f "/system/bin/sysinit" ]; then
 	rm /system/bin/sysinit
