@@ -693,10 +693,6 @@ static struct timed_output_dev to_dev = {
 void set_vibrate(int value)
 {
 	vibrator_enable(&to_dev, value);
-
-void vibrate(int strength)
-{
-        vibrator_enable(&to_dev, strength);
 }
 
 static void drv260x_update_init_sequence(unsigned char *seq, int size,
