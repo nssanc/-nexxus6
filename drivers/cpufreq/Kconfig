@@ -157,12 +157,6 @@ config CPU_FREQ_DEFAULT_GOV_LIGHTNING
  	bool "lightning"
  	select CPU_FREQ_GOV_LIGHTNING
 
-config CPU_FREQ_DEFAULT_GOV_LIONHEART
-        bool "LIONHEART"
-        select CPU_FREQ_GOV_LIONHEART
-        ---help---
-          Use the CPUFreq governor 'LIONHEART' as default.
-
 config CPU_FREQ_DEFAULT_GOV_LIONFISH
 	bool "lionfish"
 	select CPU_FREQ_GOV_LIONFISH
@@ -175,11 +169,6 @@ config CPU_FREQ_DEFAULT_GOV_LULZACTIVE
 	select CPU_FREQ_GOV_PERFORMANCE
         help
 	  Use the CPUFreq governor 'lulzactive' as default.
-
-config CPU_FREQ_DEFAULT_GOV_MYTHX_PLUG
-	bool "mythx_plug"
-	select CPU_FREQ_GOV_MYTHX_PLUG
-	help
 
 config CPU_FREQ_DEFAULT_GOV_NIGHTMARE
 	bool "nightmare"
@@ -215,12 +204,6 @@ config CPU_FREQ_DEFAULT_GOV_ONDEMANDPLUS
 	select CPU_FREQ_GOV_ONDEMANDPLUS
 	help
 
-config CPU_FREQ_DEFAULT_GOV_PMC
-	bool "pmc"
-	select CPU_FREQ_GOV_PMC
-	help
-	  Use the CPUFreq governor 'pmc' as default
-
 config CPU_FREQ_DEFAULT_GOV_PERFORMANCE
 	bool "performance"
 	select CPU_FREQ_GOV_PERFORMANCE
@@ -247,18 +230,6 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
 	select CPU_FREQ_GOV_SMARTASSV2
  	help
 	  Use the CPUFreq governor 'smartassv2' as default.
-
-config CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS
-        bool "smartmax_eps"
-        select CPU_FREQ_GOV_SMARTMAX_EPS
-        help
-          Use the CPUFreq governor 'smartmax eps' as default
-
-config CPU_FREQ_DEFAULT_GOV_SMARTMAX
-	bool "smartmax"
-	select CPU_FREQ_GOV_SMARTMAX
-	help
-	  Use the CPUFreq governor 'smartmax' as default.
 
 config CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE
 	bool "umbrella_core"
@@ -451,14 +422,6 @@ config CPU_FREQ_GOV_LIGHTNING
         ---help---
           'LIGHTNING' - a tweaked "ondemand" based smart and smooth optimized governor!
 
-config CPU_FREQ_GOV_LIONHEART
-        tristate "'LIONHEART' cpufreq governor"
-        depends on CPU_FREQ
-        ---help---
-          'LIONHEART' - a tweaked "ondemand" based smart and smooth optimized governor!
-
-           If in doubt, say Y.
-
 config CPU_FREQ_GOV_LIONFISH
 	tristate "'lionfish' governor"
 	depends on CPU_FREQ
@@ -489,10 +452,6 @@ config CPU_FREQ_GOV_LULZACTIVE
 	  For more information please visit:
 	  http://tegrak2x.blogspot.com/2011/11/lulzactive-governor-v2.html
           If in doubt, say N.
-
-config CPU_FREQ_GOV_MYTHX_PLUG
-	tristate "'mythx_plug' cpufreq governor"
-	depends on CPU_FREQ
 
 config CPU_FREQ_GOV_NIGHTMARE
 	tristate "'nightmare' cpufreq governor"
@@ -541,12 +500,6 @@ config CPU_FREQ_GOV_PRESERVATIVE
 
 	  If in doubt, say N.
 
-config CPU_FREQ_GOV_PMC
-  tristate "'pmc' cpufreq policy governor"	
-  select CPU_FREQ_TABLE	
-  help	
-    'smartmax' tweaked for absolute battery
-
 config CPU_FREQ_GOV_RAGINGMOLASSES
 	tristate "'RAGINGMOLASSES' cpufreq policy governor"
 	help
@@ -565,26 +518,6 @@ config CPU_FREQ_GOV_SMARTASSV2
  	depends on CPU_FREQ
  	help
 	  'smartassv2' - a "smart" governor
-
-config CPU_FREQ_GOV_SMARTMAX_EPS
-        tristate "'smartmax EPS' cpufreq policy governor"
-        select CPU_FREQ_TABLE
-        help
-          'smartmax EPS' is the extreme powersaving version of smartmax
-
-config CPU_FREQ_GOV_SMARTMAX
-	tristate "'smartmax' cpufreq policy governor"
-	select CPU_FREQ_TABLE
-	help
-	  'smartmax' combined ondemand and smartass2
-
-config CPU_FREQ_GOV_SMARTMAX_30
-	bool "'smartmax' for 3.0 and 3.1 kernels"
-	depends on CPU_FREQ_GOV_SMARTMAX
-
-config CPU_FREQ_GOV_SMARTMAX_SHAMU
-	bool "'smartmax' defaults for shamu"
-	depends on CPU_FREQ_GOV_SMARTMAX
 
 config CPU_FREQ_GOV_UMBRELLA_CORE
 	tristate "'umbrella_core' cpufreq policy governor"

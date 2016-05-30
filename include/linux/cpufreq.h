@@ -486,9 +486,6 @@ extern struct cpufreq_governor cpufreq_gov_interactive_pro;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE)
 extern struct cpufreq_governor cpufreq_gov_dynamic_interactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_dynamic_interactive)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LIONHEART)
-extern struct cpufreq_governor cpufreq_gov_lionheart;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lionheart)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LIGHTNING)
 extern struct cpufreq_governor cpufreq_gov_lightning;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lightning)
@@ -498,9 +495,6 @@ extern struct cpufreq_governor cpufreq_gov_lionfish;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LULZACTIVE)
 extern struct cpufreq_governor cpufreq_gov_lulzactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lulzactive)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_MYTHX_PLUG)
-extern struct cpufreq_governor cpufreq_gov_mythx_plug;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_mythx_plug)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_NIGHTMARE)
 extern struct cpufreq_governor cpufreq_gov_nightmare;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_nightmare)
@@ -513,9 +507,6 @@ extern struct cpufreq_governor cpufreq_gov_ondemand_eps;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMANDPLUS)
 extern struct cpufreq_governor cpufreq_gov_ondemandplus;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_ondemandplus)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_PMC)
-extern struct cpufreq_governor cpufreq_gov_pmc;
-#define CPUFREQ_DEFAULT_GOVERNOR(&cpufreq_gov_pmc)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_PRESERVATIVE)
 extern struct cpufreq_governor cpufreq_gov_preservative;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_preservative)
@@ -525,12 +516,6 @@ extern struct cpufreq_governor cpufreq_gov_ragingmolasses;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTASSV2)
 extern struct cpufreq_governor cpufreq_gov_smartassv2;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_smartassv2)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS)
-extern struct cpufreq_governor cpufreq_gov_smartmax_eps;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_smartmax_eps)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTMAX)
-extern struct cpufreq_governor cpufreq_gov_smartmax;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_smartmax)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE)
 extern struct cpufreq_governor cpufreq_gov_umbrella_core;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_umbrella_core)
