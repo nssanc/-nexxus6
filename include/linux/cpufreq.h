@@ -486,6 +486,9 @@ extern struct cpufreq_governor cpufreq_gov_interactive_pro;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE)
 extern struct cpufreq_governor cpufreq_gov_dynamic_interactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_dynamic_interactive)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_HYDRXQ)
+extern struct cpufreq_governor cpufreq_gov_dynamic_hydrxq;
+#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_dynamic_hydrxq)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LIGHTNING)
 extern struct cpufreq_governor cpufreq_gov_lightning;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lightning)

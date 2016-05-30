@@ -21,6 +21,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_CONSERVATIVEX)   += cpufreq_conservativex.o
 obj-$(CONFIG_CPU_FREQ_GOV_DANCEDANCE)      += cpufreq_dancedance.o
 obj-$(CONFIG_CPU_FREQ_GOV_DARKNESS)	   += cpufreq_darkness.o
 obj-$(CONFIG_CPU_FREQ_GOV_DYNAMIC_INTERACTIVE) += cpufreq_dynamic_interactive.o
+obj-$(CONFIG_CPU_FREQ_GOV_LULZACTIVEQ)	   += cpufreq_hydrxq.o
 obj-$(CONFIG_CPU_FREQ_GOV_IMPULSE)	   += cpufreq_impulse.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTERACTIVE)	   += cpufreq_interactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTERACTIVE_PRO) += cpufreq_interactive_pro.o
