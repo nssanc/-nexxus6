@@ -39,7 +39,7 @@
 #define DEFAULT_CPU_LOAD_THRESHOLD   (90)
 #define MIN_CPU_LOAD_THRESHOLD       (10)
 
-#define HOTPLUG_ENABLED              (1)
+#define HOTPLUG_ENABLED              (0)
 #define DEFAULT_HOTPLUG_STYLE         HOTPLUG_SCHED
 #define DEFAULT_SCHED_MODE            BALANCED
 
