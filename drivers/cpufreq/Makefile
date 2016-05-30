@@ -39,6 +39,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_RAGINGMOLASSES)  += cpufreq_ragingmolasses.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSV2)	   += cpufreq_smartassv2.o
 obj-$(CONFIG_CPU_FREQ_GOV_USERSPACE)	   += cpufreq_userspace.o
 obj-$(CONFIG_CPU_FREQ_GOV_UMBRELLA_CORE)   += cpufreq_umbrella_core.o
+obj-$(CONFIG_CPU_FREQ_GOV_YANKACTIVE)	   += cpufreq_yankactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_ZZMOOVE)         += cpufreq_zzmoove.o
 obj-$(CONFIG_CPU_FREQ_GOV_COMMON)          += cpufreq_governor.o
 #CPUfreq Governors - END
