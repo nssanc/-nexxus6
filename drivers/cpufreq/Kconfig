@@ -123,10 +123,6 @@ config CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE
 	bool "dynamic_interactive"
 	select CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 
-config CPU_FREQ_DEFAULT_GOV_HYDRXQ
-	bool "hydrxq"
-	select CPU_FREQ_GOV_HYDRXQ
-
 config CPU_FREQ_DEFAULT_GOV_IMPULSE
 	bool "impulse"
 	select CPU_FREQ_GOV_IMPULSE
@@ -388,12 +384,6 @@ config CPU_FREQ_GOV_DARKNESS
 config CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 	tristate "'dynamic_interactive' cpufreq governor"
 	depends on CPU_FREQ
-
-config CPU_FREQ_GOV_HYDRXQ
-        tristate "'hydrxq' cpufreq governor"
-        depends on CPU_FREQ
-        help
-          'hydrxq' - hotplug mechanism added in lulzactive
 
 config CPU_FREQ_GOV_IMPULSE
 	tristate "'interactive' cpufreq policy governor"
