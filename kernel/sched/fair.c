@@ -34,10 +34,6 @@
 
 #include "sched.h"
 
-#ifdef CONFIG_THUNDERPLUG_CONTROL
-EXPORT_SYMBOL_GPL(sched_set_boost);
-#endif
-
 /*
  * Targeted preemption latency for CPU-bound tasks:
  * (default: 5ms * (1 + ilog(ncpus)), units: nanoseconds)
