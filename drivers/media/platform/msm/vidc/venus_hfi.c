@@ -631,7 +631,7 @@ static int venus_hfi_iommu_attach(struct venus_hfi_device *device)
 		if (IS_ERR_OR_NULL(domain)) {
 			dprintk(VIDC_ERR,
 				"Failed to get domain: %s\n", iommu_map->name);
-			rc = PTR_ERR(domain) ?: -EINVAL;
+			rc = PTR_ERR(domain);
 			break;
 		}
 		rc = iommu_attach_group(domain, group);
@@ -2126,25 +2126,6 @@ static void venus_hfi_set_default_sys_properties(
 		dprintk(VIDC_WARN, "Setting h/w power collapse ON failed\n");
 }
 
-static int venus_hfi_session_clean(void *session)
-{
-	struct hal_session *sess_close;
-	struct venus_hfi_device *device;
-	if (!session) {
-		dprintk(VIDC_ERR, "Invalid Params %s\n", __func__);
-		return -EINVAL;
-	}
-	sess_close = session;
-	device = sess_close->device;
-	dprintk(VIDC_DBG, "deleted the session: 0x%p\n",
-			sess_close);
-	mutex_lock(&device->session_lock);
-	list_del(&sess_close->list);
-	kfree(sess_close);
-	mutex_unlock(&device->session_lock);
-	return 0;
-}
-
 static void *venus_hfi_session_init(void *device, u32 session_id,
 		enum hal_domain session_type, enum hal_video_codec codec_type)
 {
@@ -2189,7 +2170,7 @@ static void *venus_hfi_session_init(void *device, u32 session_id,
 	return (void *) new_session;
 
 err_session_init_fail:
-	venus_hfi_session_clean(new_session);
+	kfree(new_session);
 	return NULL;
 }
 
@@ -2230,6 +2211,25 @@ static int venus_hfi_session_abort(void *session)
 {
 	return venus_hfi_send_session_cmd(session,
 		HFI_CMD_SYS_SESSION_ABORT);
+}
+
+static int venus_hfi_session_clean(void *session)
+{
+	struct hal_session *sess_close;
+	if (!session) {
+		dprintk(VIDC_ERR, "Invalid Params %s\n", __func__);
+		return -EINVAL;
+	}
+	sess_close = session;
+	dprintk(VIDC_DBG, "deleted the session: 0x%p\n",
+			sess_close);
+	mutex_lock(&((struct venus_hfi_device *)
+			sess_close->device)->session_lock);
+	list_del(&sess_close->list);
+	mutex_unlock(&((struct venus_hfi_device *)
+			sess_close->device)->session_lock);
+	kfree(sess_close);
+	return 0;
 }
 
 static int venus_hfi_session_set_buffers(void *sess,
@@ -2873,7 +2873,7 @@ static inline int venus_hfi_init_clocks(struct msm_vidc_platform_resources *res,
 			if (IS_ERR_OR_NULL(cl->clk)) {
 				dprintk(VIDC_ERR,
 					"Failed to get clock: %s\n", cl->name);
-				rc = PTR_ERR(cl->clk) ?: -EINVAL;
+				rc = PTR_ERR(cl->clk);
 				cl->clk = NULL;
 				goto err_clk_get;
 			}
@@ -3745,11 +3745,59 @@ int venus_hfi_get_stride_scanline(int color_fmt,
 
 int venus_hfi_get_core_capabilities(void)
 {
+	int i = 0, rc = 0, j = 0, venus_version_length = 0;
+	u32 smem_block_size = 0;
+	u8 *smem_table_ptr;
+	char version[256];
+	char venus_version[] = "VIDEO.VE.1.4";
+	u8 version_info[256];
+	const u32 smem_image_index_venus = 14 * 128;
+
+	smem_table_ptr = smem_get_entry(SMEM_IMAGE_VERSION_TABLE,
+			&smem_block_size, 0, SMEM_ANY_HOST_FLAG);
+	if (smem_table_ptr &&
+			((smem_image_index_venus + 128) <= smem_block_size)) {
+		memcpy(version_info, smem_table_ptr + smem_image_index_venus,
+				128);
+	} else {
+		dprintk(VIDC_ERR,
+			"%s: failed to read version info from smem table\n",
+			__func__);
+		return -EINVAL;
+	}
+
+	while (version_info[i++] != 'V' && i < 128)
+		;
+
+	venus_version_length = strlen(venus_version);
+	for (i--, j = 0; i < 128 && j < venus_version_length; i++)
+		version[j++] = version_info[i];
+	version[venus_version_length] = '\0';
+	dprintk(VIDC_DBG, "F/W version retrieved : %s\n", version);
+
+	if (strcmp((const char *)version, (const char *)venus_version) == 0)
+		rc = HAL_VIDEO_ENCODER_ROTATION_CAPABILITY |
+			HAL_VIDEO_ENCODER_SCALING_CAPABILITY |
+			HAL_VIDEO_ENCODER_DEINTERLACE_CAPABILITY |
+			HAL_VIDEO_DECODER_MULTI_STREAM_CAPABILITY;
+	return rc;
+}
+
+int venus_hfi_capability_check(u32 fourcc, u32 width,
+		u32 *max_width, u32 *max_height)
+{
 	int rc = 0;
-	rc = HAL_VIDEO_ENCODER_ROTATION_CAPABILITY |
-		HAL_VIDEO_ENCODER_SCALING_CAPABILITY |
-		HAL_VIDEO_ENCODER_DEINTERLACE_CAPABILITY |
-		HAL_VIDEO_DECODER_MULTI_STREAM_CAPABILITY;
+	if (!max_width || !max_height) {
+		dprintk(VIDC_ERR, "%s - invalid parameter\n", __func__);
+		return -EINVAL;
+	}
+
+	if (width > *max_width) {
+		dprintk(VIDC_ERR,
+		"Unsupported width = %u supported max width = %u\n",
+		width, *max_width);
+		rc = -ENOTSUPP;
+	}
 	return rc;
 }
 
@@ -3909,6 +3957,7 @@ static void venus_init_hfi_callbacks(struct hfi_device *hdev)
 	hdev->resurrect_fw = venus_hfi_resurrect_fw;
 	hdev->get_fw_info = venus_hfi_get_fw_info;
 	hdev->get_stride_scanline = venus_hfi_get_stride_scanline;
+	hdev->capability_check = venus_hfi_capability_check;
 	hdev->get_core_capabilities = venus_hfi_get_core_capabilities;
 	hdev->power_enable = venus_hfi_power_enable;
 }
@@ -3928,7 +3977,8 @@ int venus_hfi_initialize(struct hfi_device *hdev, u32 device_id,
 	hdev->hfi_device_data = venus_hfi_get_device(device_id, res, callback);
 
 	if (IS_ERR_OR_NULL(hdev->hfi_device_data)) {
-		rc = PTR_ERR(hdev->hfi_device_data) ?: -EINVAL;
+		rc = PTR_ERR(hdev->hfi_device_data);
+		rc = !rc ? -EINVAL : rc;
 		goto err_venus_hfi_init;
 	}
 

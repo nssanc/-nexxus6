@@ -733,13 +733,6 @@ int msm_vidc_prepare_buf(void *instance, struct v4l2_buffer *b)
 	if (!inst || !b || !valid_v4l2_buffer(b, inst))
 		return -EINVAL;
 
-	if (!V4L2_TYPE_IS_MULTIPLANAR(b->type) || !b->length ||
-		(b->length > VIDEO_MAX_PLANES)) {
-		dprintk(VIDC_ERR, "%s: wrong input params\n",
-				__func__);
-		return -EINVAL;
-	}
-
 	if (is_dynamic_output_buffer_mode(b, inst)) {
 		dprintk(VIDC_ERR, "%s: not supported in dynamic buffer mode\n",
 				__func__);
@@ -967,9 +960,6 @@ int msm_vidc_dqbuf(void *instance, struct v4l2_buffer *b)
 	struct msm_vidc_inst *inst = instance;
 	struct buffer_info *buffer_info = NULL;
 	int i = 0, rc = 0;
-
-	if (!inst || !b)
-		return -EINVAL;
 
 	if (!inst || !b || !valid_v4l2_buffer(b, inst))
 		return -EINVAL;
@@ -1236,24 +1226,6 @@ int msm_vidc_dqevent(void *inst, struct v4l2_event *event)
 }
 EXPORT_SYMBOL(msm_vidc_dqevent);
 
-static bool msm_vidc_check_for_inst_overload(struct msm_vidc_core *core)
-{
-	u32 instance_count = 0;
-	struct msm_vidc_inst *inst = NULL;
-	bool overload = false;
-
-	mutex_lock(&core->lock);
-	list_for_each_entry(inst, &core->instances, list)
-		instance_count++;
-	mutex_unlock(&core->lock);
-
-	/* Instance count includes just opened instance as well. */
-
-	if (instance_count > core->max_supported_instances)
-		overload = true;
-	return overload;
-}
-
 void *msm_vidc_open(int core_id, int session_type)
 {
 	struct msm_vidc_inst *inst = NULL;
@@ -1335,19 +1307,12 @@ void *msm_vidc_open(int core_id, int session_type)
 	list_add_tail(&inst->list, &core->instances);
 	mutex_unlock(&core->lock);
 
-	rc = msm_comm_try_state(inst, MSM_VIDC_CORE_INIT_DONE);
+	rc = msm_comm_try_state(inst, MSM_VIDC_CORE_INIT);
 	if (rc) {
 		dprintk(VIDC_ERR,
 			"Failed to move video instance to init state\n");
 		goto fail_init;
 	}
-
-	if (msm_vidc_check_for_inst_overload(core)) {
-		dprintk(VIDC_ERR,
-			"Instance count reached Max limit, rejecting session");
-		goto fail_init;
-	}
-
 	inst->debugfs_root =
 		msm_vidc_debugfs_init_inst(inst, core->debugfs_root);
 
@@ -1381,6 +1346,7 @@ static void cleanup_instance(struct msm_vidc_inst *inst)
 {
 	struct list_head *ptr, *next;
 	struct vb2_buf_entry *entry;
+	struct internal_buf *buf;
 	if (inst) {
 		mutex_lock(&inst->lock);
 		if (!list_empty(&inst->pendingq)) {
@@ -1392,28 +1358,37 @@ static void cleanup_instance(struct msm_vidc_inst *inst)
 			}
 		}
 		if (!list_empty(&inst->internalbufs)) {
-			mutex_unlock(&inst->lock);
-			if (msm_comm_release_scratch_buffers(inst, false))
-				dprintk(VIDC_ERR,
-					"Failed to release scratch buffers\n");
-
-			mutex_lock(&inst->lock);
+			list_for_each_safe(ptr, next, &inst->internalbufs) {
+				buf = list_entry(ptr, struct internal_buf,
+						list);
+				list_del(&buf->list);
+				mutex_unlock(&inst->lock);
+				msm_comm_smem_free(inst, buf->handle);
+				kfree(buf);
+				mutex_lock(&inst->lock);
+			}
 		}
 		if (!list_empty(&inst->persistbufs)) {
-			mutex_unlock(&inst->lock);
-			if (msm_comm_release_persist_buffers(inst))
-				dprintk(VIDC_ERR,
-					"Failed to release persist buffers\n");
-
-			mutex_lock(&inst->lock);
+			list_for_each_safe(ptr, next, &inst->persistbufs) {
+				buf = list_entry(ptr, struct internal_buf,
+						list);
+				list_del(&buf->list);
+				mutex_unlock(&inst->lock);
+				msm_comm_smem_free(inst, buf->handle);
+				kfree(buf);
+				mutex_lock(&inst->lock);
+			}
 		}
 		if (!list_empty(&inst->outputbufs)) {
-			mutex_unlock(&inst->lock);
-			if (msm_comm_release_output_buffers(inst))
-				dprintk(VIDC_ERR,
-					"Failed to release output buffers\n");
-
-			mutex_lock(&inst->lock);
+			list_for_each_safe(ptr, next, &inst->outputbufs) {
+				buf = list_entry(ptr, struct internal_buf,
+						list);
+				list_del(&buf->list);
+				mutex_unlock(&inst->lock);
+				msm_comm_smem_free(inst, buf->handle);
+				kfree(buf);
+				mutex_lock(&inst->lock);
+			}
 		}
 		if (inst->extradata_handle) {
 			mutex_unlock(&inst->lock);
@@ -1437,7 +1412,7 @@ int msm_vidc_close(void *instance)
 	int rc = 0;
 	int i;
 
-	if (!inst || !inst->core)
+	if (!inst)
 		return -EINVAL;
 
 	v4l2_fh_del(&inst->event_handler);
@@ -1455,7 +1430,6 @@ int msm_vidc_close(void *instance)
 	}
 
 	core = inst->core;
-
 	mutex_lock(&core->lock);
 	list_for_each_safe(ptr, next, &core->instances) {
 		temp = list_entry(ptr, struct msm_vidc_inst, list);
@@ -1482,12 +1456,9 @@ int msm_vidc_close(void *instance)
 		dprintk(VIDC_ERR,
 			"Failed to move video instance to uninit state\n");
 
-	msm_comm_session_clean(inst);
-
 	pr_info(VIDC_DBG_TAG "Closed video instance: %p\n",
 			VIDC_MSG_PRIO2STRING(VIDC_INFO), inst);
 	kfree(inst);
 	return 0;
 }
 EXPORT_SYMBOL(msm_vidc_close);
-
