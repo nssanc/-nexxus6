@@ -438,7 +438,6 @@ static int __init dyn_hp_init(void)
 	hp_data->suspend.resume =  hp_late_resume;
 	hp_data->suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN;
 #endif	/* CONFIG_HAS_EARLYSUSPEND */
-	hp_data->enabled = 1;
 
 	up_threshold = hp_data->up_threshold;
 	enabled = hp_data->enabled;
@@ -453,6 +452,10 @@ static int __init dyn_hp_init(void)
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	register_early_suspend(&hp_data->suspend);
 #endif	/* CONFIG_HAS_EARLYSUSPEND */
+
+	if (!hp_data->enabled)
+		return 0;
+	
 	INIT_DELAYED_WORK(&hp_data->work, load_timer);
 	schedule_delayed_work_on(0, &hp_data->work, INIT_DELAY);
 
