@@ -128,13 +128,6 @@ config QCOM_EARLY_RANDOM
 	  may not be truly random. Select this option to make an early call
 	  to get some random data to put in the pool. If unsure, say N.
 
-config BLU_PLUG
-	bool "Dynamic hotplug driver"
-	depends on HOTPLUG_CPU
-	default y
-	help
-	  The Dynamic hotplug driver automatically online/offline CPUs proportional to system load.
-
 config ALUCARD_HOTPLUG
 	bool "Enable alucard-hotplug cpu hotplug driver"
 	default y
@@ -142,16 +135,31 @@ config ALUCARD_HOTPLUG
 	  Generic Alucard-hotplug cpu hotplug driver for ARM SOCs
 
 config AUTOSMP
-	bool "Enable autosmp cpu hotplug driver"
+	bool "CPU hotplug driver"
 	default y
 	help
-	  Generic autosmp cpu hotplug driver for ARM SOCs
+	  CPU hotplug driver
+
+config BLU_PLUG
+	bool "Dynamic hotplug driver"
+	depends on HOTPLUG_CPU
+	default y
+	help
+	  The Dynamic hotplug driver automatically online/offline CPUs proportional to system load.
 
 config BRICKED_HOTPLUG
 	bool "Enable kernel based mpdecision"
+	depends on MSM_RUN_QUEUE_STATS
 	default y
 	help
 	  This enables kernel based multi core control.
+	  (up/down hotplug based on load)
+
+config DYN_HOTPLUG
+	bool "CPU hotplug driver"
+	default y
+	help
+	  CPU hotplug driver
 
 config INTELLI_PLUG
   	bool "Intelli hotplug driver"
@@ -161,13 +169,38 @@ config INTELLI_PLUG
   	An intelligent cpu hotplug driver for
   	Low Latency Frequency Transition capable processors.
 
+config MAKO_HOTPLUG
+	bool "CPU hotplug driver"
+	default y
+	help
+	  CPU hotplug driver
+
 config MSM_HOTPLUG
- 	bool "MSM hotplug driver"
- 	depends on HOTPLUG_CPU
- 	default y
- 	help
- 	  The MSM hotplug driver controls on-/offlining of additional cores based
- 	  on current cpu load.
+	bool "MSM hotplug driver"
+	depends on HOTPLUG_CPU
+	default y
+	help
+	  The MSM hotplug driver controls on-/offlining of additional cores based
+	  on current cpu load.
+
+config MSM_SLEEPER
+	bool "CPU hotplug driver"
+	default y
+	help
+	  CPU hotplug driver
+
+config MSM_LIMITER
+	bool "MSM Frequency Limiter Driver"
+	default y
+	help
+	  The MSM Frequency Limiter Driver controls max frequency limit for each CPU
+	  to desired value on suspend/resume
+
+config MSM_ZEN_DECISION
+	bool "CPU hotplug driver"
+	default y
+	help
+	  CPU hotplug driver
 
 config STATE_HELPER
         bool "State Helper"
