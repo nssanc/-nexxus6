@@ -173,6 +173,15 @@ config CPU_FREQ_DEFAULT_GOV_BLU_ACTIVE
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
 
+config CPU_FREQ_DEFAULT_GOV_CAFACTIVE
+  	bool "cafactive"
+  	select CPU_FREQ_GOV_CAFACTIVE
+  	help
+  	  Use the CPUFreq governor 'cafactive' as default. This allows
+  	  you to get a full dynamic cpu frequency capable system by simply
+  	  loading your cpufreq low-level hardware driver, using the
+  	  'cafactive' governor for latency-sensitive workloads.
+
 config CPU_FREQ_DEFAULT_GOV_CONSERVATIVEX
 	bool "conservativex"
 	select CPU_FREQ_GOV_CONSERVATIVEX
@@ -261,6 +270,10 @@ config CPU_FREQ_DEFAULT_GOV_IMPULSE
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'impulse' governor for latency-sensitive workloads.
+
+config CPU_FREQ_DEFAULT_GOV_LIGHTNING
+  	bool "lightning"
+  	select CPU_FREQ_GOV_LIGHTNING
 
 config CPU_FREQ_DEFAULT_GOV_LIONHEART
         bool "LIONHEART"
@@ -619,6 +632,17 @@ config CPU_FREQ_GOV_BLU_ACTIVE
 	  module will be called cpufreq_blu_active
           If in doubt, say N.
 
+config CPU_FREQ_GOV_CAFACTIVE
+  	tristate "'cafactive' cpufreq policy governor"
+  	help
+  	  'cafactive' - CodeAurora(Qualcomm) version of interactive
+  	  cpufreq policy governor.
+  
+  	  To compile this driver as a module, choose M here: the
+  	  module will be called cpufreq_cafactive.
+  
+  	  If in doubt, say N.
+
 config CPU_FREQ_GOV_CONSERVATIVEX
 	tristate "'conservativex' cpufreq governor"
 	depends on CPU_FREQ
@@ -729,6 +753,9 @@ config CPU_FREQ_GOV_LIONHEART
           'LIONHEART' - a tweaked "ondemand" based smart and smooth optimized governor!
 
            If in doubt, say Y.
+
+config CPU_FREQ_GOV_LIGHTNING
+  	tristate "'lightning' cpufreq policy govern
 
 config CPU_FREQ_GOV_LIONFISH
 	tristate "'lionfish' governor"
