@@ -34,7 +34,7 @@
 #define DEFAULT_LOAD_THRESHOLD 80
 #define DEFAULT_HIGH_LOAD_COUNTER 10
 #define DEFAULT_MAX_LOAD_COUNTER 20
-#define DEFAULT_CPUFREQ_UNPLUG_LIMIT 1574400
+#define DEFAULT_CPUFREQ_UNPLUG_LIMIT 1800000
 #define DEFAULT_MIN_TIME_CPU_ONLINE 1
 #define DEFAULT_TIMER 1
 
@@ -51,8 +51,8 @@ struct cpu_stats {
 };
 
 struct hotplug_tunables {
-	/*
-	 * Enable/Disable Hotplug Work
+	/**
+	 * whether make_hotplug is enabled or not
 	 */
 	unsigned int enabled;
 
@@ -228,8 +228,9 @@ static void __ref decide_hotplug_func(struct work_struct *work)
 	 * reschedule early when users desire to run with all cores online
 	 */
 	if (unlikely(!t->load_threshold &&
-			online_cpus == NUM_POSSIBLE_CPUS))
+			online_cpus == NUM_POSSIBLE_CPUS)) {
 		goto reschedule;
+	}
 
 	for (cpu = 0; cpu < 2; cpu++)
 		cur_load += cpufreq_quick_get_util(cpu);
