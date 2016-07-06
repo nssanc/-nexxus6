@@ -31,7 +31,7 @@
 
 /* How long to wait to enable cores on wake (in ms) // 1 minute maximum */
 #define WAKE_WAIT_TIME_MAX	60000
-#define WAKE_WAIT_TIME		1000
+#define WAKE_WAIT_TIME		6000
 /* Battery level threshold to ignore UP operations. Only do CPU_UP work when battery level is above this value. Setting to 0 will do CPU_UP work regardless of battery level. */
 #define BAT_THRESHOLD		0
 /* Maximum,Minimum cores online / Screen on */
