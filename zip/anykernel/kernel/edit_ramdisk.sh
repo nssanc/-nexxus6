@@ -45,6 +45,16 @@ if  grep -qr verity_update_state /tmp/ramdisk/init.shamu.rc; then
  sed -i "s/verity_update_state/#verity_update_state/" /tmp/ramdisk/init.shamu.rc
 fi
 
+#Force SystemLess Root
+Rless=/data/.supersu
+if grep "SYSTEMLESS=true" $Rless; then
+echo SystemLess Root already forced
+else
+rm /data/.supersu
+echo "SYSTEMLESS=true" >> /data/.supersu
+echo SystemLess Root forced
+fi
+
 #add init.d support if not already supported
 #this is no longer needed as the ramdisk now inserts our modules, but we will
 #keep this here for user comfort, since having run-parts init.d support is a
@@ -72,6 +82,7 @@ if [ -f "/system/bin/sysinit" ]; then
 	echo "done" >> /system/bin/sysinit
 	chmod 755 /system/bin/sysinit
 fi
+
 #Make MPD and T-E as RW only
 if [ -f "/system/bin/mpdecision" ]; then
 chmod 644 /system/bin/mpdecision
