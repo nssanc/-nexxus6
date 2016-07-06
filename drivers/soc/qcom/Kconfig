@@ -189,23 +189,11 @@ config MSM_SLEEPER
 	help
 	  CPU hotplug driver
 
-config MSM_LIMITER
-	bool "MSM Frequency Limiter Driver"
-	default y
-	help
-	  The MSM Frequency Limiter Driver controls max frequency limit for each CPU
-	  to desired value on suspend/resume
-
 config MSM_ZEN_DECISION
 	bool "CPU hotplug driver"
 	default y
 	help
 	  CPU hotplug driver
-
-config STATE_HELPER
-        bool "State Helper"
-	depends on STATE_NOTIFIER
-	default y
 
 config MSM_LIMITER
 	bool "MSM Frequency Limiter Driver"
