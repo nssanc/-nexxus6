@@ -17,17 +17,16 @@
 #include <linux/power_supply.h>
 #include <linux/sched.h>
 #include <linux/state_helper.h>
-#include <linux/msm_thermal.h>
 #include <linux/workqueue.h>
 
 #define STATE_HELPER			"state_helper"
 #define HELPER_ENABLED			0
 #define DELAY_MSEC			100
 #define DEFAULT_MAX_CPUS_ONLINE		NR_CPUS
-#define DEFAULT_SUSP_CPUS		2
+#define DEFAULT_SUSP_CPUS		1
 #define DEFAULT_MAX_CPUS_ECONOMIC	2
 #define DEFAULT_MAX_CPUS_CRITICAL	1
-#define DEFAULT_BATT_ECONOMIC		30
+#define DEFAULT_BATT_ECONOMIC		25
 #define DEFAULT_BATT_CRITICAL		15
 #define DEBUG_MASK			1
 
@@ -51,22 +50,14 @@ static struct state_helper {
 	.debug = DEBUG_MASK
 };
 
-static struct state_info {
-	unsigned int target_cpus;
-	unsigned int batt_limited_cpus;
-	unsigned int therm_allowed_cpus;
-	unsigned int batt_level;
-	long current_temp;
-} info = {
-	.target_cpus = NR_CPUS,
-	.batt_limited_cpus = NR_CPUS,
-	.therm_allowed_cpus = NR_CPUS,
-	.batt_level = 100
-};
-
 static struct notifier_block notif;
+
 static struct workqueue_struct *helper_wq;
 static struct delayed_work helper_work;
+
+static unsigned int target_cpus;
+static unsigned int batt_limited_cpus = NR_CPUS;
+static unsigned int batt_level = 100;
 
 #define dprintk(msg...)		\
 do { 				\
@@ -74,105 +65,69 @@ do { 				\
 		pr_info(msg);	\
 } while (0)
 
-static void target_cpus_calc(void)
-{
-	if (state_suspended)
-		info.target_cpus = helper.max_cpus_susp;
-	else
-		info.target_cpus = helper.max_cpus_online;
-
-	info.target_cpus = min(info.target_cpus,
-				info.batt_limited_cpus);	
-	info.target_cpus = min(info.target_cpus,
-				info.therm_allowed_cpus);	
-}
 
 static void __ref state_helper_work(struct work_struct *work)
 {
 	int cpu;
 
-	target_cpus_calc();
+	if (state_suspended)
+		target_cpus = helper.max_cpus_susp;
+	else
+		target_cpus = helper.max_cpus_online;
 
-	if (info.target_cpus < num_online_cpus()) {
+	target_cpus = min(target_cpus,  batt_limited_cpus);		
+
+	if (target_cpus < num_online_cpus()) {
 		for_each_online_cpu(cpu) {
 			if (cpu == 0)
 				continue;
-			dprintk("%s: Switching CPU%u offline\n",
+			dprintk("%s: Switching CPU%u offline.\n",
 				STATE_HELPER, cpu);
 			cpu_down(cpu);
-			if (info.target_cpus >= num_online_cpus())
+			if (target_cpus >= num_online_cpus())
 				break;
 		}
-	} else if (info.target_cpus > num_online_cpus()) {
+	} else if (target_cpus > num_online_cpus()) {
 		for_each_possible_cpu(cpu) {
-			if (info.target_cpus <= num_online_cpus())
+			if (target_cpus <= num_online_cpus())
 				break;
-			if (!cpu_online(cpu) &&
-			!(msm_thermal_info.cpus_offlined & BIT(cpu))) {
+			if (!cpu_online(cpu)) {
 				cpu_up(cpu);
-				dprintk("%s: Switching CPU%u online\n",
+				dprintk("%s: Switching CPU%u online.\n",
 					STATE_HELPER, cpu);
 			}
 		}
 	} else {
-		dprintk("%s: Target already achieved: %u\n",
-			STATE_HELPER, info.target_cpus);
+		dprintk("%s: Target already achieved: %u.\n",
+			STATE_HELPER, target_cpus);
 		return;
 	}
 
 	if (helper.debug) {
-		pr_info("%s: Battery Level: %u\n",
-			STATE_HELPER, info.batt_level);
-		pr_info("%s: Current Temp: %ld\n",
-			STATE_HELPER, info.current_temp);
-		pr_info("%s: Core Limit Temp: %u\n",
-			STATE_HELPER, msm_thermal_info.core_limit_temp_degC);
-		pr_info("%s: Target requested: %u\n",
-			STATE_HELPER, info.target_cpus);
+		if (batt_level <= 30)
+			pr_info("%s: Low Battery Level Detected.\n",
+				STATE_HELPER);
+		pr_info("%s: Target requested: %u.\n",
+			STATE_HELPER, target_cpus);
 		for_each_possible_cpu(cpu)
-			pr_info("%s: CPU%u status:%u allowed:%u\n",
-				STATE_HELPER, cpu, cpu_online(cpu),
-				!(msm_thermal_info.cpus_offlined & BIT(cpu)));
+			pr_info("%s: CPU%u status: %u\n",
+				STATE_HELPER, cpu, cpu_online(cpu));
 	}
 }
 
 static void batt_level_check(void)
 {
-	if (info.batt_level > helper.batt_level_eco)
-		info.batt_limited_cpus = NR_CPUS;
-	else if (info.batt_level > helper.batt_level_cri)
-		info.batt_limited_cpus = helper.max_cpus_eco;
+	if (batt_level > helper.batt_level_eco)
+		batt_limited_cpus = NR_CPUS;
+	else if (batt_level > helper.batt_level_cri)
+		batt_limited_cpus = helper.max_cpus_eco;
 	else
-		info.batt_limited_cpus = helper.max_cpus_cri;
+		batt_limited_cpus = helper.max_cpus_cri;
 }
 
-static void thermal_check(void)
-{
-	int cpu, sum = 0;
-
-	for_each_possible_cpu(cpu)
-		sum += !(msm_thermal_info.cpus_offlined & BIT(cpu));
-
-	info.therm_allowed_cpus = sum;
-}
-
-static void reschedule_nodelay(void)
+static void reschedule_work(void)
 {
 	batt_level_check();
-	thermal_check();
-
-	cancel_delayed_work_sync(&helper_work);
-	queue_delayed_work(helper_wq, &helper_work, 0);
-}
-
-void reschedule_helper(void)
-{
-	batt_level_check();
-	thermal_check();
-
-	if (!helper.enabled)
-		return;
-
 	cancel_delayed_work_sync(&helper_work);
 	queue_delayed_work(helper_wq, &helper_work,
 		msecs_to_jiffies(DELAY_MSEC));
@@ -180,46 +135,26 @@ void reschedule_helper(void)
 
 void batt_level_notify(int k)
 {
-	if (k == info.batt_level || k < 1 || k > 100)
+	if (!helper.enabled || k == batt_level || k < 1 || k > 100)
 		return;
 
-	/* Always stay updated. */
-	info.batt_level = k;
+	batt_level = k;
 
-	if (!helper.enabled)
-		return;
+	dprintk("%s: Received new BCL Notification: %u.\n",
+			STATE_HELPER, batt_level);
 
-	dprintk("%s: Received new BCL Notification: %u\n",
-			STATE_HELPER, info.batt_level);
-
-	/* Reschedule only if required. */
-	if (info.batt_level == helper.batt_level_cri || 
-		info.batt_level == helper.batt_level_eco)
-		reschedule_helper();
-}
-
-void thermal_notify(int cpu, int status)
-{
-	if (!helper.enabled)
-		return;
-
-	dprintk("%s: Received Thermal Notification for CPU%u: %u\n",
-			STATE_HELPER, cpu, status);
-
-	/* Do not reschedule; let thermal driver take care. */
-	thermal_check();
-}
-
-void thermal_level_relay(long temp)
-{
-	info.current_temp = temp;
+	if (batt_level == helper.batt_level_cri || 
+		batt_level == helper.batt_level_eco)
+		reschedule_work();
 }
 
 static int state_notifier_callback(struct notifier_block *this,
 				unsigned long event, void *data)
 {
-	if (helper.enabled)
-		reschedule_nodelay();
+	if (!helper.enabled)
+		return NOTIFY_OK;
+
+	reschedule_work();
 
 	return NOTIFY_OK;
 }
@@ -242,7 +177,7 @@ static void state_helper_start(void)
 	}
 
 	INIT_DELAYED_WORK(&helper_work, state_helper_work);
-	reschedule_helper();
+	reschedule_work();
 
 	return;
 err_dev:
@@ -264,10 +199,10 @@ static void __ref state_helper_stop(void)
 
 	/* Wake up all the sibling cores */
 	for_each_possible_cpu(cpu)
-		if (!cpu_online(cpu) &&
-			!(msm_thermal_info.cpus_offlined & BIT(cpu)))
+		if (!cpu_online(cpu))
 			cpu_up(cpu);
 }
+
 
 /************************** sysfs interface ************************/
 
@@ -324,8 +259,8 @@ static ssize_t store_max_cpus_online(struct kobject *kobj,
 		val = NR_CPUS;
 
 	helper.max_cpus_online = val;
-
-	reschedule_helper();
+	if (helper.enabled)
+		reschedule_work();
 
 	return count;
 }
@@ -378,8 +313,8 @@ static ssize_t store_max_cpus_eco(struct kobject *kobj,
 		val = helper.max_cpus_online;
 
 	helper.max_cpus_eco = val;
-
-	reschedule_helper();
+	if (helper.enabled)
+		reschedule_work();
 
 	return count;
 }
@@ -406,8 +341,8 @@ static ssize_t store_max_cpus_cri(struct kobject *kobj,
 		val = helper.max_cpus_eco;
 
 	helper.max_cpus_cri = val;
-
-	reschedule_helper();
+	if (helper.enabled)
+		reschedule_work();
 
 	return count;
 }
@@ -434,8 +369,8 @@ static ssize_t store_batt_level_eco(struct kobject *kobj,
 		val = 100;
 
 	helper.batt_level_eco = val;
-
-	reschedule_helper();
+	if (helper.enabled)
+		reschedule_work();
 
 	return count;
 }
@@ -462,8 +397,8 @@ static ssize_t store_batt_level_cri(struct kobject *kobj,
 		val = helper.batt_level_eco;
 
 	helper.batt_level_cri = val;
-
-	reschedule_helper();
+	if (helper.enabled)
+		reschedule_work();
 
 	return count;
 }
@@ -494,60 +429,9 @@ static ssize_t store_debug_mask(struct kobject *kobj,
 	return count;
 }
 
-static ssize_t show_target_cpus(struct kobject *kobj,
-				struct kobj_attribute *attr, 
-				char *buf)
-{
-	if (!helper.enabled) {
-		batt_level_check();
-		thermal_check();
-		target_cpus_calc();
-	}
-
-	return sprintf(buf, "%u\n", info.target_cpus);
-}
-
-static ssize_t show_batt_limited_cpus(struct kobject *kobj,
-				struct kobj_attribute *attr, 
-				char *buf)
-{
-	if (!helper.enabled)
-		batt_level_check();
-
-	return sprintf(buf, "%u\n", info.batt_limited_cpus);
-}
-
-static ssize_t show_therm_allowed_cpus(struct kobject *kobj,
-				struct kobj_attribute *attr, 
-				char *buf)
-{
-	if (!helper.enabled)
-		thermal_check();
-
-	return sprintf(buf, "%u\n", info.therm_allowed_cpus);
-}
-
-static ssize_t show_batt_level(struct kobject *kobj,
-				struct kobj_attribute *attr, 
-				char *buf)
-{
-	return sprintf(buf, "%u\n", info.batt_level);
-}
-
-static ssize_t show_current_temp(struct kobject *kobj,
-				struct kobj_attribute *attr, 
-				char *buf)
-{
-	return sprintf(buf, "%ld\n", info.current_temp);
-}
-
 #define KERNEL_ATTR_RW(_name) 				\
 static struct kobj_attribute _name##_attr = 		\
 	__ATTR(_name, 0664, show_##_name, store_##_name)
-
-#define KERNEL_ATTR_RO(_name) 				\
-static struct kobj_attribute _name##_attr = 		\
-	__ATTR(_name, 0444, show_##_name, NULL)
 
 KERNEL_ATTR_RW(enabled);
 KERNEL_ATTR_RW(max_cpus_online);
@@ -557,11 +441,6 @@ KERNEL_ATTR_RW(max_cpus_cri);
 KERNEL_ATTR_RW(batt_level_eco);
 KERNEL_ATTR_RW(batt_level_cri);
 KERNEL_ATTR_RW(debug_mask);
-KERNEL_ATTR_RO(target_cpus);
-KERNEL_ATTR_RO(batt_limited_cpus);
-KERNEL_ATTR_RO(therm_allowed_cpus);
-KERNEL_ATTR_RO(batt_level);
-KERNEL_ATTR_RO(current_temp);
 
 static struct attribute *state_helper_attrs[] = {
 	&enabled_attr.attr,
@@ -572,11 +451,6 @@ static struct attribute *state_helper_attrs[] = {
 	&batt_level_eco_attr.attr,
 	&batt_level_cri_attr.attr,
 	&debug_mask_attr.attr,
-	&target_cpus_attr.attr,
-	&batt_limited_cpus_attr.attr,
-	&therm_allowed_cpus_attr.attr,
-	&batt_level_attr.attr,
-	&current_temp_attr.attr,
 	NULL,
 };
 
