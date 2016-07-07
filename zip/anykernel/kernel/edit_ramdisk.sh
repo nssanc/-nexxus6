@@ -81,6 +81,7 @@ if [ "$found" != 'run-parts /system/etc/init.d' ]; then
         echo "    user root" >> /tmp/ramdisk/init.rc
         echo "    group root" >> /tmp/ramdisk/init.rc
 fi
+
 #Editing the sysinit to match /su/bin or /su/xbin location
 if [ -f "/system/bin/sysinit" ]; then
 	rm /system/bin/sysinit
@@ -94,13 +95,9 @@ if [ -f "/system/bin/sysinit" ]; then
 	chmod 755 /system/bin/sysinit
 fi
 
-#Make MPD and T-E as RW only
-if [ -f "/system/bin/mpdecision" ]; then
-chmod 644 /system/bin/mpdecision
-fi
-if [ -f "/system/bin/thermal-engine" ]; then
-chmod 644 /system/bin/thermal-engine
-fi
+#copy init.sysinit.rc
+cp /tmp/init.sysinit.rc /tmp/ramdisk/init.sysinit.rc
+chmod 750 /tmp/ramdisk/init.sysinit.rc
 
 #copy fstab
 cp /tmp/fstab.shamu /tmp/ramdisk/fstab.shamu
@@ -116,4 +113,3 @@ cd /tmp/ramdisk/
 find . | cpio -o -H newc | gzip > ../boot.img-ramdisk.gz
 cd /
 rm -rf /tmp/ramdisk
-
