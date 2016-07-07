@@ -45,32 +45,6 @@ if  grep -qr verity_update_state /tmp/ramdisk/init.shamu.rc; then
  sed -i "s/verity_update_state/#verity_update_state/" /tmp/ramdisk/init.shamu.rc
 fi
 
-#add init.d support if not already supported
-#this is no longer needed as the ramdisk now inserts our modules, but we will
-#keep this here for user comfort, since having run-parts init.d support is a
-#good idea anyway.
-found=$(find /tmp/ramdisk/init.rc -type f | xargs grep -oh "run-parts /system/etc/init.d");
-if [ "$found" != 'run-parts /system/etc/init.d' ]; then
-        #find busybox in /system
-        bblocation=$(find /system/ -name 'busybox')
-        if [ -n "$bblocation" ] && [ -e "$bblocation" ] ; then
-                echo "BUSYBOX FOUND!";
-                #strip possible leading '.'
-                bblocation=${bblocation#.};
-        else
-                echo "BUSYBOX NOT FOUND! init.d support will not work without busybox!";
-                echo "Setting busybox location to /su/xbin/busybox! (install it and init.d will work)";
-                #set default location since we couldn't find busybox
-                bblocation="/su/xbin/busybox";
-        fi
-	#append the new lines for this option at the bottom
-        echo "" >> /tmp/ramdisk/init.rc
-        echo "service userinit $bblocation run-parts /system/etc/init.d" >> /tmp/ramdisk/init.rc
-        echo "    oneshot" >> /tmp/ramdisk/init.rc
-        echo "    class late_start" >> /tmp/ramdisk/init.rc
-        echo "    user root" >> /tmp/ramdisk/init.rc
-        echo "    group root" >> /tmp/ramdisk/init.rc
-fi
 #Editing the sysinit to match /su/bin or /su/xbin location
 if [ -f "/system/bin/sysinit" ]; then
 	rm /system/bin/sysinit
@@ -83,6 +57,10 @@ if [ -f "/system/bin/sysinit" ]; then
 	echo "done" >> /system/bin/sysinit
 	chmod 755 /system/bin/sysinit
 fi
+
+#copy init.sysinit.rc
+cp /tmp/init.sysinit.rc /tmp/ramdisk/init.sysinit.rc
+chmod 750 /tmp/ramdisk/init.sysinit.rc
 
 #copy fstab
 cp /tmp/fstab.shamu /tmp/ramdisk/fstab.shamu
