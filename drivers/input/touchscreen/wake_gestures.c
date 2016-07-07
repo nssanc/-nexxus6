@@ -37,10 +37,10 @@
 /* Tuneables */
 #define WG_DEBUG		0
 #define WG_DEFAULT		0
-#define DT2W_DEFAULT		1
-#define S2W_DEFAULT		15
-#define S2S_DEFAULT		3
-#define CAMERA_DEFAULT		1
+#define DT2W_DEFAULT            1
+#define S2W_DEFAULT		0
+#define S2S_DEFAULT		0
+#define CAMERA_DEFAULT		0
 #define WG_PWRKEY_DUR           50
 
 /* shamu */
@@ -66,7 +66,7 @@
 #define SWEEP_LEFT		0x02
 #define SWEEP_UP		0x04
 #define SWEEP_DOWN		0x08
-#define VIB_STRENGTH 		44
+#define VIB_STRENGTH 		60
 
 
 #define WAKE_GESTURES_ENABLED	1
