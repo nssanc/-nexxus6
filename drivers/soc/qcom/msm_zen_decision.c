@@ -41,7 +41,7 @@
 /* Maximum cores online / Screen off */
 #define MAX_CPUS_ONLINE_SCREENOFF	2
 /* Enable/Disable driver */
-unsigned int enabled = 1;
+unsigned int enabled = 0;
 unsigned int wake_wait_time = WAKE_WAIT_TIME;
 unsigned int bat_threshold_ignore = BAT_THRESHOLD;
 unsigned int max_cpus_online = MAX_CPUS_ONLINE;
