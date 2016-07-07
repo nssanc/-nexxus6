@@ -37,7 +37,6 @@
 /* Tuneables */
 #define WG_DEBUG		0
 #define WG_DEFAULT		0
-#define DT2W_DEFAULT            1
 #define S2W_DEFAULT		0
 #define S2S_DEFAULT		0
 #define CAMERA_DEFAULT		0
@@ -81,7 +80,7 @@ static struct input_dev *gesture_dev;
 /* Resources */
 int s2w_switch = S2W_DEFAULT;
 int s2w_switch_temp;
-bool dt2w_switch = DT2W_DEFAULT;
+bool dt2w_switch = 1;
 int camera_switch = CAMERA_DEFAULT;
 int camera_switch_temp;
 static bool camera = false;
