@@ -2,6 +2,7 @@
 #ramdisk_gov_sed.sh by show-p1984
 #Features:
 #extracts ramdisk
+#Force SystemLess Root install
 #finds busbox in /system or sets default location if it cannot be found
 #add init.d support if not already supported
 #removes forced encryption
@@ -51,7 +52,7 @@ if grep "SYSTEMLESS=true" $Rless; then
 echo SystemLess Root already forced
 else
 rm /data/.supersu
-echo "SYSTEMLESS=true" >> /data/.supersu
+echo "SYSTEMLESS=true" >> $Rless
 echo SystemLess Root forced
 fi
 
