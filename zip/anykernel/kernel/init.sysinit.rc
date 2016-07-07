@@ -1,0 +1,17 @@
+#Init.rc file to run init.d script at boot by Dead-neM
+#Version 1.0
+
+# Sysinit service
+service sysinit /system/bin/sysinit service
+    class late_start
+    user root
+    seclabel u:r:init:s0
+    oneshot
+
+# Set sysinit property
+    setprop run.sysinit.script true
+
+# Run sysinit if define property is enabled
+on property:run.sysinit.script=true
+    start sysinit
+

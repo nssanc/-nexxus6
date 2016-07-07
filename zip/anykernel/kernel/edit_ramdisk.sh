@@ -26,7 +26,7 @@ fi
 # Force Permissive on cmdline
 sed -ri 's/ enforcing=[0-1]//g' /tmp/boot.img-cmdline
 sed -ri 's/ androidboot.selinux=permissive|androidboot.selinux=enforcing|androidboot.selinux=disabled//g' /tmp/boot.img-cmdline
-echo $(cat /tmp/boot.img-cmdline) enforcing=0 androidboot.selinux=permissive >/tmp/boot.img-cmdline
+echo $(cat /tmp/boot.img-cmdline) enforcing=0 androidboot.selinux=permissive > /tmp/boot.img-cmdline
 
 #Don't force encryption
 if  grep -qr forceencrypt /tmp/ramdisk/fstab.shamu; then
@@ -56,21 +56,6 @@ echo "SYSTEMLESS=true" >> $Rless
 echo SystemLess Root forced
 fi
 
-#add init.d support if not already supported
-#this is no longer needed as the ramdisk now inserts our modules, but we will
-#keep this here for user comfort, since having run-parts init.d support is a
-#good idea anyway.
-#found=$(find /tmp/ramdisk/init.rc -type f | xargs grep -oh "start /system/bin/sysinit");
-#if [ "$found" != 'start /system/bin/sysinit' ]; then
-#	echo "Sysinit launcher already created"
-#else
-#	#append the new lines for this option at the bottom
-#        echo "" >> /tmp/ramdisk/init.rc
-#        echo "# Sysinit will run scripts in init.d folder" >> /tmp/ramdisk/init.rc
-#	#Edit the property to one which is sure to not change so far
-#        echo "on property:???" >> /tmp/ramdisk/init.rc
-#        echo "    start /system/bin/sysinit" >> /tmp/ramdisk/init.rc
-#fi
 #Editing the sysinit to match /su/bin or /su/xbin location
 if [ -f "/system/bin/sysinit" ]; then
 	rm /system/bin/sysinit
@@ -91,6 +76,10 @@ fi
 if [ -f "/system/bin/thermal-engine" ]; then
 chmod 644 /system/bin/thermal-engine
 fi
+
+#copy init.sysinit.rc
+cp /tmp/init.sysinit.rc /tmp/ramdisk/init.sysinit.rc
+chmod 750 /tmp/ramdisk/init.sysinit.rc
 
 #copy fstab
 cp /tmp/fstab.shamu /tmp/ramdisk/fstab.shamu
