@@ -26,8 +26,9 @@
 #include <linux/slab.h>
 #include <linux/input.h>
 #include <linux/time.h>
-#include <linux/fb.h>
-#include <linux/notifier.h>
+#ifdef CONFIG_LCD_NOTIFY
+#include <linux/lcd_notify.h>
+#endif
 
 struct cpu_sync {
 	struct delayed_work boost_rem;
@@ -47,7 +48,9 @@ static struct workqueue_struct *cpu_boost_wq;
 
 static struct work_struct input_boost_work;
 
+#ifdef CONFIG_LCD_NOTIFY
 static struct notifier_block notif;
+#endif
 
 static unsigned int boost_ms;
 module_param(boost_ms, uint, 0644);
@@ -69,8 +72,10 @@ module_param(load_based_syncs, bool, 0644);
 static bool hotplug_boost = 0;
 module_param(hotplug_boost, bool, 0644);
 
+#ifdef CONFIG_LCD_NOTIFY
 bool wakeup_boost;
 module_param(wakeup_boost, bool, 0644);
+#endif
 
 static struct delayed_work input_boost_rem;
 static u64 last_input_time;
@@ -500,33 +505,30 @@ static struct notifier_block __refdata cpu_nblk = {
         .notifier_call = cpuboost_cpu_callback,
 };
 
-static int fb_notifier_callback(struct notifier_block *self,
+#ifdef CONFIG_LCD_NOTIFY
+static int lcd_notifier_callback(struct notifier_block *this,
 				unsigned long event, void *data)
 {
-	struct fb_event *evdata = data;
-	int *blank;
-
-	if (evdata && evdata->data && event == FB_EVENT_BLANK) {
-		blank = evdata->data;
-		switch (*blank) {
-			case FB_BLANK_UNBLANK:
-				if (!wakeup_boost || !input_boost_enabled ||
-				     work_pending(&input_boost_work))
-					break;
-				pr_debug("Wakeup boost for display on event.\n");
-				queue_work(cpu_boost_wq, &input_boost_work);
-				last_input_time = ktime_to_us(ktime_get());
-				break;
-			case FB_BLANK_POWERDOWN:
-			case FB_BLANK_HSYNC_SUSPEND:
-			case FB_BLANK_VSYNC_SUSPEND:
-			case FB_BLANK_NORMAL:
-				break;
-		}
+	switch (event) {
+	case LCD_EVENT_ON_START:
+	case LCD_EVENT_OFF_END:
+	case LCD_EVENT_OFF_START:
+		break;
+	case LCD_EVENT_ON_END:
+		if (!wakeup_boost || !input_boost_enabled ||
+		     work_pending(&input_boost_work))
+			break;
+		pr_debug("Wakeup boost for LCD on event.\n");
+		queue_work(cpu_boost_wq, &input_boost_work);
+		last_input_time = ktime_to_us(ktime_get());
+		break;
+	default:
+		break;
 	}
 
-	return 0;
+	return NOTIFY_OK;
 }
+#endif
 
 static int cpu_boost_init(void)
 {
@@ -562,7 +564,12 @@ static int cpu_boost_init(void)
 	if (ret)
 		pr_err("Cannot register cpuboost hotplug handler.\n");
 
-	notif.notifier_call = fb_notifier_callback;
+#ifdef CONFIG_LCD_NOTIFY
+	notif.notifier_call = lcd_notifier_callback;
+	ret = lcd_register_client(&notif);
+        if (ret != 0)
+                pr_err("Failed to register hotplug LCD notifier callback.\n");
+#endif
 
 	return ret;
 }
