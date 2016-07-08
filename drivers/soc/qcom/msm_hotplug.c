@@ -19,9 +19,7 @@
 #include <linux/device.h>
 #include <linux/slab.h>
 #include <linux/cpufreq.h>
-#ifdef CONFIG_STATE_NOTIFIER
-#include <linux/state_notifier.h>
-#endif
+#include <linux/fb.h>
 #include <linux/mutex.h>
 #include <linux/input.h>
 #include <linux/math64.h>
@@ -557,7 +555,47 @@ static int state_notifier_callback(struct notifier_block *this,
 
 	return NOTIFY_OK;
 }
-#endif
+
+static void __msm_hotplug_suspend(void)
+
+{
+	INIT_DELAYED_WORK(&hotplug.suspend_work, msm_hotplug_suspend);
+	queue_delayed_work_on(0, susp_wq, &hotplug.suspend_work, 
+				 msecs_to_jiffies(hotplug.suspend_defer_time * 1000)); 
+}
+
+static void __msm_hotplug_resume(void)
+{
+	flush_workqueue(susp_wq);
+	cancel_delayed_work_sync(&hotplug.suspend_work);
+	queue_work_on(0, susp_wq, &hotplug.resume_work);
+}
+
+static int fb_notifier_callback(struct notifier_block *self,
+				unsigned long event, void *data)
+{
+	struct fb_event *evdata = data;
+	int *blank;
+
+	if (evdata && evdata->data && event == FB_EVENT_BLANK) {
+		blank = evdata->data;
+		switch (*blank) {
+			case FB_BLANK_UNBLANK:
+				//display on
+				__msm_hotplug_resume();
+				break;
+			case FB_BLANK_POWERDOWN:
+			case FB_BLANK_HSYNC_SUSPEND:
+			case FB_BLANK_VSYNC_SUSPEND:
+			case FB_BLANK_NORMAL:
+				//display off
+				__msm_hotplug_suspend();
+				break;
+		}
+	}
+
+	return 0;
+}
 
 static void hotplug_input_event(struct input_handle *handle, unsigned int type,
 				unsigned int code, int value)
@@ -664,14 +702,21 @@ static int msm_hotplug_start(void)
 		goto err_out;
 	}
 
-#ifdef CONFIG_STATE_NOTIFIER
-	hotplug.notif.notifier_call = state_notifier_callback;
-	if (state_register_client(&hotplug.notif)) {
-		pr_err("%s: Failed to register State notifier callback\n",
+	susp_wq =
+	    alloc_workqueue("susp_wq", WQ_FREEZABLE, 0);
+	if (!susp_wq) {
+		pr_err("%s: Failed to allocate suspend workqueue\n",
+		       MSM_HOTPLUG);
+		ret = -ENOMEM;
+		goto err_out;
+	}
+
+	hotplug.notif.notifier_call = fb_notifier_callback;
+	if (fb_register_client(&hotplug.notif)) {
+		pr_err("%s: Failed to register FB notifier callback\n",
 			MSM_HOTPLUG);
 		goto err_dev;
 	}
-#endif
 
 	ret = input_register_handler(&hotplug_input_handler);
 	if (ret) {
@@ -733,9 +778,7 @@ static void __ref msm_hotplug_stop(void)
 	mutex_destroy(&stats.stats_mutex);
 	kfree(stats.load_hist);
 
-#ifdef CONFIG_STATE_NOTIFIER
-	state_unregister_client(&hotplug.notif);
-#endif
+	fb_unregister_client(&hotplug.notif);
 	hotplug.notif.notifier_call = NULL;
 	input_unregister_handler(&hotplug_input_handler);
 
