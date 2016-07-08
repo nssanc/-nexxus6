@@ -181,11 +181,10 @@ config MSM_SLEEPER
 	help
 	  CPU hotplug driver
 
-config MSM_ZEN_DECISION
-	bool "CPU hotplug driver"
+config ZEN_DECISION
+	bool "Zen Decision: MSM Userspace Handler"
+	depends on SMP && FB
 	default y
-	help
-	  CPU hotplug driver
 
 config MSM_LIMITER
 	bool "MSM Frequency Limiter Driver"

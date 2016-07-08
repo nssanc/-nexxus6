@@ -25,28 +25,27 @@
 #include <linux/platform_device.h>
 #include <linux/workqueue.h>
 #include <linux/power_supply.h>
-#include <linux/mutex.h>
-#include <linux/cpuset.h>
 
 #define ZEN_DECISION "zen_decision"
 
-/* How long to wait to enable cores on wake (in ms) // 1 minute maximum */
-#define WAKE_WAIT_TIME_MAX	60000
-#define WAKE_WAIT_TIME		6000
-/* Battery level threshold to ignore UP operations. Only do CPU_UP work when battery level is above this value. Setting to 0 will do CPU_UP work regardless of battery level. */
-#define BAT_THRESHOLD		0
-/* Maximum,Minimum cores online / Screen on */
-#define MIN_CPUS_ONLINE		1
-#define MAX_CPUS_ONLINE		NR_CPUS
-/* Maximum cores online / Screen off */
-#define MAX_CPUS_ONLINE_SCREENOFF	2
-/* Enable/Disable driver */
-unsigned int enabled = 0;
-unsigned int wake_wait_time = WAKE_WAIT_TIME;
-unsigned int bat_threshold_ignore = BAT_THRESHOLD;
-unsigned int max_cpus_online = MAX_CPUS_ONLINE;
-unsigned int min_cpus_online = MIN_CPUS_ONLINE;
-unsigned int max_cpus_online_screenoff = MAX_CPUS_ONLINE_SCREENOFF;
+/*
+ * Enable/Disable driver
+ */
+unsigned int enabled = 1;
+
+/*
+ * How long to wait to enable cores on wake (in ms)
+ */
+#define WAKE_WAIT_TIME_MAX 60000 // 1 minute maximum
+unsigned int wake_wait_time = 1000;
+
+/*
+ * Battery level threshold to ignore UP operations.
+ * Only do CPU_UP work when battery level is above this value.
+ *
+ * Setting to 0 will do CPU_UP work regardless of battery level.
+ */
+unsigned int bat_threshold_ignore = 15;
 
 /* FB Notifier */
 static struct notifier_block fb_notifier;
@@ -61,12 +60,6 @@ struct kobject *zendecision_kobj;
 /* Power supply information */
 static struct power_supply *psy;
 union power_supply_propval current_charge;
-
-struct msm_zen_decision_off_t {
-       struct mutex core_mutex;
-       unsigned int screen_off;
-};
-static DEFINE_PER_CPU(struct msm_zen_decision_off_t, msm_zen_decision_off);
 
 /*
  * Some devices may have a different name power_supply device representing the battery.
@@ -108,21 +101,7 @@ static void __ref msm_zd_online_all_cpus(struct work_struct *work)
 	int cpu;
 
 	for_each_cpu_not(cpu, cpu_online_mask) {
-	        mutex_lock(&per_cpu(msm_zen_decision_off, cpu).core_mutex);
-		if (cpu && num_online_cpus() > max_cpus_online_screenoff)
-			cpu_down(cpu);
-		else
-			cpu_up(cpu);
-		per_cpu(msm_zen_decision_off, cpu).screen_off = false;
-		mutex_unlock(&per_cpu(msm_zen_decision_off, cpu).core_mutex);for_each_online_cpu(cpu)
-		if (cpu && num_online_cpus() > max_cpus_online)
-			cpu_down(cpu);
-		else
-			cpu_up(cpu);
-		if (cpu && num_online_cpus() > min_cpus_online)
-			cpu_down(cpu);
-		else
-			cpu_up(cpu);
+		cpu_up(cpu);
 	}
 }
 
@@ -239,90 +218,6 @@ static ssize_t bat_threshold_ignore_store(struct kobject *kobj,
 	return size;
 }
 
-static ssize_t max_cpus_online_show(struct kobject *kobj,
-	struct kobj_attribute *attr, char *buf)
-{
-	return sprintf(buf, "%u\n", max_cpus_online);
-}
-
-static ssize_t max_cpus_online_store(struct kobject *kobj,
-	struct kobj_attribute *attr, const char *buf, size_t size)
-{
-	int ret;
-	unsigned long new_val;
-	ret = kstrtoul(buf, 0, &new_val);
-	if (ret < 0)
-		return ret;
-
-	/* Restrict between 1 and 4 */
-	if (new_val > 4)
-		max_cpus_online = 4;
-	else
-		max_cpus_online = new_val;
-	if (new_val < 1)
-		max_cpus_online = 1;
-	else
-		max_cpus_online = new_val;
-
-	return size;
-}
-
-static ssize_t min_cpus_online_show(struct kobject *kobj,
-	struct kobj_attribute *attr, char *buf)
-{
-	return sprintf(buf, "%u\n", min_cpus_online);
-}
-
-static ssize_t min_cpus_online_store(struct kobject *kobj,
-	struct kobj_attribute *attr, const char *buf, size_t size)
-{
-	int ret;
-	unsigned long new_val;
-	ret = kstrtoul(buf, 0, &new_val);
-	if (ret < 0)
-		return ret;
-
-	/* Restrict between 1 and 4 */
-	if (new_val > 4)
-		min_cpus_online = 4;
-	else
-		min_cpus_online = new_val;
-	if (new_val < 1)
-		min_cpus_online = 1;
-	else
-		min_cpus_online = new_val;
-
-	return size;
-}
-
-static ssize_t max_cpus_online_screenoff_show(struct kobject *kobj,
-	struct kobj_attribute *attr, char *buf)
-{
-	return sprintf(buf, "%u\n", max_cpus_online_screenoff);
-}
-
-static ssize_t max_cpus_online_screenoff_store(struct kobject *kobj,
-	struct kobj_attribute *attr, const char *buf, size_t size)
-{
-	int ret;
-	unsigned long new_val;
-	ret = kstrtoul(buf, 0, &new_val);
-	if (ret < 0)
-		return ret;
-
-	/* Restrict between 1 and 4 */
-	if (new_val > 4)
-		max_cpus_online_screenoff = 4;
-	else
-		max_cpus_online_screenoff = new_val;
-	if (new_val < 1)
-		max_cpus_online_screenoff = 1;
-	else
-		max_cpus_online_screenoff = new_val;
-
-	return size;
-}
-
 static struct kobj_attribute kobj_enabled =
 	__ATTR(enabled, 0644, enable_show,
 		enable_store);
@@ -335,25 +230,10 @@ static struct kobj_attribute kobj_bat_threshold_ignore =
 	__ATTR(bat_threshold_ignore, 0644, bat_threshold_ignore_show,
 		bat_threshold_ignore_store);
 
-static struct kobj_attribute kobj_max_cpus_online =
-	__ATTR(max_cpus_online, 0644, max_cpus_online_show,
-		max_cpus_online_store);
-
-static struct kobj_attribute kobj_min_cpus_online =
-	__ATTR(min_cpus_online, 0644, min_cpus_online_show,
-		min_cpus_online_store);
-
-static struct kobj_attribute kobj_max_cpus_online_screenoff =
-	__ATTR(max_cpus_online_screenoff, 0644, max_cpus_online_screenoff_show,
-		max_cpus_online_screenoff_store);
-
 static struct attribute *zd_attrs[] = {
 	&kobj_enabled.attr,
 	&kobj_wake_wait.attr,
 	&kobj_bat_threshold_ignore.attr,
-	&kobj_max_cpus_online.attr,
-	&kobj_min_cpus_online.attr,
-	&kobj_max_cpus_online_screenoff.attr,
 	NULL,
 };
 
@@ -439,7 +319,6 @@ static struct platform_device zd_device = {
 
 static int __init zd_init(void)
 {
-        int cpu;
 	int ret = platform_driver_register(&zd_driver);
 	if (ret)
 		pr_err("[%s]: platform_driver_register failed: %d\n", ZEN_DECISION, ret);
@@ -453,22 +332,13 @@ static int __init zd_init(void)
 	else
 		pr_info("[%s]: platform_device_register succeeded\n", ZEN_DECISION);
 
-        for_each_possible_cpu(cpu) {
-		mutex_init(&(per_cpu(msm_zen_decision_off, cpu).core_mutex));
-		per_cpu(msm_zen_decision_off, cpu).screen_off = false;
-	}
-	
 	return ret;
 }
 
 static void __exit zd_exit(void)
 {
-        int cpu;
 	platform_driver_unregister(&zd_driver);
 	platform_device_unregister(&zd_device);
-        for_each_possible_cpu(cpu) {
-		mutex_destroy(&(per_cpu(msm_zen_decision_off, cpu).core_mutex));
-	}
 }
 
 late_initcall(zd_init);
