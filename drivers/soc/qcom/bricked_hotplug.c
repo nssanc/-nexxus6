@@ -24,6 +24,7 @@
 #include <linux/module.h>
 #include <linux/device.h>
 #include <linux/fb.h>
+#include <linux/notifier.h>
 
 #define DEBUG 0
 
@@ -352,7 +353,55 @@ static int bricked_hotplug_start(void)
 		goto err_out;
 	}
 
-	fb_unregister_client(&notif);
+	susp_wq =
+	    alloc_workqueue("susp_wq", WQ_FREEZABLE, 0);
+	if (!susp_wq) {
+		pr_err("%s: Failed to allocate suspend workqueue\n",
+		       MPDEC_TAG);
+		ret = -ENOMEM;
+		goto err_out;
+	}
+
+	notif.notifier_call = fb_notifier_callback;
+
+	mutex_init(&hotplug.bricked_cpu_mutex);
+	mutex_init(&hotplug.bricked_hotplug_mutex);
+
+	INIT_DELAYED_WORK(&hotplug_work, bricked_hotplug_work);
+	INIT_DELAYED_WORK(&suspend_work, bricked_hotplug_suspend);
+	INIT_WORK(&resume_work, bricked_hotplug_resume);
+
+	for_each_possible_cpu(cpu) {
+		dl = &per_cpu(lock_info, cpu);
+		INIT_DELAYED_WORK(&dl->lock_rem, remove_down_lock);
+	}
+
+	if (hotplug.bricked_enabled)
+		queue_delayed_work(hotplug_wq, &hotplug_work,
+					msecs_to_jiffies(hotplug.startdelay));
+
+	return ret;
+err_out:
+	hotplug.bricked_enabled = 0;
+	return ret;
+}
+
+static void bricked_hotplug_stop(void)
+{
+	int cpu;
+	struct down_lock *dl;
+
+	for_each_possible_cpu(cpu) {
+		dl = &per_cpu(lock_info, cpu);
+		cancel_delayed_work_sync(&dl->lock_rem);
+	}
+
+	flush_workqueue(susp_wq);
+	cancel_work_sync(&resume_work);
+	cancel_delayed_work_sync(&suspend_work);
+	cancel_delayed_work_sync(&hotplug_work);
+	mutex_destroy(&hotplug.bricked_hotplug_mutex);
+	mutex_destroy(&hotplug.bricked_cpu_mutex);
 	notif.notifier_call = NULL;
 	destroy_workqueue(hotplug_wq);
 
