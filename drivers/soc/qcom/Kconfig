@@ -134,12 +134,6 @@ config ALUCARD_HOTPLUG
 	help
 	  Generic Alucard-hotplug cpu hotplug driver for ARM SOCs
 
-config AUTOSMP
-	bool "CPU hotplug driver"
-	default y
-	help
-	  CPU hotplug driver
-
 config BLU_PLUG
 	bool "Dynamic hotplug driver"
 	depends on HOTPLUG_CPU
