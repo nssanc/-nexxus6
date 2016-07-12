@@ -46,7 +46,8 @@
 #include <linux/cpuset.h>
 #include <linux/show_mem_notifier.h>
 #include <linux/vmpressure.h>
-#include <linux/zcache.h>
+
+#include <trace/events/memkill.h>
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/almk.h>
@@ -59,7 +60,7 @@
 
 static uint32_t lmk_count = 0;
 
-static uint32_t lowmem_debug_level = 1;
+static uint32_t lowmem_debug_level = 0;
 static short lowmem_adj[6] = {
 	0,
 	1,
@@ -70,12 +71,12 @@ static short lowmem_adj[6] = {
 };
 static int lowmem_adj_size = 6;
 static int lowmem_minfree[6] = {
-	 4 * 1024,	/* Foreground App: 	16 MB	*/
-	 8 * 1024,	/* Visible App: 	32 MB	*/
-	16 * 1024,	/* Secondary Server: 	65 MB	*/
-	28 * 1024,	/* Hidden App: 		114 MB	*/
-	45 * 1024,	/* Content Provider: 	184 MB	*/
-	50 * 1024,	/* Empty App: 		204 MB	*/
+	 3 *  512,	/* Foreground App: 	6 MB	*/
+	 2 * 1024,	/* Visible App: 	8 MB	*/
+	 4 * 1024,	/* Secondary Server: 	16 MB	*/
+	16 * 1024,	/* Hidden App: 		64 MB	*/
+	28 * 1024,	/* Content Provider: 	112 MB	*/
+	32 * 1024,	/* Empty App: 		128 MB	*/
 };
 static int lowmem_minfree_size = 6;
 static int lmk_fast_run = 1;
@@ -144,7 +145,7 @@ static int lmk_vmpressure_notifier(struct notifier_block *nb,
 		return 0;
 
 	if (pressure >= 95) {
-		other_file = global_page_state(NR_FILE_PAGES) + zcache_pages() -
+		other_file = global_page_state(NR_FILE_PAGES) -
 			global_page_state(NR_SHMEM) -
 			total_swapcache_pages();
 		other_free = global_page_state(NR_FREE_PAGES);
@@ -157,7 +158,7 @@ static int lmk_vmpressure_notifier(struct notifier_block *nb,
 		if (lowmem_minfree_size < array_size)
 			array_size = lowmem_minfree_size;
 
-		other_file = global_page_state(NR_FILE_PAGES) + zcache_pages() -
+		other_file = global_page_state(NR_FILE_PAGES) -
 			global_page_state(NR_SHMEM) -
 			total_swapcache_pages();
 
@@ -218,7 +219,7 @@ static int test_task_flag(struct task_struct *p, int flag)
 {
 	struct task_struct *t;
 
-	for_each_thread(p, t) {
+	for_each_thread(p,t) {
 		task_lock(t);
 		if (test_tsk_thread_flag(t, flag)) {
 			task_unlock(t);
@@ -472,18 +473,18 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	other_free = global_page_state(NR_FREE_PAGES);
 
 	if (global_page_state(NR_SHMEM) + total_swapcache_pages() <
-		global_page_state(NR_FILE_PAGES) + zcache_pages())
+		global_page_state(NR_FILE_PAGES))
 #if defined (CONFIG_SWAP) && (defined (CONFIG_ZSWAP) || defined (CONFIG_ZRAM))
 		{
 		si_swapinfo(&si);
 		other_file = global_page_state(NR_FILE_PAGES) -
-						global_page_state(NR_SHMEM) + zcache_pages() +
+						global_page_state(NR_SHMEM) +
 						(si.freeswap >> 1) -
 						total_swapcache_pages();
 		}
 #else
 		other_file = global_page_state(NR_FILE_PAGES) -
-						global_page_state(NR_SHMEM) + zcache_pages() -
+						global_page_state(NR_SHMEM) -
 						total_swapcache_pages();
 #endif
 	else
@@ -619,6 +620,9 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		}
 	}
 	if (selected) {
+		int i, j;
+		char zinfo[ZINFO_LENGTH];
+		char *p = zinfo;
 		lowmem_print(1, "Killing '%s' (%d), adj %hd,\n" \
 				"   to free %ldkB on behalf of '%s' (%d) because\n" \
 				"   cache %ldkB is below limit %ldkB for oom_score_adj %hd\n" \
@@ -627,7 +631,6 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 				"   Total reserve is %ldkB\n" \
 				"   Total free pages is %ldkB\n" \
 				"   Total file cache is %ldkB\n" \
-                                "   Total zcache is %ldkB\n" \
 				"   Slab Reclaimable is %ldkB\n" \
 				"   Slab UnReclaimable is %ldkB\n" \
 				"   Total Slab is %ldkB\n" \
@@ -647,7 +650,6 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 				(long)(PAGE_SIZE / 1024),
 			     global_page_state(NR_FILE_PAGES) *
 				(long)(PAGE_SIZE / 1024),
-                             (long)zcache_pages() * (long)(PAGE_SIZE / 1024),
 			     global_page_state(NR_SLAB_RECLAIMABLE) *
 				(long)(PAGE_SIZE / 1024),
 			     global_page_state(NR_SLAB_UNRECLAIMABLE) *
@@ -660,15 +662,26 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 
 		if (lowmem_debug_level >= 2 && selected_oom_score_adj == 0) {
 			show_mem(SHOW_MEM_FILTER_NODES);
-                        dump_tasks(NULL, NULL);
 			show_mem_call_notifiers();
 		}
 
 		lowmem_deathpending_timeout = jiffies + HZ;
+		for (i = 0; i < MAX_NUMNODES; i++)
+			for (j = 0; j < MAX_NR_ZONES; j++)
+				if (zall[i][j].free || zall[i][j].file)
+					p += snprintf(p, ZINFO_DIGITS,
+						"%d:%d:%lu:%lu ", i, j,
+						zall[i][j].free,
+						zall[i][j].file);
+
+		trace_lmk_kill(selected->pid, selected->comm,
+				selected_oom_score_adj, selected_tasksize,
+				min_score_adj, sc->gfp_mask, zinfo);
 		set_tsk_thread_flag(selected, TIF_MEMDIE);
 		send_sig(SIGKILL, selected, 0);
 		rem -= selected_tasksize;
 		rcu_read_unlock();
+		lmk_count++;
 		/* give the system time to free up the memory */
 		msleep_interruptible(20);
 		trace_almk_shrink(selected_tasksize, ret,
