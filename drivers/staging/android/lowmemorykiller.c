@@ -60,7 +60,7 @@
 
 static uint32_t lmk_count = 0;
 
-static uint32_t lowmem_debug_level = 0;
+static uint32_t lowmem_debug_level = 1;
 static short lowmem_adj[6] = {
 	0,
 	1,
