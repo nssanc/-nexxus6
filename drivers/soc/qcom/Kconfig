@@ -134,6 +134,14 @@ config ALUCARD_HOTPLUG
 	help
 	  Generic Alucard-hotplug cpu hotplug driver for ARM SOCs
 
+config ASMP
+ 	bool "Multi-core automatic hotplug support"
+ 	depends on SMP
+ 	default n
+ 	help
+ 	Automatically hotplugs the multiple cpu cores on and off
+ 	based on cpu load and suspend stat
+
 config BLU_PLUG
 	bool "Dynamic hotplug driver"
 	depends on HOTPLUG_CPU
