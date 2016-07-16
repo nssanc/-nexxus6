@@ -137,7 +137,7 @@ config ALUCARD_HOTPLUG
 config ASMP
  	bool "Multi-core automatic hotplug support"
  	depends on SMP
- 	default n
+ 	default y
  	help
  	Automatically hotplugs the multiple cpu cores on and off
  	based on cpu load and suspend stat
