@@ -498,9 +498,6 @@ extern struct cpufreq_governor cpufreq_gov_intelliactive;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTERACTIVE)
 extern struct cpufreq_governor cpufreq_gov_interactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_interactive)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTERACTIVE_PRO)
-extern struct cpufreq_governor cpufreq_gov_interactive_pro;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_interactive_pro)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LIGHTNING)
 extern struct cpufreq_governor cpufreq_gov_lightning;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lightning)
@@ -528,9 +525,6 @@ extern struct cpufreq_governor cpufreq_gov_ondemand_eps;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMANDPLUS)
 extern struct cpufreq_governor cpufreq_gov_ondemandplus;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_ondemandplus)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_PEGASUSQ)
-extern struct cpufreq_governor cpufreq_gov_pegasusq;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_pegasusq)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_PRESERVATIVE)
 extern struct cpufreq_governor cpufreq_gov_preservative;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_preservative)
@@ -555,9 +549,6 @@ extern struct cpufreq_governor cpufreq_gov_tripndroid;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE)
 extern struct cpufreq_governor cpufreq_gov_umbrella_core;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_umbrella_core)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_WAVE)
-extern struct cpufreq_governor cpufreq_gov_wave;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_wave)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_WHEATLEY)
 extern struct cpufreq_governor cpufreq_gov_wheatley;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_wheatley)
