@@ -53,16 +53,6 @@ config CPU_FREQ_DEFAULT_GOV_ABYSSPLUGV2
 	bool "abyssplugv2"
 	select CPU_FREQ_GOV_ABYSSPLUGV2
 
-config CPU_FREQ_DEFAULT_GOV_ADAPTIVE
-	bool "adaptive"
-	select CPU_FREQ_GOV_ADAPTIVE
-	---help---
-	  Use the CPUFreq governor 'adaptive' as default. This allows
-	  you to get a full dynamic cpu frequency capable system by simply
-	  loading your cpufreq low-level hardware driver, using the
-	  'adaptive' governor for latency-sensitive workloads and demanding
-	  performance.
-
 config CPU_FREQ_DEFAULT_GOV_ALUCARD
 	bool "alucard"
 	select CPU_FREQ_GOV_ALUCARD
@@ -229,11 +219,6 @@ config CPU_FREQ_DEFAULT_GOV_PERFORMANCE
 	  the frequency statically to the highest frequency supported by
 	  the CPU.
 
-config CPU_FREQ_DEFAULT_GOV_PRESERVATIVE
-	bool "preservative"
-	select CPU_FREQ_GOV_PRESERVATIVE
-	help
-
 config CPU_FREQ_DEFAULT_GOV_RAGINGMOLASSES
 	bool "ragingmolasses"
 	select CPU_FREQ_GOV_RAGINMOLASSES
@@ -325,27 +310,6 @@ config GENERIC_CPUFREQ_CPU0
 config CPU_FREQ_GOV_ABYSSPLUGV2
 	tristate "'abyssplugv2' cpufreq governor"
 	depends on CPU_FREQ
-
-config CPU_FREQ_GOV_ADAPTIVE
-	tristate "'adaptive' cpufreq policy governor"
-	---help---
-	  'adaptive' - This driver adds a dynamic cpufreq policy governor
-	  designed for latency-sensitive workloads and also for demanding
-	  performance.
-
-	  This governor attempts to reduce the latency of clock
-	  increases so that the system is more responsive to
-	  interactive workloads in loweset steady-state but to
-	  to reduce power consumption in middle operation level level up
-	  will be done in step by step to prohibit system from going to
-	  max operation level.
-
-	  To compile this driver as a module, choose M here: the
-	  module will be called cpufreq_adaptive.
-
-	  For details, take a look at linux/Documentation/cpu-freq.
-
-	  If in doubt, say N.
 
 config CPU_FREQ_GOV_ALUCARD
 	tristate "'alucard' cpufreq governor"
@@ -569,14 +533,6 @@ config CPU_FREQ_GOV_PERFORMANCE
 	  module will be called cpufreq_performance.
 
 	  If in doubt, say Y.
-	
-config CPU_FREQ_GOV_PRESERVATIVE
-	tristate "'preservative' cpufreq governor"
-	depends on CPU_FREQ
-	help
-	  'preservative' - this driver is good in cakes
-
-	  If in doubt, say N.
 
 config CPU_FREQ_GOV_RAGINGMOLASSES
 	tristate "'RAGINGMOLASSES' cpufreq policy governor"

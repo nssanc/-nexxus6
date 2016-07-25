@@ -12,7 +12,6 @@ obj-$(CONFIG_GENERIC_CPUFREQ_CPU0)	   += cpufreq-cpu0.o
 
 # CPUfreq Governors - START
 obj-$(CONFIG_CPU_FREQ_GOV_ABYSSPLUGV2)	   += cpufreq_abyssplugv2.o
-obj-$(CONFIG_CPU_FREQ_GOV_ADAPTIVE)	   += cpufreq_adaptive.o
 obj-$(CONFIG_CPU_FREQ_GOV_ALUCARD)	   += cpufreq_alucard.o
 obj-$(CONFIG_CPU_FREQ_GOV_ARTERACTIVE)	   += cpufreq_arteractive.o
 obj-$(CONFIG_CPU_FREQ_GOV_BARRY_ALLEN)	   += cpufreq_barry_allen.o
@@ -39,7 +38,6 @@ obj-$(CONFIG_CPU_FREQ_GOV_ONDEMAND)	   += cpufreq_ondemand.o
 obj-$(CONFIG_CPU_FREQ_GOV_ONDEMAND_EPS)	   += cpufreq_ondemand_eps.o
 obj-$(CONFIG_CPU_FREQ_GOV_ONDEMANDPLUS)    += cpufreq_ondemandplus.o
 obj-$(CONFIG_CPU_FREQ_GOV_PERFORMANCE)	   += cpufreq_performance.o
-obj-$(CONFIG_CPU_FREQ_GOV_PRESERVATIVE)	   += cpufreq_preservative.o
 obj-$(CONFIG_CPU_FREQ_GOV_RAGINGMOLASSES)  += cpufreq_ragingmolasses.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSH3)	   += cpufreq_smartassh3.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSV2)	   += cpufreq_smartassv2.o

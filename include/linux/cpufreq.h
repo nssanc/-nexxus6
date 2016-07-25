@@ -447,9 +447,6 @@ extern struct cpufreq_governor cpufreq_gov_performance;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ABYSSPLUGV2)
 extern struct cpufreq_governor cpufreq_gov_abyssplugv2;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_abyssplugv2)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ADAPTIVE)
-extern struct cpufreq_governor cpufreq_gov_adaptive;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_adaptive)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ALUCARD)
 extern struct cpufreq_governor cpufreq_gov_alucard;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_alucard)
@@ -525,9 +522,6 @@ extern struct cpufreq_governor cpufreq_gov_ondemand_eps;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMANDPLUS)
 extern struct cpufreq_governor cpufreq_gov_ondemandplus;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_ondemandplus)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_PRESERVATIVE)
-extern struct cpufreq_governor cpufreq_gov_preservative;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_preservative)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_RAGINGMOLASSES)
 extern struct cpufreq_governor cpufreq_gov_ragingmolasses;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_ragingmolasses)
