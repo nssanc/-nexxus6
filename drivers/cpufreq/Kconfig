@@ -202,10 +202,6 @@ config CPU_FREQ_DEFAULT_GOV_ONDEMAND
 	  governor. If unsure have a look at the help section of the
 	  driver. Fallback governor will be the performance governor.
 
-config CPU_FREQ_DEFAULT_GOV_ONDEMAND_EPS
-	bool "ondemand_eps"
-	select CPU_FREQ_GOV_ONDEMAND_EPS
-
 config CPU_FREQ_DEFAULT_GOV_ONDEMANDPLUS
 	bool "ondemandplus"
 	select CPU_FREQ_GOV_ONDEMANDPLUS
@@ -240,10 +236,6 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
 config CPU_FREQ_DEFAULT_GOV_SMARTMAX
 	bool "smartmax"
 	select CPU_FREQ_GOV_SMARTMAX
-
-config CPU_FREQ_DEFAULT_GOV_SMARTMAX_EPS
-	bool "smartmax_eps"
-	select CPU_FREQ_GOV_SMARTMAX_EPS
 
 config CPU_FREQ_DEFAULT_GOV_TRIPNDROID
 	bool "tripndroid"
@@ -516,10 +508,6 @@ config CPU_FREQ_GOV_ONDEMAND
 
 	  If in doubt, say N.
 
-config CPU_FREQ_GOV_ONDEMAND_EPS
-        tristate "'ondemand_eps' cpufreq governor"
-        depends on CPU_FREQ
-
 config CPU_FREQ_GOV_ONDEMANDPLUS
 	tristate "'ondemandplus' cpufreq governor"
  
@@ -559,10 +547,6 @@ config CPU_FREQ_GOV_SMARTASSV2
 
 config CPU_FREQ_GOV_SMARTMAX
         tristate "'smartmax' cpufreq governor"
-        depends on CPU_FREQ
-
-config CPU_FREQ_GOV_SMARTMAX_EPS
-        tristate "'smartmax_eps' cpufreq governor"
         depends on CPU_FREQ
 
 config CPU_FREQ_GOV_TRIPNDROID
