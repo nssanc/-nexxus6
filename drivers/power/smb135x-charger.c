@@ -31,7 +31,7 @@
 #include <linux/qpnp/qpnp-adc.h>
 #include <linux/moduleparam.h>
 
-static bool use_wlock = false;
+static bool use_wlock = true;
 module_param(use_wlock, bool, 0644);
 
 #ifdef CONFIG_FORCE_FAST_CHARGE
