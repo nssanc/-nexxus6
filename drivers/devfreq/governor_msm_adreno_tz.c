@@ -22,8 +22,6 @@
 #include <soc/qcom/scm.h>
 #include "governor.h"
 
-extern bool mdss_screen_on;
-
 static DEFINE_SPINLOCK(tz_lock);
 
 /*
@@ -48,6 +46,22 @@ static DEFINE_SPINLOCK(tz_lock);
 #define LONG_FRAME		25000
 
 /*
+ * Use BUSY_BIN to check for fully busy rendering
+ * intervals that may need early intervention when
+ * seen with LONG_FRAME lengths
+ */
+#define BUSY_BIN		95
+#define LONG_FRAME		25000
+
+/*
+ * Use BUSY_BIN to check for fully busy rendering
+ * intervals that may need early intervention when
+ * seen with LONG_FRAME lengths
+ */
+#define BUSY_BIN		95
+#define LONG_FRAME		25000
+
+/*
  * CEILING is 50msec, larger than any standard
  * frame length, but less than the idle timer.
  */
@@ -55,6 +69,10 @@ static DEFINE_SPINLOCK(tz_lock);
 #define TZ_RESET_ID		0x3
 #define TZ_UPDATE_ID		0x4
 #define TZ_INIT_ID		0x6
+
+#define TZ_RESET_ID_64          0x7
+#define TZ_UPDATE_ID_64         0x8
+#define TZ_INIT_ID_64           0x9
 
 #define TAG "msm_adreno_tz: "
 
@@ -99,10 +117,6 @@ extern int simple_gpu_algorithm(int level,
 				struct devfreq_msm_adreno_tz_data *priv);
 #endif
 
-#ifdef CONFIG_ADRENO_IDLER
-extern int adreno_idler(struct devfreq_dev_status stats, struct devfreq *devfreq,
-		 unsigned long *freq);
-#endif
 static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq,
 				u32 *flag)
 {
@@ -126,31 +140,8 @@ static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq,
 		return result;
 	}
 
-	/* Prevent overflow */
-	if (stats.busy_time >= (1 << 24) || stats.total_time >= (1 << 24)) {
-		stats.busy_time >>= 7;
-		stats.total_time >>= 7;
-	}
-
 	*freq = stats.current_frequency;
 	*flag = 0;
-
-	/*
-	 * Force to use & record as min freq when system has
-	 * entered pm-suspend or screen-off state.
-	 */
-	if (!mdss_screen_on) {
-		*freq = devfreq->profile->freq_table[devfreq->profile->max_state - 1];
-		return 0;
-	}
-
-#ifdef CONFIG_ADRENO_IDLER
-	if (adreno_idler(stats, devfreq, freq)) {
-		/* adreno_idler has asked to bail out now */
-		return 0;
-	}
-#endif
-
 	priv->bin.total_time += stats.total_time;
 	priv->bin.busy_time += stats.busy_time;
 	if (priv->bus.num) {
@@ -308,8 +299,10 @@ static int tz_start(struct devfreq *devfreq)
 	ret = scm_call(SCM_SVC_DCVS, TZ_INIT_ID, tz_pwrlevels,
 			sizeof(tz_pwrlevels), NULL, 0);
 
-	if (ret != 0)
+	if (ret != 0) {
 		pr_err(TAG "tz_init failed\n");
+		return ret;
+	}
 
 	/* Set up the cut-over percentages for the bus calculation. */
 	if (priv->bus.num) {
