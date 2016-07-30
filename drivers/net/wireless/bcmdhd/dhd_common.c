@@ -107,6 +107,10 @@ extern int dhd_change_mtu(dhd_pub_t *dhd, int new_mtu, int ifidx);
 extern int dhd_get_concurrent_capabilites(dhd_pub_t *dhd);
 #endif
 extern int dhd_socram_dump(struct dhd_bus *bus);
+#ifdef DNGL_EVENT_SUPPORT
+static void dngl_host_event_process(dhd_pub_t *dhdp, bcm_dngl_event_t *event, size_t pktlen);
+static int dngl_host_event(dhd_pub_t *dhdp, void *pktdata, size_t pktlen);
+#endif /* DNGL_EVENT_SUPPORT */
 static void dngl_host_event_process(dhd_pub_t *dhdp, bcm_dngl_event_t *event, size_t pktlen);
 static int dngl_host_event(dhd_pub_t *dhdp, void *pktdata, size_t pktlen);
 bool ap_cfg_running = FALSE;
@@ -1375,6 +1379,7 @@ wl_show_host_event(dhd_pub_t *dhd_pub, wl_event_msg_t *event, void *event_data,
 }
 #endif /* SHOW_EVENTS */
 
+#ifdef DNGL_EVENT_SUPPORT
 /* Check whether packet is a BRCM dngl event pkt. If it is, process event data. */
 int
 dngl_host_event(dhd_pub_t *dhdp, void *pktdata, size_t pktlen)
@@ -1497,6 +1502,8 @@ dngl_host_event_process(dhd_pub_t *dhdp, bcm_dngl_event_t *event, size_t pktlen)
 	break;
 	}
 }
+#endif /* DNGL_EVENT_SUPPORT */
+
 int wl_host_event(dhd_pub_t *dhd_pub, int *ifidx, void *pktdata, size_t pktlen,
 	wl_event_msg_t *event, void **data_ptr, void *raw_event)
 {
@@ -1508,10 +1515,15 @@ int wl_host_event(dhd_pub_t *dhd_pub, int *ifidx, void *pktdata, size_t pktlen,
 	int evlen;
 	int hostidx;
 
+#ifdef DNGL_EVENT_SUPPORT
 	/* If it is a DNGL event process it first */
 	if (dngl_host_event(dhd_pub, pktdata, pktlen) == BCME_OK) {
+
+		/* Return error purposely to prevent DNGL event being processed as BRCM event */
+		return BCME_ERROR;
 		return BCME_OK;
 	}
+#endif /* DNGL_EVENT_SUPPORT */
 
 	if (bcmp(BRCM_OUI, &pvt_data->bcm_hdr.oui[0], DOT11_OUI_LEN)) {
 		DHD_ERROR(("%s: mismatched OUI, bailing\n", __FUNCTION__));
@@ -1529,7 +1541,6 @@ int wl_host_event(dhd_pub_t *dhd_pub, int *ifidx, void *pktdata, size_t pktlen,
 
 	*data_ptr = &pvt_data[1];
 	event_data = *data_ptr;
-
 
 	/* memcpy since BRCM event pkt may be unaligned. */
 	memcpy(event, &pvt_data->event, sizeof(wl_event_msg_t));
@@ -1619,10 +1630,8 @@ int wl_host_event(dhd_pub_t *dhd_pub, int *ifidx, void *pktdata, size_t pktlen,
 				dhd_event_ifdel(dhd_pub->info, ifevent, event->ifname,
 					event->addr.octet);
 			} else if (ifevent->opcode == WLC_E_IF_CHANGE) {
-#ifdef WL_CFG80211
-				wl_cfg80211_notify_ifchange(ifevent->ifidx,
-					event->ifname, event->addr.octet, ifevent->bssidx);
-#endif /* WL_CFG80211 */
+				dhd_event_ifchange(dhd_pub->info, ifevent, event->ifname,
+					event->addr.octet);
 			}
 		} else {
 #if !defined(PROP_TXSTATUS) || !defined(PCIE_FULL_DONGLE)
@@ -2398,7 +2407,7 @@ dhd_get_suspend_bcn_li_dtim(dhd_pub_t *dhd, int *dtim_period, int *bcn_interval)
 		DHD_TRACE(("%s agjust dtim_skip as %d\n", __FUNCTION__, bcn_li_dtim));
 	}
 
-	DHD_ERROR(("%s beacon=%d bcn_li_dtim=%d DTIM=%d Listen=%d\n",
+	DHD_INFO(("%s beacon=%d bcn_li_dtim=%d DTIM=%d Listen=%d\n",
 		__FUNCTION__, *bcn_interval, bcn_li_dtim, *dtim_period, CUSTOM_LISTEN_INTERVAL));
 
 	return bcn_li_dtim;
