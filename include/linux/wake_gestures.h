@@ -24,6 +24,7 @@
 #include <linux/input.h>
 
 extern int s2w_switch;
+extern int s2w_switch_temp;
 extern bool dt2w_switch;
 extern int vib_strength;
 bool scr_suspended(void);
@@ -33,4 +34,3 @@ void wg_setdev(struct input_dev *);
 void set_vibrate(int value);
 
 #endif	/* _LINUX_WAKE_GESTURES_H */
-
