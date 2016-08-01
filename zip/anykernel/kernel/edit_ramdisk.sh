@@ -45,32 +45,6 @@ if  grep -qr verity_update_state /tmp/ramdisk/init.shamu.rc; then
  sed -i "s/verity_update_state/#verity_update_state/" /tmp/ramdisk/init.shamu.rc
 fi
 
-#Force SystemLess Root
-Rless=/data/.supersu
-if grep "SYSTEMLESS=true" $Rless; then
-echo SystemLess Root already forced
-else
-rm /data/.supersu
-echo "SYSTEMLESS=true" >> /data/.supersu
-echo SystemLess Root forced
-fi
-
-#add init.d support if not already supported
-#this is no longer needed as the ramdisk now inserts our modules, but we will
-#keep this here for user comfort, since having run-parts init.d support is a
-#good idea anyway.
-#found=$(find /tmp/ramdisk/init.rc -type f | xargs grep -oh "start /system/bin/sysinit");
-#if [ "$found" != 'start /system/bin/sysinit' ]; then
-#	echo "Sysinit launcher already created"
-#else
-#	#append the new lines for this option at the bottom
-#        echo "" >> /tmp/ramdisk/init.rc
-#        echo "# Sysinit will run scripts in init.d folder" >> /tmp/ramdisk/init.rc
-#	#Edit the property to one which is sure to not change so far
-#        echo "on property:???" >> /tmp/ramdisk/init.rc
-#        echo "    start /system/bin/sysinit" >> /tmp/ramdisk/init.rc
-#fi
-
 #Editing the sysinit to match /su/bin or /su/xbin location
 if [ -f "/system/bin/sysinit" ]; then
 	rm /system/bin/sysinit
@@ -88,14 +62,6 @@ fi
 cp /tmp/init.sysinit.rc /tmp/ramdisk/init.sysinit.rc
 chmod 750 /tmp/ramdisk/init.sysinit.rc
 
-#Make MPD and T-E as RW only
-if [ -f "/system/bin/mpdecision" ]; then
-chmod 644 /system/bin/mpdecision
-fi
-if [ -f "/system/bin/thermal-engine" ]; then
-chmod 644 /system/bin/thermal-engine
-fi
-
 #copy fstab
 cp /tmp/fstab.shamu /tmp/ramdisk/fstab.shamu
 chmod 750 /tmp/ramdisk/fstab.shamu
@@ -110,3 +76,4 @@ cd /tmp/ramdisk/
 find . | cpio -o -H newc | gzip > ../boot.img-ramdisk.gz
 cd /
 rm -rf /tmp/ramdisk
+
