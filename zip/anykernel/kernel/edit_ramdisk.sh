@@ -71,18 +71,6 @@ if [ "$found" != 'run-parts /system/etc/init.d' ]; then
         echo "    user root" >> /tmp/ramdisk/init.rc
         echo "    group root" >> /tmp/ramdisk/init.rc
 fi
-#Editing the sysinit to match /su/bin or /su/xbin location
-if [ -f "/system/bin/sysinit" ]; then
-	rm /system/bin/sysinit
-	echo "#!system/bin/sh" >> /system/bin/sysinit
-	echo "#Support below busybox location to run init.d script, remember to chmod your script as executable" >> /system/bin/sysinit
-	echo "export PATH=/sbin:/system/sbin:/system/bin:/system/xbin:/su/bin:/su/xbin" >> /system/bin/sysinit
-	echo 'for i in /system/etc/init.d/*; do' >> /system/bin/sysinit
-	echo '	if [ -x $i ]; then' >> /system/bin/sysinit
-	echo '	log -p i -t Init.d Script $i; $i; fi' >> /system/bin/sysinit
-	echo "done" >> /system/bin/sysinit
-	chmod 755 /system/bin/sysinit
-fi
 
 #copy fstab
 cp /tmp/fstab.shamu /tmp/ramdisk/fstab.shamu
