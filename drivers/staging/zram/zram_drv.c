@@ -588,7 +588,7 @@ static void zram_reset_device(struct zram *zram, bool reset_capacity)
 	/* Reset stats */
 	memset(&zram->stats, 0, sizeof(zram->stats));
 
-	zram->disksize = 800;
+	zram->disksize = 0;
 	if (reset_capacity)
 		set_capacity(zram->disk, 0);
 	up_write(&zram->init_lock);
