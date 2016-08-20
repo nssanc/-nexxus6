@@ -208,6 +208,8 @@ struct cs_dbs_tuners {
 	unsigned int twostep_threshold;
 	unsigned int min_load;
         unsigned int sleep_depth;
+        unsigned int boost_enabled;
+	unsigned int boost_count;
 };
 
 struct ex_dbs_tuners {
