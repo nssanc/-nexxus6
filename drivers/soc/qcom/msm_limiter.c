@@ -52,7 +52,7 @@
 #if defined(CONFIG_ARCH_MSM8916)
 #define DEFAULT_MIN_FREQUENCY		200000
 #elif defined(CONFIG_ARCH_APQ8084)
-#define DEFAULT_MIN_FREQUENCY		300000 
+#define DEFAULT_MIN_FREQUENCY		98300
 #endif
 
 static struct notifier_block notif;
