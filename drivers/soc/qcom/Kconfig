@@ -182,6 +182,11 @@ config ZEN_DECISION
 	depends on SMP && FB
 	default y
 
+config STATE_HELPER
+        bool "State Helper"
+ 	depends on STATE_NOTIFIER
+        default y
+
 config MSM_LIMITER
 	bool "MSM Frequency Limiter Driver"
 	default y
