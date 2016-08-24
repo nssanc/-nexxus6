@@ -201,7 +201,7 @@ static int __init prandom_init(void)
 
 	for_each_possible_cpu(i) {
 		struct rnd_state *state = &per_cpu(net_rand_state,i);
-		u32 weak_seed = (i + jiffies) ^ random_get_entropy();
+		u32 weak_seed = (i + jiffies) ^ get_cycles();
 
 		prandom_seed_early(state, weak_seed, true);
 		prandom_warmup(state);

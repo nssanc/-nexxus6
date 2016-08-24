@@ -738,7 +738,7 @@ struct timer_rand_state {
  */
 void add_device_randomness(const void *buf, unsigned int size)
 {
-	unsigned long time = random_get_entropy() ^ jiffies;
+	unsigned long time = get_cycles() ^ jiffies;
 	unsigned long flags;
 
 	trace_add_device_randomness(size, _RET_IP_);
@@ -779,7 +779,7 @@ static void add_timer_randomness(struct timer_rand_state *state, unsigned num)
 	preempt_disable();
 
 	sample.jiffies = jiffies;
-	sample.cycles = random_get_entropy();
+	sample.cycles = get_cycles();
 	sample.num = num;
 	r = nonblocking_pool.initialized ? &input_pool : &nonblocking_pool;
 	mix_pool_bytes(r, &sample, sizeof(sample));
@@ -847,7 +847,7 @@ static unsigned long avg_cycles, avg_deviation;
 
 static void add_interrupt_bench(cycles_t start)
 {
-        long delta = random_get_entropy() - start;
+        long delta = get_cycles() - start;
 
         /* Use a weighted moving average */
         delta = delta - ((avg_cycles + FIXED_1_2) >> AVG_SHIFT);
@@ -877,7 +877,7 @@ void add_interrupt_randomness(int irq, int irq_flags)
 	struct fast_pool	*fast_pool = this_cpu_ptr(&irq_randomness);
 	struct pt_regs		*regs = get_irq_regs();
 	unsigned long		now = jiffies;
-	cycles_t		cycles = random_get_entropy();
+	cycles_t		cycles = get_cycles();
 	__u32			c_high, j_high;
 	__u64			ip;
 	unsigned long		seed;
@@ -1297,7 +1297,7 @@ static void init_std_data(struct entropy_store *r)
 	for (i = r->poolinfo->poolbytes; i > 0; i -= sizeof(rv)) {
 		if (!arch_get_random_seed_long(&rv) &&
 		    !arch_get_random_long(&rv))
-			rv = random_get_entropy();
+			rv = get_cycles();
 		mix_pool_bytes(r, &rv, sizeof(rv));
 	}
 	mix_pool_bytes(r, utsname(), sizeof(*(utsname())));
@@ -1731,7 +1731,7 @@ unsigned int get_random_int(void)
 
 	hash = get_cpu_var(get_random_int_hash);
 
-	hash[0] += current->pid + jiffies + random_get_entropy();
+	hash[0] += current->pid + jiffies + get_cycles();
 	md5_transform(hash, random_int_secret);
 	ret = hash[0];
 	put_cpu_var(get_random_int_hash);
