@@ -181,6 +181,10 @@ config STATE_HELPER
  	depends on STATE_NOTIFIER
         default y
 
+config THUNDERPLUG_CONTROL
+	bool "Enable plugging down/up of cores using powersuspend"
+	default y
+
 config MSM_LIMITER
 	bool "MSM Frequency Limiter Driver"
 	default y
