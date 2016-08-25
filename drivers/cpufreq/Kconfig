@@ -112,10 +112,6 @@ config CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
 	  governor. If unsure have a look at the help section of the
 	  driver. Fallback governor will be the performance governor.
 
-config CPU_FREQ_DEFAULT_GOV_CONSERVATIVEX
-	bool "conservativex"
-	select CPU_FREQ_GOV_CONSERVATIVEX
-
 config CPU_FREQ_DEFAULT_GOV_DANCEDANCE
  	bool "dancedance"
  	select CPU_FREQ_GOV_DANCEDANCE
@@ -232,10 +228,6 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
  	help
 	  Use the CPUFreq governor 'smartassv2' as default.
 
-config CPU_FREQ_DEFAULT_GOV_SMARTMAX
-	bool "smartmax"
-	select CPU_FREQ_GOV_SMARTMAX
-
 config CPU_FREQ_DEFAULT_GOV_TRIPNDROID
 	bool "tripndroid"
 	select CPU_FREQ_GOV_TRIPNDROID
@@ -252,10 +244,6 @@ config CPU_FREQ_DEFAULT_GOV_UMBRELLA_CORE
 config CPU_FREQ_DEFAULT_GOV_WHEATLEY
 	bool "wheatley"
 	select CPU_FREQ_GOV_WHEATLEY
-
-config CPU_FREQ_DEFAULT_GOV_XPERIENCE
-	bool "xperience"
-	select CPU_FREQ_GOV_XPERIENCE
 
 config CPU_FREQ_DEFAULT_GOV_YANKACTIVE
  	bool "yankactive"
@@ -386,12 +374,6 @@ config CPU_FREQ_GOV_CONSERVATIVE
 	  For details, take a look at linux/Documentation/cpu-freq.
 
 	  If in doubt, say N.
-
-config CPU_FREQ_GOV_CONSERVATIVEX
-	tristate "'conservativex' cpufreq governor"
-	depends on CPU_FREQ
-	help
-	  'conservativex' - less aggressive version of conservative
 
 config CPU_FREQ_GOV_DANCEDANCE
  	tristate "'dancedance' cpufreq governor"
@@ -531,10 +513,6 @@ config CPU_FREQ_GOV_SMARTASSV2
  	help
 	  'smartassv2' - a "smart" governor
 
-config CPU_FREQ_GOV_SMARTMAX
-        tristate "'smartmax' cpufreq governor"
-        depends on CPU_FREQ
-
 config CPU_FREQ_GOV_TRIPNDROID
         tristate "'tripndroid' cpufreq governor"
 
@@ -543,10 +521,6 @@ config CPU_FREQ_GOV_UMBRELLA_CORE
 
 config CPU_FREQ_GOV_WHEATLEY
         tristate "'wheatley' cpufreq governor"
-        depends on CPU_FREQ
-
-config CPU_FREQ_GOV_XPERIENCE
-        tristate "'xperience' cpufreq governor"
         depends on CPU_FREQ
 
 config CPU_FREQ_GOV_YANKACTIVE
