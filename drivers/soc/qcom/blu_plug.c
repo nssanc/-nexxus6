@@ -38,7 +38,7 @@
 #define MAX_FREQ_SCREENOFF      (0)
 #define MAX_FREQ_PLUG           (3033600)
 #define DEF_PLUG_THRESHOLD      (70)
-#define BLU_PLUG_ENABLED	(0)
+#define BLU_PLUG_ENABLED	(1)
 
 static unsigned int blu_plug_enabled = BLU_PLUG_ENABLED;
 
