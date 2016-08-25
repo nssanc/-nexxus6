@@ -41,21 +41,9 @@
  * pair to apply value individually.
  */
 
-#if defined(CONFIG_ARCH_MSM8916)
-#define DEFAULT_SUSP_MAX_FREQUENCY	998400
-#elif defined(CONFIG_ARCH_APQ8084)
 #define DEFAULT_SUSP_MAX_FREQUENCY	960000
-#endif
-#if defined(CONFIG_ARCH_MSM8916)
-#define DEFAULT_RESUME_MAX_FREQUENCY	1209600
-#elif defined(CONFIG_ARCH_APQ8084)
-#define DEFAULT_RESUME_MAX_FREQUENCY	2726400
-#endif
-#if defined(CONFIG_ARCH_MSM8916)
-#define DEFAULT_MIN_FREQUENCY		200000
-#elif defined(CONFIG_ARCH_APQ8084)
+#define DEFAULT_RESUME_MAX_FREQUENCY	2880000
 #define DEFAULT_MIN_FREQUENCY		98300
-#endif
 
 static struct notifier_block notif;
 static unsigned int freq_control = FREQ_CONTROL;
