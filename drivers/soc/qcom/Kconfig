@@ -163,14 +163,6 @@ config MAKO_HOTPLUG
 	help
 	  CPU hotplug driver
 
-config MSM_HOTPLUG
-	bool "MSM hotplug driver"
-	depends on HOTPLUG_CPU
-	default y
-	help
-	  The MSM hotplug driver controls on-/offlining of additional cores based
-	  on current cpu load.
-
 config ZEN_DECISION
 	bool "Zen Decision: MSM Userspace Handler"
 	depends on SMP && FB
