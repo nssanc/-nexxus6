@@ -48,7 +48,7 @@
 #include <linux/vmpressure.h>
 
 #include <trace/events/memkill.h>
-
+#include <trace/lowmemorykiller.h>
 #define CREATE_TRACE_POINTS
 #include <trace/events/almk.h>
 
@@ -58,7 +58,7 @@
 #define _ZONE ZONE_NORMAL
 #endif
 
-static uint32_t lowmem_debug_level = 1;
+static uint32_t lowmem_debug_level = 0;
 static short lowmem_adj[6] = {
 	0,
 	1,
@@ -67,7 +67,7 @@ static short lowmem_adj[6] = {
 	13,
 	15,
 };
-static int lowmem_adj_size = 6;
+static int lowmem_adj_size = 16;
 static int lowmem_minfree[6] = {
 	 3 *  512,	/* Foreground App: 	6 MB	*/
 	 2 * 1024,	/* Visible App: 	8 MB	*/
@@ -76,7 +76,7 @@ static int lowmem_minfree[6] = {
 	28 * 1024,	/* Content Provider: 	112 MB	*/
 	32 * 1024,	/* Empty App: 		128 MB	*/
 };
-static int lowmem_minfree_size = 6;
+static int lowmem_minfree_size = 16;
 static int lmk_fast_run = 1;
 
 static unsigned long lowmem_deathpending_timeout;
@@ -497,7 +497,7 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		array_size = lowmem_minfree_size;
 	for (i = 0; i < array_size; i++) {
 		minfree = lowmem_minfree[i];
-		if (other_free < minfree && other_file < minfree) {
+		if (other_free + other_file < minfree) {
 			min_score_adj = lowmem_adj[i];
 			break;
 		}

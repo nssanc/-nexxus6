@@ -60,7 +60,6 @@ module_param_named(vmpressure_scale_max, vmpressure_scale_max,
 static unsigned long allocstall_threshold = 70;
 module_param_named(allocstall_threshold, allocstall_threshold,
 			ulong, S_IRUGO | S_IWUSR);
-
 static struct vmpressure global_vmpressure;
 BLOCKING_NOTIFIER_HEAD(vmpressure_notifier);
 
@@ -182,7 +181,7 @@ static unsigned long vmpressure_account_stall(unsigned long pressure,
 {
 	unsigned long scale;
 
-	if (pressure < allocstall_threshold)
+	if (pressure < 70)
 		return pressure;
 
 	scale = ((vmpressure_scale_max - pressure) * stall) / scanned;
