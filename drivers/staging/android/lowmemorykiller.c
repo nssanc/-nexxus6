@@ -48,7 +48,7 @@
 #include <linux/vmpressure.h>
 
 #include <trace/events/memkill.h>
-#include <trace/lowmemorykiller.h>
+
 #define CREATE_TRACE_POINTS
 #include <trace/events/almk.h>
 
