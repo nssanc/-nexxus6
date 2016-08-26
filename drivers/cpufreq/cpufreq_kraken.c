@@ -1,5 +1,5 @@
 /*
- *  drivers/cpufreq/cpufreq_elementalx.c
+ *  drivers/cpufreq/cpufreq_kraken.c
  *
  *  Copyright (C)  2001 Russell King
  *            (C)  2003 Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
@@ -16,7 +16,7 @@
 #include <linux/msm_kgsl.h>
 #include "cpufreq_governor.h"
 
-/* elementalx governor macros */
+/* kraken governor macros */
 #define DEF_FREQUENCY_UP_THRESHOLD		(90)
 #define DEF_FREQUENCY_DOWN_DIFFERENTIAL		(20)
 #define DEF_ACTIVE_FLOOR_FREQ			(960000)
@@ -475,7 +475,7 @@ static struct attribute *dbs_attributes_gov_sys[] = {
 
 static struct attribute_group ex_attr_group_gov_sys = {
 	.attrs = dbs_attributes_gov_sys,
-	.name = "elementalx",
+	.name = "kraken",
 };
 
 static struct attribute *dbs_attributes_gov_pol[] = {
@@ -493,7 +493,7 @@ static struct attribute *dbs_attributes_gov_pol[] = {
 
 static struct attribute_group ex_attr_group_gov_pol = {
 	.attrs = dbs_attributes_gov_pol,
-	.name = "elementalx",
+	.name = "kraken",
 };
 
 /************************** sysfs end ************************/
@@ -540,7 +540,7 @@ static void ex_exit(struct dbs_data *dbs_data)
 define_get_cpu_dbs_routines(ex_cpu_dbs_info);
 
 static struct common_dbs_data ex_dbs_cdata = {
-	.governor = GOV_ELEMENTALX,
+	.governor = GOV_KRAKEN,
 	.attr_group_gov_sys = &ex_attr_group_gov_sys,
 	.attr_group_gov_pol = &ex_attr_group_gov_pol,
 	.get_cpu_cdbs = get_cpu_cdbs,
@@ -557,11 +557,11 @@ static int ex_cpufreq_governor_dbs(struct cpufreq_policy *policy,
 	return cpufreq_governor_dbs(policy, &ex_dbs_cdata, event);
 }
 
-#ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_ELEMENTALX
+#ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_KRAKEN
 static
 #endif
-struct cpufreq_governor cpufreq_gov_elementalx = {
-	.name			= "elementalx",
+struct cpufreq_governor cpufreq_gov_kraken = {
+	.name			= "kraken",
 	.governor		= ex_cpufreq_governor_dbs,
 	.max_transition_latency	= TRANSITION_LATENCY_LIMIT,
 	.owner			= THIS_MODULE,
@@ -569,19 +569,19 @@ struct cpufreq_governor cpufreq_gov_elementalx = {
 
 static int __init cpufreq_gov_dbs_init(void)
 {
-	return cpufreq_register_governor(&cpufreq_gov_elementalx);
+	return cpufreq_register_governor(&cpufreq_gov_kraken);
 }
 
 static void __exit cpufreq_gov_dbs_exit(void)
 {
-	cpufreq_unregister_governor(&cpufreq_gov_elementalx);
+	cpufreq_unregister_governor(&cpufreq_gov_kraken);
 }
 
 MODULE_AUTHOR("Aaron Segaert <asegaert@gmail.com>");
-MODULE_DESCRIPTION("'cpufreq_elementalx' - multiphase cpufreq governor");
+MODULE_DESCRIPTION("'cpufreq_kraken' - multiphase cpufreq governor");
 MODULE_LICENSE("GPL");
 
-#ifdef CONFIG_CPU_FREQ_DEFAULT_GOV_ELEMENTALX
+#ifdef CONFIG_CPU_FREQ_DEFAULT_GOV_KRAKEN
 fs_initcall(cpufreq_gov_dbs_init);
 #else
 module_init(cpufreq_gov_dbs_init);

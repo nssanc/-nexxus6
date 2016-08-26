@@ -477,9 +477,6 @@ extern struct cpufreq_governor cpufreq_gov_darkness;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE)
 extern struct cpufreq_governor cpufreq_gov_dynamic_interactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_dynamic_interactive)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ELEMENTALX)
-extern struct cpufreq_governor cpufreq_gov_elementalx;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_elementalx)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_HELLSACTIVE)
 extern struct cpufreq_governor cpufreq_gov_hellsactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_hellsactive)
@@ -495,6 +492,9 @@ extern struct cpufreq_governor cpufreq_gov_intelliactive;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_INTERACTIVE)
 extern struct cpufreq_governor cpufreq_gov_interactive;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_interactive)
+#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_KRAKEN)
+extern struct cpufreq_governor cpufreq_gov_kraken;
+#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_kraken)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_LIGHTNING)
 extern struct cpufreq_governor cpufreq_gov_lightning;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_lightning)

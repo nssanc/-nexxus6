@@ -128,12 +128,6 @@ config CPU_FREQ_DEFAULT_GOV_DYNAMIC_INTERACTIVE
 	bool "dynamic_interactive"
 	select CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 
-config CPU_FREQ_DEFAULT_GOV_ELEMENTALX
-	bool "elementalx"
-	select CPU_FREQ_GOV_ELEMENTALX
-	help
-	Use the CPUfreq governor 'elementalx' as default.
-
 config CPU_FREQ_DEFAULT_GOV_HELLSACTIVE
 	bool "hellsactive"
 	select CPU_FREQ_GOV_HELLSACTIVE
@@ -169,6 +163,12 @@ config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 	  you to get a full dynamic cpu frequency capable system by simply
 	  loading your cpufreq low-level hardware driver, using the
 	  'interactive' governor for latency-sensitive workloads.
+
+config CPU_FREQ_DEFAULT_GOV_KRAKEN
+	bool "kraken"
+	select CPU_FREQ_GOV_KRAKEN
+	help
+	Use the CPUfreq governor 'kraken' as default.
 
 config CPU_FREQ_DEFAULT_GOV_LIGHTNING
  	bool "lightning"
@@ -387,8 +387,8 @@ config CPU_FREQ_GOV_DYNAMIC_INTERACTIVE
 	tristate "'dynamic_interactive' cpufreq governor"
 	depends on CPU_FREQ
 
-config CPU_FREQ_GOV_ELEMENTALX
-	tristate "'elementalx' cpufreq governor"
+config CPU_FREQ_GOV_KRAKEN
+	tristate "kraken' cpufreq governor"
 	depends on CPU_FREQ
 
 config CPU_FREQ_GOV_HELLSACTIVE
