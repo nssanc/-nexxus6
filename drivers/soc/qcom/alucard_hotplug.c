@@ -45,10 +45,10 @@ static struct hotplug_tuners {
 	atomic_t cpu_down_rate;
 	atomic_t maxcoreslimit;
 } hotplug_tuners_ins = {
-	.hotplug_sampling_rate = ATOMIC_INIT(60000),
+	.hotplug_sampling_rate = ATOMIC_INIT(50000),
 	.hotplug_enable = ATOMIC_INIT(0),
 	.cpu_up_rate = ATOMIC_INIT(10),
-	.cpu_down_rate = ATOMIC_INIT(20),
+	.cpu_down_rate = ATOMIC_INIT(30),
 	.maxcoreslimit = ATOMIC_INIT(NR_CPUS),
 };
 

@@ -149,7 +149,7 @@ static unsigned int *nr_run_profiles[] = {
 
 #define CPU_NR_THRESHOLD	((THREAD_CAPACITY << 1) + (THREAD_CAPACITY / 2))
 
-static unsigned int nr_possible_cores;
+static unsigned int nr_possible_cores = 4;
 module_param(nr_possible_cores, uint, 0444);
 
 static unsigned int cpu_nr_run_threshold = CPU_NR_THRESHOLD;
