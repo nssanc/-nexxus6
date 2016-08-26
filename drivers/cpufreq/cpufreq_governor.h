@@ -126,7 +126,7 @@ static void *get_cpu_dbs_info_s(int cpu)				\
  * cdbs: common dbs
  * od_*: On-demand governor
  * cs_*: Conservative governor
- * ex_*: ElementalX governor
+ * ex_*: Kracken governor
  */
 
 /* Per cpu structures */
@@ -237,7 +237,7 @@ struct common_dbs_data {
 	/* Common across governors */
 	#define GOV_ONDEMAND		0
 	#define GOV_CONSERVATIVE	1
-	#define GOV_ELEMENTALX		2
+	#define GOV_KRAKEN		2
 	#define GOV_RAGINGMOLASSES  1
 	int governor;
 	struct attribute_group *attr_group_gov_sys; /* one governor - system */
