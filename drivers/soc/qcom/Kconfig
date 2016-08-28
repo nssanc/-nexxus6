@@ -149,20 +149,6 @@ config BRICKED_HOTPLUG
 	  This enables kernel based multi core control.
 	  (up/down hotplug based on load)
 
-config FAST_HOTPLUG
- 	bool "Enable fast hotplug"
- 	default y
-	help
-	  Kernel based core control.
-
-config INTELLI_PLUG
-  	bool "Intelli hotplug driver"
-  	depends on HOTPLUG_CPU
-  	default y
-  	help
-  	An intelligent cpu hotplug driver for
-  	Low Latency Frequency Transition capable processors.
-
 config MAKO_HOTPLUG
 	bool "CPU hotplug driver"
 	default y
