@@ -149,12 +149,6 @@ config CPU_FREQ_DEFAULT_GOV_IMPULSE
 	  loading your cpufreq low-level hardware driver, using the
 	  'impulse' governor for latency-sensitive workloads.
 
-config CPU_FREQ_DEFAULT_GOV_INTELLIACTIVE
-        bool "INTELLIACTIVE"
-        select CPU_FREQ_GOV_INTELLIACTIVE
-        ---help---
-          Use the CPUFreq governor 'INTELLIACTIVE' as default.
-
 config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 	bool "interactive"
 	select CPU_FREQ_GOV_INTERACTIVE
@@ -410,13 +404,6 @@ config CPU_FREQ_GOV_IMPULSE
 	  designed for latency-sensitive workloads.
 
 	  If in doubt, say N.
-
-config CPU_FREQ_GOV_INTELLIACTIVE
-        tristate "'INTELLIACTIVE' cpufreq governor"
-        depends on CPU_FREQ
-        ---help---
-          'INTELLIACTIVE' - a tweaked "ondemand" based smart and smooth optimized governor!
-           If in doubt, say Y.
 
 config CPU_FREQ_GOV_INTERACTIVE
 	tristate "'interactive' cpufreq policy governor"
