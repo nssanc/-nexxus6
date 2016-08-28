@@ -38,6 +38,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_ONDEMANDPLUS)    += cpufreq_ondemandplus.o
 obj-$(CONFIG_CPU_FREQ_GOV_PERFORMANCE)	   += cpufreq_performance.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSH3)	   += cpufreq_smartassh3.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTASSV2)	   += cpufreq_smartassv2.o
+obj-$(CONFIG_CPU_FREQ_GOV_SMARTMAX)	   += cpufreq_smartmax.o
 obj-$(CONFIG_CPU_FREQ_GOV_TRIPNDROID)	   += cpufreq_tripndroid.o
 obj-$(CONFIG_CPU_FREQ_GOV_UMBRELLA_CORE)   += cpufreq_umbrella_core.o
 obj-$(CONFIG_CPU_FREQ_GOV_WHEATLEY)	   += cpufreq_wheatley.o

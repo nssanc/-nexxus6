@@ -228,6 +228,10 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
  	help
 	  Use the CPUFreq governor 'smartassv2' as default.
 
+config CPU_FREQ_DEFAULT_GOV_SMARTMAX
+ 	bool "smartmax"
+ 	select CPU_FREQ_GOV_SMARTMAX
+
 config CPU_FREQ_DEFAULT_GOV_TRIPNDROID
 	bool "tripndroid"
 	select CPU_FREQ_GOV_TRIPNDROID
@@ -512,6 +516,10 @@ config CPU_FREQ_GOV_SMARTASSV2
  	depends on CPU_FREQ
  	help
 	  'smartassv2' - a "smart" governor
+
+config CPU_FREQ_GOV_SMARTMAX
+        tristate "'smartmax' cpufreq governor"
+        depends on CPU_FREQ
 
 config CPU_FREQ_GOV_TRIPNDROID
         tristate "'tripndroid' cpufreq governor"
