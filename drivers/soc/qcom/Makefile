@@ -16,6 +16,8 @@ obj-$(CONFIG_MSM_RUN_QUEUE_STATS) += msm_rq_stats.o
 
 obj-$(CONFIG_MSM_SCM) += scm.o
 
+obj-$(CONFIG_MSM_DCVS) += msm_dcvs_scm.o msm_dcvs.o
+
 obj-$(CONFIG_MSM_SMEM) += smem.o smem_debug.o
 obj-$(CONFIG_MSM_SMEM_LOGGING) += smem_log.o
 obj-$(CONFIG_MSM_WATCHDOG_V2) += watchdog_v2.o
@@ -26,6 +28,7 @@ obj-$(CONFIG_QCOM_EARLY_RANDOM)	+= early_random.o
 obj-$(CONFIG_ALUCARD_HOTPLUG) += alucard_hotplug.o
 obj-$(CONFIG_BLU_PLUG)        += blu_plug.o
 obj-$(CONFIG_BRICKED_HOTPLUG) += bricked_hotplug.o
+obj-$(CONFIG_FAST_HOTPLUG)    += fast_hotplug.o
 obj-$(CONFIG_INTELLI_PLUG)    += intelli_plug.o
 obj-$(CONFIG_MAKO_HOTPLUG)    += mako_hotplug.o
 obj-$(CONFIG_ZEN_DECISION)    += msm_zen_decision.o
@@ -33,5 +36,4 @@ obj-$(CONFIG_STATE_HELPER)    += state_helper.o
 obj-$(CONFIG_THUNDERPLUG_CONTROL) += thunderplug.o
 
 obj-$(CONFIG_MSM_LIMITER)     += msm_limiter.o
-
 obj-$(CONFIG_STATE_NOTIFIER)  += state_notifier.o
