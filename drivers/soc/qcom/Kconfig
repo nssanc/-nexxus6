@@ -157,6 +157,12 @@ config MAKO_HOTPLUG
 	help
 	  CPU hotplug driver
 
+config MSM_SLEEPER
+ 	bool "CPU hotplug driver"
+ 	default y
+ 	help
+ 	  CPU hotplug driver
+
 config ZEN_DECISION
 	bool "Zen Decision: MSM Userspace Handler"
 	depends on SMP && FB
