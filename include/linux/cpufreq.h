@@ -447,9 +447,6 @@ extern struct cpufreq_governor cpufreq_gov_performance;
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ABYSSPLUGV2)
 extern struct cpufreq_governor cpufreq_gov_abyssplugv2;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_abyssplugv2)
-#elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_ALUCARD)
-extern struct cpufreq_governor cpufreq_gov_alucard;
-#define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_alucard)
 #elif defined(CONFIG_CPU_FREQ_DEFAULT_GOV_BARRY_ALLEN)
 extern struct cpufreq_governor cpufreq_gov_barry_allen;
 #define CPUFREQ_DEFAULT_GOVERNOR (&cpufreq_gov_barry_allen)
