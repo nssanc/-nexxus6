@@ -26,6 +26,7 @@ struct msm_thermal_data {
 	int32_t hotplug_temp_degC;
 	int32_t hotplug_temp_hysteresis_degC;
 	uint32_t core_control_mask;
+	uint32_t cpus_offlined;
 	uint32_t freq_mitig_temp_degc;
 	uint32_t freq_mitig_temp_hysteresis_degc;
 	uint32_t freq_mitig_control_mask;
@@ -48,15 +49,24 @@ struct msm_thermal_data {
 	int32_t therm_reset_temp_degC;
 };
 
-#ifdef CONFIG_THERMAL_MONITOR
+extern struct msm_thermal_data msm_thermal_info;
+
+#if defined (CONFIG_THERMAL_MONITOR) || defined (CONFIG_INTELLI_THERMAL)
 extern int msm_thermal_init(struct msm_thermal_data *pdata);
 extern int msm_thermal_device_init(void);
+extern int msm_thermal_set_frequency(uint32_t cpu, uint32_t freq,
+	bool is_max);
 #else
 static inline int msm_thermal_init(struct msm_thermal_data *pdata)
 {
 	return -ENOSYS;
 }
 static inline int msm_thermal_device_init(void)
+{
+	return -ENOSYS;
+}
+static inline int msm_thermal_set_frequency(uint32_t cpu, uint32_t freq,
+	bool is_max)
 {
 	return -ENOSYS;
 }

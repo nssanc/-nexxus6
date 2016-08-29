@@ -40,10 +40,9 @@
  * all the CPUs present. Otherwise, you can pass value in token:value
  * pair to apply value individually.
  */
-
 #define DEFAULT_SUSP_MAX_FREQUENCY	960000
-#define DEFAULT_RESUME_MAX_FREQUENCY	2649600
-#define DEFAULT_MIN_FREQUENCY		223200
+#define DEFAULT_RESUME_MAX_FREQUENCY	2880000
+#define DEFAULT_MIN_FREQUENCY		98300 
 
 static struct notifier_block notif;
 static unsigned int freq_control = FREQ_CONTROL;

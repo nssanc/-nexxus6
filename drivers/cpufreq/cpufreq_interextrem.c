@@ -87,10 +87,10 @@ static spinlock_t regionchange_cpumask_lock;
 #endif
 
 /* Target load.  Lower values result in higher CPU speeds. */
-#define DEFAULT_TARGET_LOAD 85
+#define DEFAULT_TARGET_LOAD 80
 static unsigned int default_target_loads[] = {DEFAULT_TARGET_LOAD};
 
-#define DEFAULT_TIMER_RATE 20000
+#define DEFAULT_TIMER_RATE 7000
 #define DEFAULT_ABOVE_HISPEED_DELAY DEFAULT_TIMER_RATE
 static unsigned int default_above_hispeed_delay[] = {
 	DEFAULT_ABOVE_HISPEED_DELAY };
@@ -111,17 +111,17 @@ static bool hmp_boost;
 #define DEFAULT_MULTI_EXIT_TIME (16 * DEFAULT_TIMER_RATE)
 #define DEFAULT_SINGLE_ENTER_TIME (8 * DEFAULT_TIMER_RATE)
 #define DEFAULT_SINGLE_EXIT_TIME (4 * DEFAULT_TIMER_RATE)
-#define DEFAULT_SINGLE_CLUSTER0_MIN_FREQ 0
-#define DEFAULT_MULTI_CLUSTER0_MIN_FREQ 0
+#define DEFAULT_SINGLE_KFC_MIN_FREQ 0
+#define DEFAULT_MULTI_KFC_MIN_FREQ 0
 
 static DEFINE_PER_CPU(struct cpufreq_loadinfo, loadinfo);
 static DEFINE_PER_CPU(unsigned int, cpu_util);
 
-static struct pm_qos_request cluster0_min_freq_qos;
+static struct pm_qos_request kfc_min_freq_qos;
 static void mode_auto_change_minlock(struct work_struct *work);
 static struct workqueue_struct *mode_auto_change_minlock_wq;
 static struct work_struct mode_auto_change_minlock_work;
-static unsigned int cluster0_min_freq=0;
+static unsigned int kfc_min_freq=0;
 
 #define set_qos(req, pm_qos_class, value) { \
 	if (value) { \
@@ -151,7 +151,7 @@ struct cpufreq_interextrem_tunables {
 	 * The minimum amount of time to spend at a frequency before we can ramp
 	 * down.
 	 */
-#define DEFAULT_MIN_SAMPLE_TIME 40000
+#define DEFAULT_MIN_SAMPLE_TIME 30000
 	unsigned long min_sample_time;
 	/*
 	 * The sample rate of the timer used to increase frequency
@@ -174,7 +174,7 @@ struct cpufreq_interextrem_tunables {
 	 * Max additional time to wait in idle, beyond timer_rate, at speeds
 	 * above minimum before wakeup to reduce speed, or -1 if unnecessary.
 	 */
-#define DEFAULT_TIMER_SLACK (4 * DEFAULT_TIMER_RATE)
+#define DEFAULT_TIMER_SLACK 80000
 	int timer_slack_val;
 	bool io_is_busy;
 
@@ -217,8 +217,8 @@ struct cpufreq_interextrem_tunables {
 	unsigned int param_index;
 	unsigned int cur_param_index;
 
-	unsigned int single_cluster0_min_freq;
-	unsigned int multi_cluster0_min_freq;
+	unsigned int single_kfc_min_freq;
+	unsigned int multi_kfc_min_freq;
 
 #define MAX_PARAM_SET 4 /* ((MULTI_MODE | SINGLE_MODE | NO_MODE) + 1) */
 	unsigned int hispeed_freq_set[MAX_PARAM_SET];
@@ -636,9 +636,9 @@ static void enter_mode(struct cpufreq_interextrem_tunables * tunables)
 {
 	set_new_param_set(tunables->mode, tunables);
 	if(tunables->mode & SINGLE_MODE)
-		cluster0_min_freq = tunables->single_cluster0_min_freq;
+		kfc_min_freq = tunables->single_kfc_min_freq;
 	if(tunables->mode & MULTI_MODE)
-		cluster0_min_freq = tunables->multi_cluster0_min_freq;
+		kfc_min_freq = tunables->multi_kfc_min_freq;
 	if(!hmp_boost) {
 		pr_debug("%s mp boost on", __func__);
 		(void)set_hmp_boost(1);
@@ -651,7 +651,7 @@ static void enter_mode(struct cpufreq_interextrem_tunables * tunables)
 static void exit_mode(struct cpufreq_interextrem_tunables * tunables)
 {
 	set_new_param_set(0, tunables);
-	cluster0_min_freq = 0;
+	kfc_min_freq = 0;
 
 	if(hmp_boost) {
 		pr_debug("%s mp boost off", __func__);
@@ -1120,7 +1120,7 @@ static int cpufreq_interextrem_notifier(
 	int cpu;
 	unsigned long flags;
 
-	if (val == CPUFREQ_POSTCHANGE) {
+	if (val == CPUFREQ_PRECHANGE) {
 		pcpu = &per_cpu(cpuinfo, freq->cpu);
 		if (!down_read_trylock(&pcpu->enable_sem))
 			return 0;
@@ -1831,13 +1831,13 @@ static ssize_t show_cpu_util(struct cpufreq_interextrem_tunables
 	return ret;
 }
 
-static ssize_t show_single_cluster0_min_freq(struct cpufreq_interextrem_tunables
+static ssize_t show_single_kfc_min_freq(struct cpufreq_interextrem_tunables
 		*tunables, char *buf)
 {
-	return sprintf(buf, "%u\n", tunables->single_cluster0_min_freq);
+	return sprintf(buf, "%u\n", tunables->single_kfc_min_freq);
 }
 
-static ssize_t store_single_cluster0_min_freq(struct cpufreq_interextrem_tunables
+static ssize_t store_single_kfc_min_freq(struct cpufreq_interextrem_tunables
 		*tunables, const char *buf, size_t count)
 {
 	int ret;
@@ -1847,17 +1847,17 @@ static ssize_t store_single_cluster0_min_freq(struct cpufreq_interextrem_tunable
 	if (ret < 0)
 			return ret;
 
-	tunables->single_cluster0_min_freq = val;
+	tunables->single_kfc_min_freq = val;
 	return count;
 }
 
-static ssize_t show_multi_cluster0_min_freq(struct cpufreq_interextrem_tunables
+static ssize_t show_multi_kfc_min_freq(struct cpufreq_interextrem_tunables
 		*tunables, char *buf)
 {
-	return sprintf(buf, "%u\n", tunables->multi_cluster0_min_freq);
+	return sprintf(buf, "%u\n", tunables->multi_kfc_min_freq);
 }
 
-static ssize_t store_multi_cluster0_min_freq(struct cpufreq_interextrem_tunables
+static ssize_t store_multi_kfc_min_freq(struct cpufreq_interextrem_tunables
 		*tunables, const char *buf, size_t count)
 {
 	int ret;
@@ -1867,7 +1867,7 @@ static ssize_t store_multi_cluster0_min_freq(struct cpufreq_interextrem_tunables
 	if (ret < 0)
 			return ret;
 
-	tunables->multi_cluster0_min_freq = val;
+	tunables->multi_kfc_min_freq = val;
 	return count;
 }
 #endif
@@ -1947,8 +1947,8 @@ show_store_gov_pol_sys(multi_enter_time);
 show_store_gov_pol_sys(multi_exit_time);
 show_store_gov_pol_sys(single_enter_time);
 show_store_gov_pol_sys(single_exit_time);
-show_store_gov_pol_sys(single_cluster0_min_freq);
-show_store_gov_pol_sys(multi_cluster0_min_freq);
+show_store_gov_pol_sys(single_kfc_min_freq);
+show_store_gov_pol_sys(multi_kfc_min_freq);
 show_gov_pol_sys(cpu_util);
 #endif
 #ifdef CONFIG_PMU_COREMEM_RATIO
@@ -1988,8 +1988,8 @@ gov_sys_pol_attr_rw(multi_enter_time);
 gov_sys_pol_attr_rw(multi_exit_time);
 gov_sys_pol_attr_rw(single_enter_time);
 gov_sys_pol_attr_rw(single_exit_time);
-gov_sys_pol_attr_rw(single_cluster0_min_freq);
-gov_sys_pol_attr_rw(multi_cluster0_min_freq);
+gov_sys_pol_attr_rw(single_kfc_min_freq);
+gov_sys_pol_attr_rw(multi_kfc_min_freq);
 #endif
 
 static struct global_attr boostpulse_gov_sys =
@@ -2037,8 +2037,8 @@ static struct attribute *interextrem_attributes_gov_sys[] = {
 	&multi_exit_time_gov_sys.attr,
 	&single_enter_time_gov_sys.attr,
 	&single_exit_time_gov_sys.attr,
-	&single_cluster0_min_freq_gov_sys.attr,
-	&multi_cluster0_min_freq_gov_sys.attr,
+	&single_kfc_min_freq_gov_sys.attr,
+	&multi_kfc_min_freq_gov_sys.attr,
 	&cpu_util_gov_sys.attr,
 #endif
 #ifdef CONFIG_PMU_COREMEM_RATIO
@@ -2077,8 +2077,8 @@ static struct attribute *interextrem_attributes_gov_pol[] = {
 	&multi_exit_time_gov_pol.attr,
 	&single_enter_time_gov_pol.attr,
 	&single_exit_time_gov_pol.attr,
-	&single_cluster0_min_freq_gov_pol.attr,
-	&multi_cluster0_min_freq_gov_pol.attr,
+	&single_kfc_min_freq_gov_pol.attr,
+	&multi_kfc_min_freq_gov_pol.attr,
 	&cpu_util_gov_pol.attr,
 #endif
 #ifdef CONFIG_PMU_COREMEM_RATIO
@@ -2117,8 +2117,8 @@ static const char *interextrem_sysfs[] = {
 	"multi_exit_time",
 	"single_enter_time",
 	"single_exit_time",
-	"single_cluster0_min_freq",
-	"multi_cluster0_min_freq",
+	"single_kfc_min_freq",
+	"multi_kfc_min_freq",
 	"cpu_util",
 #endif
 #ifdef CONFIG_PMU_COREMEM_RATIO
@@ -2312,8 +2312,8 @@ static int cpufreq_governor_interextrem(struct cpufreq_policy *policy,
 			tunables->single_enter_load = DEFAULT_TARGET_LOAD;
 			tunables->single_exit_time = DEFAULT_SINGLE_EXIT_TIME;
 			tunables->single_exit_load = DEFAULT_TARGET_LOAD;
-			tunables->single_cluster0_min_freq = DEFAULT_SINGLE_CLUSTER0_MIN_FREQ;
-			tunables->multi_cluster0_min_freq = DEFAULT_MULTI_CLUSTER0_MIN_FREQ;
+			tunables->single_kfc_min_freq = DEFAULT_SINGLE_KFC_MIN_FREQ;
+			tunables->multi_kfc_min_freq = DEFAULT_MULTI_KFC_MIN_FREQ;
 
 			cpufreq_param_set_init(tunables);
 #endif
@@ -2572,7 +2572,7 @@ unsigned int cpufreq_interextrem_get_hispeed_freq(int cpu)
 }
 
 #ifdef CONFIG_ARCH_EXYNOS
-static int cpufreq_interextrem_cluster1_min_qos_handler(struct notifier_block *b,
+static int cpufreq_interextrem_cpu_min_qos_handler(struct notifier_block *b,
 						unsigned long val, void *v)
 {
 	struct cpufreq_interextrem_cpuinfo *pcpu;
@@ -2580,7 +2580,7 @@ static int cpufreq_interextrem_cluster1_min_qos_handler(struct notifier_block *b
 	unsigned long flags;
 	int ret = NOTIFY_OK;
 #if defined(CONFIG_ARM_EXYNOS_MP_CPUFREQ)
-	int cpu = NR_CLUST0_CPUS;
+	int cpu = NR_CA7;
 #else
 	int cpu = 0;
 #endif
@@ -2619,11 +2619,11 @@ exit:
 	return ret;
 }
 
-static struct notifier_block cpufreq_interextrem_cluster1_min_qos_notifier = {
-	.notifier_call = cpufreq_interextrem_cluster1_min_qos_handler,
+static struct notifier_block cpufreq_interextrem_cpu_min_qos_notifier = {
+	.notifier_call = cpufreq_interextrem_cpu_min_qos_handler,
 };
 
-static int cpufreq_interextrem_cluster1_max_qos_handler(struct notifier_block *b,
+static int cpufreq_interextrem_cpu_max_qos_handler(struct notifier_block *b,
 						unsigned long val, void *v)
 {
 	struct cpufreq_interextrem_cpuinfo *pcpu;
@@ -2631,7 +2631,7 @@ static int cpufreq_interextrem_cluster1_max_qos_handler(struct notifier_block *b
 	unsigned long flags;
 	int ret = NOTIFY_OK;
 #if defined(CONFIG_ARM_EXYNOS_MP_CPUFREQ)
-	int cpu = NR_CLUST0_CPUS;
+	int cpu = NR_CA7;
 #else
 	int cpu = 0;
 #endif
@@ -2670,12 +2670,12 @@ exit:
 	return ret;
 }
 
-static struct notifier_block cpufreq_interextrem_cluster1_max_qos_notifier = {
-	.notifier_call = cpufreq_interextrem_cluster1_max_qos_handler,
+static struct notifier_block cpufreq_interextrem_cpu_max_qos_notifier = {
+	.notifier_call = cpufreq_interextrem_cpu_max_qos_handler,
 };
 
 #ifdef CONFIG_ARM_EXYNOS_MP_CPUFREQ
-static int cpufreq_interextrem_cluster0_min_qos_handler(struct notifier_block *b,
+static int cpufreq_interextrem_kfc_min_qos_handler(struct notifier_block *b,
 						unsigned long val, void *v)
 {
 	struct cpufreq_interextrem_cpuinfo *pcpu;
@@ -2717,11 +2717,11 @@ exit:
 	return ret;
 }
 
-static struct notifier_block cpufreq_interextrem_cluster0_min_qos_notifier = {
-	.notifier_call = cpufreq_interextrem_cluster0_min_qos_handler,
+static struct notifier_block cpufreq_interextrem_kfc_min_qos_notifier = {
+	.notifier_call = cpufreq_interextrem_kfc_min_qos_handler,
 };
 
-static int cpufreq_interextrem_cluster0_max_qos_handler(struct notifier_block *b,
+static int cpufreq_interextrem_kfc_max_qos_handler(struct notifier_block *b,
 						unsigned long val, void *v)
 {
 	struct cpufreq_interextrem_cpuinfo *pcpu;
@@ -2763,8 +2763,8 @@ exit:
 	return ret;
 }
 
-static struct notifier_block cpufreq_interextrem_cluster0_max_qos_notifier = {
-	.notifier_call = cpufreq_interextrem_cluster0_max_qos_handler,
+static struct notifier_block cpufreq_interextrem_kfc_max_qos_notifier = {
+	.notifier_call = cpufreq_interextrem_kfc_max_qos_handler,
 };
 #endif
 #endif
@@ -2794,11 +2794,11 @@ static int __init cpufreq_interextrem_init(void)
 	mutex_init(&gov_lock);
 
 #ifdef CONFIG_ARCH_EXYNOS
-	pm_qos_add_notifier(PM_QOS_CLUSTER1_FREQ_MIN, &cpufreq_interextrem_cluster1_min_qos_notifier);
-	pm_qos_add_notifier(PM_QOS_CLUSTER1_FREQ_MAX, &cpufreq_interextrem_cluster1_max_qos_notifier);
+	pm_qos_add_notifier(PM_QOS_CPU_FREQ_MIN, &cpufreq_interextrem_cpu_min_qos_notifier);
+	pm_qos_add_notifier(PM_QOS_CPU_FREQ_MAX, &cpufreq_interextrem_cpu_max_qos_notifier);
 #ifdef CONFIG_ARM_EXYNOS_MP_CPUFREQ
-	pm_qos_add_notifier(PM_QOS_CLUSTER0_FREQ_MIN, &cpufreq_interextrem_cluster0_min_qos_notifier);
-	pm_qos_add_notifier(PM_QOS_CLUSTER0_FREQ_MAX, &cpufreq_interextrem_cluster0_max_qos_notifier);
+	pm_qos_add_notifier(PM_QOS_KFC_FREQ_MIN, &cpufreq_interextrem_kfc_min_qos_notifier);
+	pm_qos_add_notifier(PM_QOS_KFC_FREQ_MAX, &cpufreq_interextrem_kfc_max_qos_notifier);
 #endif
 #endif
 
@@ -2814,7 +2814,7 @@ static int __init cpufreq_interextrem_init(void)
 #ifdef CONFIG_MODE_AUTO_CHANGE
 static void mode_auto_change_minlock(struct work_struct *work)
 {
-	set_qos(&cluster0_min_freq_qos, PM_QOS_CLUSTER0_FREQ_MIN, cluster0_min_freq);
+	set_qos(&kfc_min_freq_qos, PM_QOS_KFC_FREQ_MIN, kfc_min_freq);
 }
 #endif
 
