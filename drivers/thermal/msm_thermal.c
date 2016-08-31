@@ -57,7 +57,7 @@
 
 struct msm_thermal_data msm_thermal_info;
 static struct delayed_work check_temp_work;
-static bool core_control_enabled = false;
+static bool core_control_enabled = true;
 static DEFINE_MUTEX(core_control_mutex);
 static struct kobject *cc_kobj;
 static struct task_struct *hotplug_task;
@@ -67,7 +67,7 @@ static struct completion hotplug_notify_complete;
 static struct completion freq_mitigation_complete;
 static struct completion thermal_monitor_complete;
 
-static int enabled;
+static int enabled = 1;
 static int polling_enabled;
 static int rails_cnt;
 static int psm_rails_cnt;
