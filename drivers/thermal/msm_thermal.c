@@ -67,7 +67,7 @@ static struct completion hotplug_notify_complete;
 static struct completion freq_mitigation_complete;
 static struct completion thermal_monitor_complete;
 
-static int enabled = 1;
+static int enabled;
 static int polling_enabled;
 static int rails_cnt;
 static int psm_rails_cnt;
