@@ -57,7 +57,7 @@
 
 struct msm_thermal_data msm_thermal_info;
 static struct delayed_work check_temp_work;
-static bool core_control_enabled = true;
+static bool core_control_enabled;
 static DEFINE_MUTEX(core_control_mutex);
 static struct kobject *cc_kobj;
 static struct task_struct *hotplug_task;
