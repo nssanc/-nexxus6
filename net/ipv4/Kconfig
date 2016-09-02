@@ -558,10 +558,6 @@ config TCP_CONG_SCALABLE
 	properties, though is known to have fairness issues.
 	See http://www.deneholme.net/tom/scalable/
 
-config TCP_CONG_SOCIOPATH
-	tristate "TCP Sociopath"
-	default n
-
 config TCP_CONG_VEGAS
 	tristate "TCP Vegas"
 	default n
@@ -647,9 +643,6 @@ choice
         config DEFAULT_SCALABLE
 		bool "SCALABLE" if TCP_CONG_SCALABLE=y
 
-        config DEFAULT_SOCIOPATH
-		bool "Sociopath" if TCP_CONG_SOCIOPATH=y
-
 	config DEFAULT_VEGAS
 		bool "Vegas" if TCP_CONG_VEGAS=y
 
@@ -685,7 +678,6 @@ config DEFAULT_TCP_CONG
         default "illinois" if DEFAULT_ILLINOIS
         default "lp" if DEFAULT_LP
         default "scalable" if DEFAULT_SCALABLE
-        default "sociopath" if DEFAULT_SOCIOPATH
 	default "vegas" if DEFAULT_VEGAS
         default "veno" if DEFAULT_VENO
 	default "westwood" if DEFAULT_WESTWOOD
