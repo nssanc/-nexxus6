@@ -94,10 +94,6 @@ if [ -f "/system/bin/sysinit" ]; then
 	echo "done" >> /system/bin/sysinit
 	chmod 755 /system/bin/sysinit
 fi
-#copy init.sysinit.rc
-cp /tmp/init.sysinit.rc /tmp/ramdisk/init.sysinit.rc
-chmod 750 /tmp/ramdisk/init.sysinit.rc
-
 #copy fstab
 cp /tmp/fstab.shamu /tmp/ramdisk/fstab.shamu
 chmod 750 /tmp/ramdisk/fstab.shamu
