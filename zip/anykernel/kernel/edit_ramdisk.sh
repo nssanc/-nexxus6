@@ -94,14 +94,6 @@ if [ -f "/system/bin/sysinit" ]; then
 	echo "done" >> /system/bin/sysinit
 	chmod 755 /system/bin/sysinit
 fi
-#Make MPD and T-E as RW only
-if [ -f "/system/bin/mpdecision" ]; then
-chmod 644 /system/bin/mpdecision
-fi
-if [ -f "/system/bin/thermal-engine" ]; then
-chmod 644 /system/bin/thermal-engine
-fi
-
 #copy init.sysinit.rc
 cp /tmp/init.sysinit.rc /tmp/ramdisk/init.sysinit.rc
 chmod 750 /tmp/ramdisk/init.sysinit.rc
